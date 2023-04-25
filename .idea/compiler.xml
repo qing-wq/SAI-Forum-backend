@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="sai-api" />
+        <module name="sai-core" />
+        <module name="sai-service" />
+        <module name="sai-web" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SAI-Forum-Backend" options="" />
+      <module name="sai-api" options="-parameters" />
+      <module name="sai-core" options="-parameters" />
+      <module name="sai-service" options="-parameters" />
+      <module name="sai-web" options="-parameters" />
+    </option>
+  </component>
+</project>
