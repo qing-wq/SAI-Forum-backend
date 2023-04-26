@@ -1,0 +1,13 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 5m # 设置session的有效期为五分钟
+
+spring:
+  config:
+    import: application-dal.yml
+
+
+database:
+  name: sai-forum
