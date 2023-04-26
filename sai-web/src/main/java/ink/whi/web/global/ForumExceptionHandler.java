@@ -1,7 +1,7 @@
 package ink.whi.web.global;
 
 import ink.whi.api.model.enums.StatusEnum;
-import ink.whi.api.model.exception.ForumException;
+import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.Status;
 import ink.whi.api.model.vo.ResVo;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 @Order(-100)
 public class ForumExceptionHandler {
 
-    @ExceptionHandler(ForumException.class)
+    @ExceptionHandler(BusinessException.class)
     public ResVo<String> forumExceptionHandler(HttpServletResponse resp, Exception e) {
-        ForumException ex = (ForumException) e;
+        BusinessException ex = (BusinessException) e;
         Status errStatus = ex.getStatus();
         resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         resp.setHeader("Cache-Control", "no-cache, must-revalidate");

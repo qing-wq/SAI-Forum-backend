@@ -7,7 +7,7 @@ import ink.whi.api.model.enums.StatusEnum;
  * @Date: 2023/4/26 10:42
  */
 public class ExceptionUtils {
-    public static ForumException of(StatusEnum statusEnum, Object... arg) {
-        return new ForumException(statusEnum, arg);
+    public static BusinessException of(StatusEnum statusEnum, Object... arg) {
+        return new BusinessException(statusEnum, arg);
     }
 }
