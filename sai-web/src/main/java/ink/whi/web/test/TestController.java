@@ -4,6 +4,7 @@ import com.mysql.cj.log.Log;
 import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.exception.ForumException;
 import ink.whi.api.model.vo.ResVo;
+import ink.whi.web.base.BaseRestController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
