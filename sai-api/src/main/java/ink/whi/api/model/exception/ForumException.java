@@ -22,4 +22,7 @@ public class ForumException extends RuntimeException{
         this.status = Status.newStatus(statusEnum, args);
     }
 
+    public static ForumException newInstance(StatusEnum statusEnum, Object... args) {
+        return new ForumException(statusEnum, args);
+    }
 }

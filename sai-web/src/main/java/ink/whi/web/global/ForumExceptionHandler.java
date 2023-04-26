@@ -9,22 +9,18 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * @author: qing
  * @Date: 2023/4/25 23:50
  */
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 @Order(-100)
 public class ForumExceptionHandler {
 
