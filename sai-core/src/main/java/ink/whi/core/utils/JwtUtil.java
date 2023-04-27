@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 public class JwtUtil {
     @Value("${jwt.key}")
-    private static String JWT_KEY;
+    private static String JWT_KEY = "JWT_KEY";
     private static final String TOKEN_PREFIX = "Bearer ";
     public static final String Authorization = "Authorization";
     private static final long ONE_MONTH = 30 * 24 * 60 * 60 * 1000L;

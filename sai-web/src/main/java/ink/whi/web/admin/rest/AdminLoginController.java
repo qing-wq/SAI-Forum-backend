@@ -5,7 +5,6 @@ import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.utils.JwtUtil;
 import ink.whi.service.user.service.UserSettingService;
-import ink.whi.web.base.BaseRestController;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 前后台登录接口
+ *
  * @author: qing
  * @Date: 2023/4/26
  */
@@ -25,6 +26,12 @@ public class AdminLoginController{
     @Autowired
     private UserSettingService userSettingService;
 
+    /**
+     * 账号密码登录
+     * @param request
+     * @param response
+     * @return
+     */
     @PostMapping(path = {"/", ""})
     public ResVo<BaseUserInfoDTO> login(HttpServletRequest request,
                                         HttpServletResponse response) {
