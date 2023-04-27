@@ -1,5 +1,6 @@
 package ink.whi.service.user.repo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,6 +13,7 @@ import java.io.Serial;
  */
 @Data
 @Accessors(chain = true)
+@TableName("user")
 public class UserDO extends BaseDO {
 
     @Serial

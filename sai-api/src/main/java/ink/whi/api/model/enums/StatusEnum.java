@@ -46,6 +46,9 @@ public enum StatusEnum {
     LOGIN_FAILED_MIXED(400_403_001, "登录失败:%s"),
     USER_NOT_EXISTS(400_404_001, "用户不存在:%s"),
     USER_PWD_ERROR(400_500_002, "用户名or密码错误"),
+
+    // token异常
+    JWT_VERIFY_EXISTS(500_500_001, "token校验异常")
     ;
 
     private int code;
