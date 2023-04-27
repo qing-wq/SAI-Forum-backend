@@ -1,4 +1,4 @@
-package ink.whi.service.statistic.repo.entity;
+package ink.whi.service.statistics.repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.util.Date;
 
 /**
@@ -17,8 +18,8 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @TableName("request_count")
 public class RequestCountDO extends BaseDO {
-
-    private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 6586218844596585874L;
 
     /**
      * 机器IP

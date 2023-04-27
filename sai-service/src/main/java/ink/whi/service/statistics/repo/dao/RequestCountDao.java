@@ -1,8 +1,8 @@
-package ink.whi.service.statistic.repo.dao;
+package ink.whi.service.statistics.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import ink.whi.service.statistic.repo.entity.RequestCountDO;
-import ink.whi.service.statistic.repo.mapper.RequestCountMapper;
+import ink.whi.service.statistics.repo.entity.RequestCountDO;
+import ink.whi.service.statistics.repo.mapper.RequestCountMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;

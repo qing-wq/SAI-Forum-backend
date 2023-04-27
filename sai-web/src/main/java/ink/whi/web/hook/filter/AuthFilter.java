@@ -3,14 +3,13 @@ package ink.whi.web.hook.filter;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.utils.CrossUtil;
 import ink.whi.core.utils.IpUtil;
-import ink.whi.service.statistic.service.StatisticSettingService;
-import ink.whi.service.user.service.UserSettingService;
+import ink.whi.service.statistics.service.StatisticSettingService;
 import ink.whi.web.global.GlobalInitService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +25,10 @@ import java.net.URLDecoder;
 public class AuthFilter implements Filter {
     private static Logger REQ_LOG = LoggerFactory.getLogger("req");
 
-    @Resource
+    @Autowired
     private StatisticSettingService statisticSettingService;
 
-    @Resource
+    @Autowired
     private GlobalInitService globalInitService;
 
     @Override

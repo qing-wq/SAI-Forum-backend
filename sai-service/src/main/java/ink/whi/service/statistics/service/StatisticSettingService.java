@@ -1,4 +1,4 @@
-package ink.whi.service.statistic.service;
+package ink.whi.service.statistics.service;
 
 /**
  * @author: qing

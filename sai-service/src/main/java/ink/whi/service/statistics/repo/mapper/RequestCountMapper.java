@@ -1,7 +1,7 @@
-package ink.whi.service.statistic.repo.mapper;
+package ink.whi.service.statistics.repo.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import ink.whi.service.statistic.repo.entity.RequestCountDO;
+import ink.whi.service.statistics.repo.entity.RequestCountDO;
 
 /**
  * @author qing

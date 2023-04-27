@@ -5,8 +5,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author YiHui
- * @date 2022/7/6
+ * @author qing
+ * @date 2023/4/27
  */
 @Configuration
 @ComponentScan("ink.whi.service")

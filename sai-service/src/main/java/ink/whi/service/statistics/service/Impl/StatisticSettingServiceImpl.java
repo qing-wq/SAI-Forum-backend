@@ -1,9 +1,8 @@
-package ink.whi.service.statistic.service.Impl;
+package ink.whi.service.statistics.service.Impl;
 
-import ink.whi.service.statistic.repo.dao.RequestCountDao;
-import ink.whi.service.statistic.repo.entity.RequestCountDO;
-import ink.whi.service.statistic.service.StatisticSettingService;
-import lombok.Data;
+import ink.whi.service.statistics.repo.dao.RequestCountDao;
+import ink.whi.service.statistics.repo.entity.RequestCountDO;
+import ink.whi.service.statistics.service.StatisticSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

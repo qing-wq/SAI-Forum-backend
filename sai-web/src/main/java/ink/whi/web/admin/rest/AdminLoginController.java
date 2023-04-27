@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping(path = {"/admin/login"})
-public class AdminLoginController extends BaseRestController {
+public class AdminLoginController{
     @Autowired
     private UserSettingService userSettingService;
 
