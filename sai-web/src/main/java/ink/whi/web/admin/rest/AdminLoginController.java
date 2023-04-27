@@ -1,17 +1,15 @@
 package ink.whi.web.admin.rest;
 
-import com.github.xiaoymin.knife4j.core.util.StrUtil;
-import ink.whi.api.model.base.BaseDTO;
 import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.core.utils.JwtUtil;
 import ink.whi.service.user.service.UserSettingService;
 import ink.whi.web.base.BaseRestController;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +34,9 @@ public class AdminLoginController extends BaseRestController {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "用户名或密码不能为空");
         }
         BaseUserInfoDTO info = userSettingService.passwordLogin(username, password);
-        // 将用户信息存入session
+        // 签发token
+        String token = JwtUtil.createToken(info.getUserId());
+        response.setHeader(JwtUtil.Authorization, token);
         return ResVo.ok(info);
     }
 }

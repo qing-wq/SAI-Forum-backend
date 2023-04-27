@@ -39,7 +39,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         return queryBasicUserInfo(user.getId());
     }
 
-    private BaseUserInfoDTO queryBasicUserInfo(Long userId) {
+    public BaseUserInfoDTO queryBasicUserInfo(Long userId) {
         UserInfoDO user = userDao.getByUserId(userId);
         if (user == null) {
             throw BusinessException.newInstance(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);

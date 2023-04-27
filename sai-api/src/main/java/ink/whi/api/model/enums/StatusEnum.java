@@ -48,7 +48,8 @@ public enum StatusEnum {
     USER_PWD_ERROR(400_500_002, "用户名or密码错误"),
 
     // token异常
-    JWT_VERIFY_EXISTS(500_500_001, "token校验异常")
+    JWT_VERIFY_EXISTS(500_500_001, "token校验异常"),
+    TOKEN_NOT_EXISTS(500_403_002, "token不存在")
     ;
 
     private int code;

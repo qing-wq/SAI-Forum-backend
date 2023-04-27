@@ -2,11 +2,9 @@ package ink.whi.core.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Date;
 
@@ -46,12 +44,13 @@ public class JwtUtil {
      * @param token
      * @return userId
      */
-    public static String isVerify(String token) {
+    public static Long isVerify(String token) {
         Algorithm algorithm = Algorithm.HMAC256(JWT_KEY);
-        return JWT.require(algorithm)
+        String userId = JWT.require(algorithm)
                 .build()
                 .verify(token.replace(TOKEN_PREFIX, ""))
                 .getSubject();
+        return Long.parseLong(userId);
     }
 
     /**

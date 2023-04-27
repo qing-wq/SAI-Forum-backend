@@ -8,4 +8,6 @@ import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
  */
 public interface UserSettingService {
     BaseUserInfoDTO passwordLogin(String username, String password);
-}
+
+    BaseUserInfoDTO queryBasicUserInfo(Long userId);
+    }
