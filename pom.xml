@@ -30,6 +30,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <commons-io.version>2.11.0</commons-io.version>
         <knife4j.version>4.0.0</knife4j.version>
+        <qrcode-plugin.version>3.0.0</qrcode-plugin.version>
         <java.jwt.version>4.2.1</java.jwt.version>
     </properties>
 
@@ -94,6 +95,12 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.liuyueyi.media</groupId>
+                <artifactId>qrcode-plugin</artifactId>
+                <version>${qrcode-plugin.version}</version>
             </dependency>
 
             <dependency>

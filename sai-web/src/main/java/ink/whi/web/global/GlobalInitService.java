@@ -7,6 +7,7 @@ import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.utils.JwtUtil;
 import ink.whi.service.notify.repo.dao.NotifyMsgDao;
 import ink.whi.service.notify.service.NotifyMsgService;
+import ink.whi.service.user.service.SessionService;
 import ink.whi.service.user.service.UserSettingService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,9 @@ public class GlobalInitService {
     @Autowired
     private NotifyMsgService notifyService;
 
+    @Autowired
+    private SessionService sessionService;
+
     public void initLoginUser(ReqInfoContext.ReqInfo reqInfo) {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -42,6 +46,8 @@ public class GlobalInitService {
             reqInfo.setUserId(user.getUserId());
             reqInfo.setUser(user);
             reqInfo.setMsgNum(notifyService.queryUserNotifyMsgCount(user.getUserId()));
+            // 更新ip信息
+            sessionService.updateUserIpInfo(user, reqInfo.getClientIp());
         }
     }
 
@@ -62,11 +68,11 @@ public class GlobalInitService {
             throw BusinessException.newInstance(StatusEnum.JWT_VERIFY_EXISTS);
         }
 
+        // 检查token是否需要更新
+        if (JwtUtil.isNeedUpdate(token)) {
+            token = JwtUtil.createToken(userId);
+            res.setHeader(JwtUtil.Authorization, token);
+        }
         return user;
-//        // 检查token是否需要更新
-//        if (JwtUtil.isNeedUpdate(token)) {
-//            token = JwtUtil.createToken(userId);
-//            res.setHeader(JwtUtil.Authorization, token);
-//        }
     }
 }

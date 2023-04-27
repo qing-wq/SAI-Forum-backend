@@ -77,6 +77,11 @@
             <version>2.6.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.liuyueyi.media</groupId>
+            <artifactId>qrcode-plugin</artifactId>
+        </dependency>
+
         <!--  caffeine 缓存使用姿势   -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
