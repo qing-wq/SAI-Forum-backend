@@ -3,6 +3,7 @@ package ink.whi.web.hook.filter;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.utils.CrossUtil;
 import ink.whi.core.utils.IpUtil;
+import ink.whi.service.statistic.service.StatisticSettingService;
 import ink.whi.service.user.service.UserSettingService;
 import ink.whi.web.global.GlobalInitService;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,7 @@ public class AuthFilter implements Filter {
     private static Logger REQ_LOG = LoggerFactory.getLogger("req");
 
     @Resource
-    private UserSettingService userSettingService;
+    private StatisticSettingService statisticSettingService;
 
     @Resource
     private GlobalInitService globalInitService;
@@ -37,10 +38,10 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = null;
         try {
             req = initReqInfo((HttpServletRequest) request);
-            CrossUtil.buildCors(request, (HttpServletResponse) servletResponse);
+            CrossUtil.buildCors(req, (HttpServletResponse) response);
             chain.doFilter(req, response);
         }finally {
-            buildRequestLog(ReqInfoContext.getReqInfo(), request, System.currentTimeMillis() - start);
+            buildRequestLog(ReqInfoContext.getReqInfo(), req, System.currentTimeMillis() - start);
             ReqInfoContext.clear();
         }
     }
@@ -104,6 +105,7 @@ public class AuthFilter implements Filter {
         REQ_LOG.info("{}", msg);
 
         // todo: 保存请求计数
+        statisticSettingService.saveRequestCount(req.getClientIp());
     }
 
     private boolean staticURI(HttpServletRequest request) {

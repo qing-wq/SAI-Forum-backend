@@ -2,6 +2,7 @@ package ink.whi.service.statistic.repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,6 +13,7 @@ import java.util.Date;
  * @date 2023/4/27
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = true)
 @TableName("request_count")
 public class RequestCountDO extends BaseDO {
