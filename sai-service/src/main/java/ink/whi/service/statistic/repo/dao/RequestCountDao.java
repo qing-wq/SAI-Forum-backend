@@ -13,9 +13,6 @@ import java.sql.Date;
  */
 @Repository
 public class RequestCountDao extends ServiceImpl<RequestCountMapper, RequestCountDO> {
-    public void saveRequestCount(String ip) {
-        new RequestCountDO()
-    }
 
     /**
      * 根据ip和日期查询请求
