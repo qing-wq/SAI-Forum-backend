@@ -1,6 +1,6 @@
 package ink.whi.service.notify.service.Impl;
 
-import ink.whi.service.article.service.ArticleService;
+import ink.whi.service.article.service.ArticleReadService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
  * @Date: 2023/4/27
  */
 @Service
-public class ArticleServiceImpl implements ArticleService {
+public class ArticleReadServiceImpl implements ArticleReadService {
 }
