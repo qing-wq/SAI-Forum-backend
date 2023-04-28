@@ -63,7 +63,7 @@ public class ArticleConverter {
         articleDTO.setToppingStat(articleDO.getToppingStat());
         articleDTO.setCreamStat(articleDO.getCreamStat());
 
-        // 设置类目id
+        // 设置分类信息
         articleDTO.setCategory(new CategoryDTO(articleDO.getCategoryId(), null));
         return articleDTO;
     }

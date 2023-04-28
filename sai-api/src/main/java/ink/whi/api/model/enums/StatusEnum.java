@@ -15,7 +15,7 @@ import lombok.Getter;
  */
 @Getter
 public enum StatusEnum {
-    SUCCESS(0, "OK"),
+    SUCCESS(200, "OK"),
 
     // 全局传参异常
     ILLEGAL_ARGUMENTS(100_400_001, "参数异常"),
