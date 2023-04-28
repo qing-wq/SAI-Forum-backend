@@ -3,10 +3,16 @@
 <mapper namespace="ink.whi.service.user.repo.mapper.UserFootMapper">
 
     <select id="countArticleByArticleId" resultType="ink.whi.api.model.vo.user.dto.ArticleFootCountDTO">
-        select sum(if(f.praise_stat = ${@ink.whi.api.model.enums.PraiseStatEnum@PRAISE.code}, 1, 0))             as praiseCount,
-               sum(if(f.collection_stat = ${@ink.whi.api.model.enums.CollectionStatEnum@COLLECTION.code}, 1,0))  as collectionCount
-        from user_foot f
-        where f.document_id = #{articleId}
+        SELECT
+            sum(if (f.praise_stat =${@ink.whi.api.model.enums.PraiseStatEnum@PRAISE.code}, 1, 0)) as praiseCount,
+            sum(if (f.collection_stat =${@ink.whi.api.model.enums.CollectionStatEnum@COLLECTION.code}, 1, 0)) as collectionCount,
+            avg(r.`cnt`) as readCount
+        FROM
+            read_count as r
+        left join user_foot as f  on f.document_id = r.document_id and f.document_type = r.document_type
+        WHERE
+            r.document_type = ${@ink.whi.api.model.enums.DocumentTypeEnum@ARTICLE.code}
+            AND r.document_id = #{articleId}
     </select>
 
     <select id="countArticleReadsByUserId" resultType="java.lang.Integer">

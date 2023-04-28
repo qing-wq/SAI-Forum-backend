@@ -3,6 +3,9 @@ package ink.whi.service.article.service;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.service.article.repo.entity.ArticleDO;
+
+import java.util.List;
 
 /**
  * 文章读接口
@@ -12,4 +15,6 @@ import ink.whi.api.model.vo.article.dto.ArticleDTO;
  */
 public interface ArticleReadService {
     PageListVo<ArticleDTO> queryArticlesByCategory(Long categoryId, PageParam newPageInstance);
+
+    PageListVo<ArticleDTO> buildArticleListVo(List<ArticleDO> records, long pageSize);
 }

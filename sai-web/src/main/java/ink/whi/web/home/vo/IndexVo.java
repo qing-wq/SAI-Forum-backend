@@ -2,6 +2,8 @@ package ink.whi.web.home.vo;
 
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.api.model.vo.article.dto.CategoryDTO;
+import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import lombok.Data;
 
@@ -13,6 +15,11 @@ import java.util.List;
  */
 @Data
 public class IndexVo {
+
+    /**
+     * 分类列表
+     */
+    List<CategoryDTO> categories;
 
     /**
      * 当前选中的分类
@@ -32,5 +39,6 @@ public class IndexVo {
     /**
      * 登录用户信息
      */
-    private UserStatisticInfoDTO user;
+//    private UserStatisticInfoDTO user;
+    private BaseUserInfoDTO user;
 }
