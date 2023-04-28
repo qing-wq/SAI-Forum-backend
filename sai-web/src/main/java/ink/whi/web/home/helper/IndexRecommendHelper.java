@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -59,13 +60,17 @@ public class IndexRecommendHelper {
      * @return 返回选中的分类；当没有匹配时，返回默认的全部分类
      */
     private CategoryDTO categories(String active, IndexVo vo) {
+        List<CategoryDTO> allList = categoryService.loadAllCategories();
+        allList.add(0, new CategoryDTO(0L, CategoryDTO.DEFAULT_TOTAL_CATEGORY));
         if (StringUtils.isBlank(active)) {
             // 添加默认的全部分类
-            return new CategoryDTO(0L, CategoryDTO.DEFAULT_TOTAL_CATEGORY);
+            vo.setCategories(allList);
+            return allList.get(0);
         }
 
-        List<CategoryDTO> allList = categoryService.loadAllCategories();
-        // 刷新选中的分类
+//        Map<Long, Long> articleCnt = articleReadService.queryArticleCountsByCategory();
+//        allList.removeIf(c -> articleCnt.getOrDefault(c.getCategoryId(), 0L) <= 0L);
+
         AtomicReference<CategoryDTO> selectedArticle = new AtomicReference<>();
         allList.forEach(category -> {
             if (category.getCategory().equalsIgnoreCase(active)) {

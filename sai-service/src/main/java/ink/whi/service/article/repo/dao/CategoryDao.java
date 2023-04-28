@@ -31,7 +31,7 @@ public class CategoryDao extends ServiceImpl<CategoryMapper, CategoryDO> {
     public List<CategoryDO> listAllCategoriesFromDb() {
         return lambdaQuery().eq(CategoryDO::getStatus, PushStatusEnum.ONLINE.getCode())
                 .eq(CategoryDO::getDeleted, YesOrNoEnum.NO.getCode())
-                .orderByDesc(CategoryDO::getRank)
+                .orderByAsc(CategoryDO::getRank)
                 .list();
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +51,11 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     public PageListVo<ArticleDTO> buildArticleListVo(List<ArticleDO> records, long pageSize) {
         List<ArticleDTO> result = records.stream().map(this::fillArticleRelatedInfo).collect(Collectors.toList());
         return PageListVo.newVo(result, pageSize);
+    }
+
+    @Override
+    public Map<Long, Long> queryArticleCountsByCategory() {
+        return articleDao.countArticleByCategoryId();
     }
 
     /**
