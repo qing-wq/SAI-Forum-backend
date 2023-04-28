@@ -4,7 +4,7 @@ import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.utils.CrossUtil;
 import ink.whi.core.utils.IpUtil;
 import ink.whi.service.statistics.service.StatisticSettingService;
-import ink.whi.web.global.GlobalInitService;
+import ink.whi.web.global.GlobalInitHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class AuthFilter implements Filter {
     private StatisticSettingService statisticSettingService;
 
     @Autowired
-    private GlobalInitService globalInitService;
+    private GlobalInitHelper globalInitService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -60,7 +60,7 @@ public class AuthFilter implements Filter {
         reqInfo.setUserAgent(request.getHeader("User-Agent"));
         request = this.wrapperRequest(request, reqInfo);
         // 校验token
-        globalInitService.initLoginUser(reqInfo);
+        globalInitService.initUserInfo(reqInfo);
         ReqInfoContext.addReqInfo(reqInfo);
         return request;
     }

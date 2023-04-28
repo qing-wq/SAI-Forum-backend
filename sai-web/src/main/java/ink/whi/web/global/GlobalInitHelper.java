@@ -11,7 +11,7 @@ import ink.whi.service.user.service.UserSettingService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  * @Date: 2023/4/27
  */
 @Slf4j
-@Service
-public class GlobalInitService {
+@Component
+public class GlobalInitHelper {
 
     @Autowired
     private UserSettingService userSettingService;
@@ -36,7 +36,11 @@ public class GlobalInitService {
     @Autowired
     private SessionService sessionService;
 
-    public void initLoginUser(ReqInfoContext.ReqInfo reqInfo) {
+    /**
+     * 初始化用户信息
+     * @param reqInfo
+     */
+    public void initUserInfo(ReqInfoContext.ReqInfo reqInfo) {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         HttpServletResponse response =
