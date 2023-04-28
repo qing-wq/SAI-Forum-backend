@@ -1,6 +1,7 @@
 package ink.whi.service.user.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.repo.mapper.UserFootMapper;
@@ -28,5 +29,12 @@ public class UserFootDao extends ServiceImpl<UserFootMapper, UserFootDO> {
 
     public ArticleFootCountDTO countArticleByArticleId(Long articleId) {
         return baseMapper.countArticleByArticleId(articleId);
+    }
+
+    public UserFootDO getRecordByDocumentAndUserId(DocumentTypeEnum type, Long articleId, Long userId) {
+        return lambdaQuery().eq(UserFootDO::getDocumentId, articleId)
+                .eq(UserFootDO::getUserId, userId)
+                .eq(UserFootDO::getDocumentType, type.getCode())
+                .one();
     }
 }
