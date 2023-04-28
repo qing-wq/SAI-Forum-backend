@@ -4,6 +4,7 @@ import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.utils.JwtUtil;
+import ink.whi.service.user.service.SessionService;
 import ink.whi.service.user.service.UserSettingService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,7 +45,7 @@ public class AdminLoginController{
         BaseUserInfoDTO info = userSettingService.passwordLogin(username, password);
         // 签发token
         String token = JwtUtil.createToken(info.getUserId());
-        response.setHeader(JwtUtil.Authorization, token);
+        response.addCookie(new Cookie(SessionService.SESSION_KEY, token));
         return ResVo.ok(info);
     }
 }

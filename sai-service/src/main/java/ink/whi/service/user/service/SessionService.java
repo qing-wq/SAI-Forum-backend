@@ -7,5 +7,8 @@ import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
  * @Date: 2023/4/26
  */
 public interface SessionService {
+
+    String SESSION_KEY = "sai-";
+
     void updateUserIpInfo(BaseUserInfoDTO user, String clientIp);
 }

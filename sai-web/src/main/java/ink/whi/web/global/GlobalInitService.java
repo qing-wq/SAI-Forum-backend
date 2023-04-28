@@ -5,7 +5,6 @@ import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.utils.JwtUtil;
-import ink.whi.service.notify.repo.dao.NotifyMsgDao;
 import ink.whi.service.notify.service.NotifyMsgService;
 import ink.whi.service.user.service.SessionService;
 import ink.whi.service.user.service.UserSettingService;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,24 +41,30 @@ public class GlobalInitService {
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         HttpServletResponse response =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-        BaseUserInfoDTO user = VerifyToken(request, response);
-        if (user != null) {
-            reqInfo.setUserId(user.getUserId());
-            reqInfo.setUser(user);
-            reqInfo.setMsgNum(notifyService.queryUserNotifyMsgCount(user.getUserId()));
-            // 更新ip信息
-            sessionService.updateUserIpInfo(user, reqInfo.getClientIp());
+        if (request.getCookies() == null) {
+            return;
+        }
+        for (Cookie cookie : request.getCookies()) {
+            if (SessionService.SESSION_KEY.equalsIgnoreCase(cookie.getName())) {
+                BaseUserInfoDTO user = VerifyToken(cookie.getValue(), response);
+                if (user != null) {
+                    reqInfo.setUserId(user.getUserId());
+                    reqInfo.setUser(user);
+                    reqInfo.setMsgNum(notifyService.queryUserNotifyMsgCount(user.getUserId()));
+                    // 更新ip信息
+                    sessionService.updateUserIpInfo(user, reqInfo.getClientIp());
+                }
+            }
         }
     }
 
     /**
      * 校验token
      *
-     * @param req
-     * @param res
+     * @param token
+     * @param response
      */
-    private BaseUserInfoDTO VerifyToken(HttpServletRequest req, HttpServletResponse res) {
-        String token = req.getHeader(JwtUtil.Authorization);
+    private BaseUserInfoDTO VerifyToken(String token, HttpServletResponse response) {
         if (StringUtils.isBlank(token)) {
             return null;
         }
@@ -71,7 +77,7 @@ public class GlobalInitService {
         // 检查token是否需要更新
         if (JwtUtil.isNeedUpdate(token)) {
             token = JwtUtil.createToken(userId);
-            res.setHeader(JwtUtil.Authorization, token);
+            response.addCookie(new Cookie(SessionService.SESSION_KEY, token));
         }
         return user;
     }
