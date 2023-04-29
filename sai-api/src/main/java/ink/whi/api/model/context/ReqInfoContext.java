@@ -10,7 +10,7 @@ import lombok.Data;
 public class ReqInfoContext {
 
     /**
-     * fixme 注意，下面这种方式导致在子线程中拿不到用户信息
+     * 本地线程变量
      */
     private static ThreadLocal<ReqInfo> contexts = new ThreadLocal<>();
 

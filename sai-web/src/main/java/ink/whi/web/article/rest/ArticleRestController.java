@@ -94,8 +94,14 @@ public class ArticleRestController {
         }
 
         ArticleDO article = articleReadService.queryBasicArticle(articleId);
+        if (article == null) {
+            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "文章不存在: " + articleId);
+        }
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, articleId, article.getUserId(),
                 ReqInfoContext.getReqInfo().getUserId(), type);
+
+        // 消息通知
+
         return ResVo.ok(true);
     }
 }
