@@ -89,7 +89,7 @@ public class IndexRecommendHelper {
      * @return
      */
     private BaseUserInfoDTO userInfo() {
-        if (ReqInfoContext.getReqInfo() != null && ReqInfoContext.getReqInfo().getUserId() != null) {
+        if (ReqInfoContext.getReqInfo().getUserId() != null) {
             return userService.queryBasicUserInfo(ReqInfoContext.getReqInfo().getUserId());
         }
         return null;

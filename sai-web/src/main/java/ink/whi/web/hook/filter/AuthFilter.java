@@ -5,6 +5,7 @@ import ink.whi.core.utils.CrossUtil;
 import ink.whi.core.utils.IpUtil;
 import ink.whi.service.statistics.service.StatisticSettingService;
 import ink.whi.web.global.GlobalInitHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,10 @@ import java.net.URLDecoder;
  * @author: qing
  * @Date: 2023/4/27
  */
+@Slf4j
 @WebFilter(urlPatterns = "/*", filterName = "authFilter", asyncSupported = true)
 public class AuthFilter implements Filter {
-    private static Logger REQ_LOG = LoggerFactory.getLogger("req");
+    private static final Logger REQ_LOG = LoggerFactory.getLogger("req");
 
     @Autowired
     private StatisticSettingService statisticSettingService;
@@ -52,16 +54,20 @@ public class AuthFilter implements Filter {
             return request;
         }
 
-        ReqInfoContext.ReqInfo reqInfo = new ReqInfoContext.ReqInfo();
-        reqInfo.setHost(request.getHeader("host"));
-        reqInfo.setPath(request.getPathInfo());
-        reqInfo.setReferer(request.getHeader("referer"));
-        reqInfo.setClientIp(IpUtil.getClientIp(request));
-        reqInfo.setUserAgent(request.getHeader("User-Agent"));
-        request = this.wrapperRequest(request, reqInfo);
-        // 校验token
-        globalInitService.initUserInfo(reqInfo);
-        ReqInfoContext.addReqInfo(reqInfo);
+        try {
+            ReqInfoContext.ReqInfo reqInfo = new ReqInfoContext.ReqInfo();
+            reqInfo.setHost(request.getHeader("host"));
+            reqInfo.setPath(request.getPathInfo());
+            reqInfo.setReferer(request.getHeader("referer"));
+            reqInfo.setClientIp(IpUtil.getClientIp(request));
+            reqInfo.setUserAgent(request.getHeader("User-Agent"));
+            request = this.wrapperRequest(request, reqInfo);
+            // 校验token
+            globalInitService.initUserInfo(reqInfo);
+            ReqInfoContext.addReqInfo(reqInfo);
+        } catch (Exception e) {
+            log.info("init reqInfo error: " + e.getMessage());
+        }
         return request;
     }
 

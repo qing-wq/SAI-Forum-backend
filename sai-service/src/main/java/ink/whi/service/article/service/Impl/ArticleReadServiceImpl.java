@@ -100,6 +100,11 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         return articleDao.countArticleByUserId(userId);
     }
 
+    @Override
+    public ArticleDO queryBasicArticle(Long articleId) {
+        return articleDao.getById(articleId);
+    }
+
     private ArticleDTO queryDetailArticleInfo(Long articleId) {
         ArticleDTO article = articleDao.queryArticleDetail(articleId);
         if (article == null) {

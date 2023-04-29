@@ -24,10 +24,7 @@ public class ReqInfoContext {
 
     public static ReqInfo getReqInfo() {
         ReqInfo reqInfo = contexts.get();
-        if (reqInfo != null) {
             return reqInfo;
-        }
-        return new ReqInfo();
     }
 
     @Data

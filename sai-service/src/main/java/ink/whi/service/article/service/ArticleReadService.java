@@ -28,4 +28,6 @@ public interface ArticleReadService {
     ArticleDTO queryTotalArticleInfo(Long articleId, Long readUser);
 
     Integer queryArticleCount(Long userId);
+
+    ArticleDO queryBasicArticle(Long articleId);
 }

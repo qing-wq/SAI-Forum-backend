@@ -35,7 +35,7 @@ public class GlobalInterceptor implements AsyncHandlerInterceptor {
             if (permission == null || permission.role() == UserRole.ALL) {
                 return true;
             }
-            if (permission.role() == UserRole.LOGIN && (ReqInfoContext.getReqInfo() == null || ReqInfoContext.getReqInfo().getUserId() == null)) {
+            if (permission.role() == UserRole.LOGIN && ReqInfoContext.getReqInfo().getUserId() != null) {
                 response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 response.getWriter().println(JsonUtil.toStr(ResVo.fail(StatusEnum.FORBID_ERROR_MIXED, "未登录")));
