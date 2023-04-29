@@ -19,6 +19,15 @@
 
     </select>
     <select id="countArticleByUserId" resultType="ink.whi.api.model.vo.user.dto.ArticleFootCountDTO">
-
+        SELECT
+            sum(if (f.praise_stat =${@ink.whi.api.model.enums.PraiseStatEnum@PRAISE.code}, 1, 0)) as praiseCount,
+            sum(if (f.collection_stat =${@ink.whi.api.model.enums.CollectionStatEnum@COLLECTION.code}, 1, 0)) as collectionCount,
+            sum(r.`cnt`) as readCount
+        FROM
+            read_count as r
+                left join user_foot as f  on f.document_id = r.document_id and f.document_type = r.document_type
+        WHERE
+                r.document_type = ${@ink.whi.api.model.enums.DocumentTypeEnum@ARTICLE.code}
+          AND f.document_user_id = #{userId}
     </select>
 </mapper>

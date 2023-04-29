@@ -24,4 +24,8 @@ public interface ArticleReadService {
      * @return
      */
     Map<Long, Long> queryArticleCountsByCategory();
+
+    ArticleDTO queryTotalArticleInfo(Long articleId, Long readUser);
+
+    Integer queryArticleCount(Long userId);
 }

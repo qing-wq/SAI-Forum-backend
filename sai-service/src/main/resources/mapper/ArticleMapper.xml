@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ink.whi.service.article.repo.mapper.ArticleMapper">
+
+
+    <select id="listYearArticleByUserId"
+            resultType="ink.whi.api.model.vo.article.dto.YearArticleDTO">
+        select DATE_FORMAT(create_time, "%Y") as year, count(*) as articleCount
+        from article
+        where user_id = #{userId}
+          and status = ${@ink.whi.api.model.enums.PushStatusEnum@ONLINE.code}
+          and deleted = ${@ink.whi.api.model.enums.YesOrNoEnum@NO.code}
+        group by year
+    </select>
+
+</mapper>

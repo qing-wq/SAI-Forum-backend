@@ -40,6 +40,11 @@ public class UserFootServiceImpl implements UserFootService {
         return record;
     }
 
+    @Override
+    public UserFootDO queryUserFoot(Long commentId, Integer documentType, Long userId) {
+        return userFootDao.getByDocumentAndUserId(commentId, documentType, userId);
+    }
+
     private boolean setUserFootStat(UserFootDO userFootDO, OperateTypeEnum operate) {
         switch (operate) {
             case READ:

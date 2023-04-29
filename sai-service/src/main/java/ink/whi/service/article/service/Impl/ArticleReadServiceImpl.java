@@ -1,8 +1,11 @@
 package ink.whi.service.article.service.Impl;
 
+import ink.whi.api.model.enums.*;
+import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
@@ -10,13 +13,16 @@ import ink.whi.service.article.repo.dao.ArticleTagDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
+import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.CountService;
+import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +47,9 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserFootService userFootService;
+
     @Override
     public PageListVo<ArticleDTO> queryArticlesByCategory(Long categoryId, PageParam pageParam) {
         List<ArticleDO> list = articleDao.listArticleByCategoryId(categoryId, pageParam);
@@ -56,6 +65,53 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Override
     public Map<Long, Long> queryArticleCountsByCategory() {
         return articleDao.countArticleByCategoryId();
+    }
+
+    @Override
+    public ArticleDTO queryTotalArticleInfo(Long articleId, Long readUser) {
+        ArticleDTO article = queryDetailArticleInfo(articleId);
+
+        // 文章阅读计数+1
+        articleDao.incrReadCount(articleId);
+
+        // 文章操作
+        if (readUser != null) {
+            UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, articleId, article.getAuthor(), readUser, OperateTypeEnum.READ);
+            article.setPraised(Objects.equals(foot.getPraiseStat(), PraiseStatEnum.PRAISE.getCode()));
+            article.setCommented(Objects.equals(foot.getCommentStat(), CommentStatEnum.COMMENT.getCode()));
+            article.setCollected(Objects.equals(foot.getCollectionStat(), CollectionStatEnum.COLLECTION.getCode()));
+        } else {
+            // 未登录，全部设置为未处理
+            article.setPraised(false);
+            article.setCommented(false);
+            article.setCollected(false);
+        }
+
+        // 设置文章的点赞|收藏|阅读数
+        article.setCount(countService.queryArticleCountInfoByArticleId(articleId));
+
+        // 设置文章的点赞列表
+//        article.setPraisedUsers(userFootService.queryArticlePraisedUsers(articleId));
+        return article;
+    }
+
+    @Override
+    public Integer queryArticleCount(Long userId) {
+        return articleDao.countArticleByUserId(userId);
+    }
+
+    private ArticleDTO queryDetailArticleInfo(Long articleId) {
+        ArticleDTO article = articleDao.queryArticleDetail(articleId);
+        if (article == null) {
+            throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
+        }
+        // 更新分类相关信息
+        CategoryDTO category = article.getCategory();
+        category.setCategory(categoryService.queryCategoryName(category.getCategoryId()));
+
+        // 更新标签信息
+        article.setTags(articleTagDao.queryArticleTagDetails(articleId));
+        return article;
     }
 
     /**

@@ -10,4 +10,6 @@ import ink.whi.service.user.repo.entity.UserFootDO;
  */
 public interface UserFootService {
     UserFootDO saveOrUpdateUserFoot(DocumentTypeEnum article, Long articleId, Long author, Long readUser, OperateTypeEnum read);
+
+    UserFootDO queryUserFoot(Long commentId, Integer code, Long userId);
 }

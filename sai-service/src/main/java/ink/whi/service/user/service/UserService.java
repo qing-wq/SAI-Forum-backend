@@ -11,4 +11,6 @@ public interface UserService {
     BaseUserInfoDTO queryBasicUserInfo(Long userId);
 
     UserStatisticInfoDTO queryUserInfoWithStatistic(Long userId);
+
+    UserStatisticInfoDTO querySimpleUserInfoWithStatistic(Long userId);
 }

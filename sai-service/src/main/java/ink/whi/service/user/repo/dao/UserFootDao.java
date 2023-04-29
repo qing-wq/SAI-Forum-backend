@@ -2,6 +2,7 @@ package ink.whi.service.user.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.enums.DocumentTypeEnum;
+import ink.whi.api.model.enums.PraiseStatEnum;
 import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.repo.mapper.UserFootMapper;
@@ -23,7 +24,7 @@ public class UserFootDao extends ServiceImpl<UserFootMapper, UserFootDO> {
      */
     public ArticleFootCountDTO countArticleByUserId(Long userId) {
         ArticleFootCountDTO count = baseMapper.countArticleByUserId(userId);
-        Optional.ofNullable(count).ifPresent(s -> s.setReadCount(baseMapper.countArticleReadsByUserId(userId)));
+//        Optional.ofNullable(count).ifPresent(s -> s.setReadCount(baseMapper.countArticleReadsByUserId(userId)));
         return count;
     }
 
@@ -36,5 +37,19 @@ public class UserFootDao extends ServiceImpl<UserFootMapper, UserFootDO> {
                 .eq(UserFootDO::getUserId, userId)
                 .eq(UserFootDO::getDocumentType, type.getCode())
                 .one();
+    }
+
+    public UserFootDO getByDocumentAndUserId(Long commentId, Integer documentType, Long userId) {
+        return lambdaQuery().eq(UserFootDO::getDocumentId, commentId)
+                .eq(UserFootDO::getDocumentType, documentType)
+                .eq(UserFootDO::getUserId, userId)
+                .one();
+    }
+
+    public Integer countCommentPraise(Long commentId) {
+        return lambdaQuery().eq(UserFootDO::getDocumentId, commentId)
+                .eq(UserFootDO::getDocumentType, DocumentTypeEnum.COMMENT.getCode())
+                .eq(UserFootDO::getPraiseStat, PraiseStatEnum.PRAISE.getCode())
+                .count().intValue();
     }
 }

@@ -3,6 +3,7 @@ package ink.whi.web.article.vo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 import ink.whi.api.model.vo.recommend.SideBarDTO;
+import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import lombok.Data;
 
@@ -27,7 +28,7 @@ public class ArticleDetailVo {
     /**
      * 热门评论
      */
-    private TopCommentDTO hotComment;
+//    private TopCommentDTO hotComment;
 
     /**
      * 作者相关信息
