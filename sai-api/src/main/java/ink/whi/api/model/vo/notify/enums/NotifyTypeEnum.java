@@ -1,4 +1,4 @@
-package ink.whi.api.model.enums;
+package ink.whi.api.model.vo.notify.enums;
 
 import lombok.Getter;
 

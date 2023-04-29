@@ -1,6 +1,6 @@
 package ink.whi.service.notify.service.Impl;
 
-import ink.whi.api.model.enums.NotifyStatEnum;
+import ink.whi.api.model.vo.notify.enums.NotifyStatEnum;
 import ink.whi.service.notify.repo.dao.NotifyMsgDao;
 import ink.whi.service.notify.service.NotifyMsgService;
 import org.springframework.beans.factory.annotation.Autowired;

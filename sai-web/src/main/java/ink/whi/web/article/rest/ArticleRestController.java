@@ -7,11 +7,14 @@ import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.api.model.vo.notify.NotifyMsgEvent;
+import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.core.article.MarkdownConverter;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.NumUtil;
+import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.comment.service.CommentReadService;
@@ -27,9 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 文章查询接口
+ *
  * @author: qing
  * @Date: 2023/4/28
  */
@@ -50,6 +55,7 @@ public class ArticleRestController {
 
     /**
      * 文章详情接口
+     *
      * @param articleId
      * @return
      */
@@ -80,6 +86,7 @@ public class ArticleRestController {
 
     /**
      * 文章点赞、收藏相关操作
+     *
      * @param articleId
      * @param operateType
      * @return
@@ -101,7 +108,8 @@ public class ArticleRestController {
                 ReqInfoContext.getReqInfo().getUserId(), type);
 
         // 消息通知
-
+        NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
+        Optional.ofNullable(notifyType).ifPresent(s -> SpringUtil.publishEvent(new NotifyMsgEvent<UserFootDO>(this, s, foot)));
         return ResVo.ok(true);
     }
 }

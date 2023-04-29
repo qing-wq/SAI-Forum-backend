@@ -1,7 +1,7 @@
 package ink.whi.service.notify.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import ink.whi.api.model.enums.NotifyStatEnum;
+import ink.whi.api.model.vo.notify.enums.NotifyStatEnum;
 import ink.whi.service.notify.repo.mapper.NotifyMsgMapper;
 import ink.whi.service.notify.repo.entity.NotifyMsgDO;
 import org.springframework.stereotype.Repository;

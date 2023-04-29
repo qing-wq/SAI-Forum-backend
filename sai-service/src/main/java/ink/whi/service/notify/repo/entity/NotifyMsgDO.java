@@ -2,7 +2,7 @@ package ink.whi.service.notify.repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
-import ink.whi.api.model.enums.NotifyTypeEnum;
+import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
