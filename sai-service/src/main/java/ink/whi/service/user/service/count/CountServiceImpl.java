@@ -41,4 +41,9 @@ public class CountServiceImpl implements CountService {
         }
         return res;
     }
+
+    @Override
+    public Integer queryCommentPraiseCount(Long commentId) {
+        return userFootDao.countCommentPraise(commentId);
+    }
 }

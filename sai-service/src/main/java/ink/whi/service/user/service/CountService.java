@@ -20,4 +20,11 @@ public interface CountService {
      * @return
      */
     ArticleFootCountDTO queryArticleCountInfoByArticleId(Long articleId);
+
+    /**
+     * 查询点赞数
+     * @param commentId
+     * @return
+     */
+    Integer queryCommentPraiseCount(Long commentId);
 }

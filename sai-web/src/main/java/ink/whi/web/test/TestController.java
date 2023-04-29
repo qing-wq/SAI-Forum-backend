@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @Permission(role = UserRole.LOGIN)
-    @GetMapping(path = "/error")
+//    @GetMapping(path = "/error")
     public ResVo<String> test() {
-        log.info("enter");
 //        throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS);
         return ResVo.ok("ok");
     }
