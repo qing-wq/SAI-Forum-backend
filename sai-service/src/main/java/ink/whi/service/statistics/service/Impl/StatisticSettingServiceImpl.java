@@ -24,10 +24,7 @@ public class StatisticSettingServiceImpl implements StatisticSettingService {
         RequestCountDO requestCount = requestCountDao.getRequestCount(host, date);
         if (requestCount == null) {
             // 请求不存在，保存新纪录
-            RequestCountDO request = new RequestCountDO();
-            request.setHost(host);
-            request.setDate(date);
-            request.setCnt(1);
+            RequestCountDO request = RequestCountDO.builder().host(host).cnt(1).date(date).build();
             requestCountDao.save(request);
         } else {
             requestCount.setCnt(requestCount.getCnt() + 1);
