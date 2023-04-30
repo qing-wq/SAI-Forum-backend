@@ -1,9 +1,12 @@
 package ink.whi.web.article.rest;
 
+import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.service.article.repo.dao.ArticleDao;
+import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.web.base.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,22 @@ public class ArticleListRestController extends BaseRestController {
                                       @RequestParam(name = "pageSize", required = false) Long pageSize) {
         PageParam pageParam = buildPageParam(pageNum, pageSize);
         PageListVo<ArticleDTO> list = articleReadService.queryArticlesByCategory(category, pageParam);
+        return ResVo.ok(list);
+    }
+
+    /**
+     * 相关文章推荐接口
+     * @param articleId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping(path = "recommend/{articleId}")
+    public ResVo<PageListVo<ArticleDTO>> recommend(@PathVariable(name = "articleId") Long articleId,
+                                                   @RequestParam(name = "page") Long pageNum,
+                                                   @RequestParam(name = "pageSize", required = false) Long pageSize) {
+        PageParam pageParam = buildPageParam(pageNum, pageSize);
+        PageListVo<ArticleDTO> list = articleReadService.queryRecommendArticle(articleId, pageParam);
         return ResVo.ok(list);
     }
 }

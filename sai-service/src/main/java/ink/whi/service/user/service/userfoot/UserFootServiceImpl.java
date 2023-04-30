@@ -2,6 +2,7 @@ package ink.whi.service.user.service.userfoot;
 
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
+import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.dao.UserFootDao;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.UserFootService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -43,6 +45,16 @@ public class UserFootServiceImpl implements UserFootService {
     @Override
     public UserFootDO queryUserFoot(Long commentId, Integer documentType, Long userId) {
         return userFootDao.getByDocumentAndUserId(commentId, documentType, userId);
+    }
+
+    /**
+     * 查询文章点赞用户
+     * @param articleId
+     * @return
+     */
+    @Override
+    public List<SimpleUserInfoDTO> queryArticlePraisedUsers(Long articleId) {
+        return userFootDao.listPraiseUserByArticleId(articleId);
     }
 
     private boolean setUserFootStat(UserFootDO userFootDO, OperateTypeEnum operate) {

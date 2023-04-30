@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ink.whi.service.article.repo.mapper.ArticleMapper">
-
+    <sql id="limit">
+        <if test="pageParam != null">
+            limit #{pageParam.offset}, #{pageParam.limit}
+        </if>
+    </sql>
 
     <select id="listYearArticleByUserId"
             resultType="ink.whi.api.model.vo.article.dto.YearArticleDTO">
@@ -11,6 +15,25 @@
           and status = ${@ink.whi.api.model.enums.PushStatusEnum@ONLINE.code}
           and deleted = ${@ink.whi.api.model.enums.YesOrNoEnum@NO.code}
         group by year
+    </select>
+
+    <select id="listArticleByCategoryAndTags" resultType="ink.whi.service.article.repo.entity.ReadCountDO">
+        select a.id as documentId, r.cnt as cnt
+        from read_count r
+        left join article_tag t on r.document_id = t.article_id
+        left join article a on a.id = t.article_id
+        where a.category_id = #{categoryId}
+        and r.document_type = ${@ink.whi.api.model.enums.DocumentTypeEnum@ARTICLE.code}
+        and a.status = ${@ink.whi.api.model.enums.PushStatusEnum@ONLINE.code}
+        and a.deleted = ${@ink.whi.api.model.enums.YesOrNotEnum@NO.code}
+        and t.tag_id in
+        <if test="tagIds != null and tagIds.size > 0">
+            <foreach collection="tagIds" item="tagId" open="(" close=")" separator=",">
+                #{tagId}
+            </foreach>
+        </if>
+        order by r.cnt desc, a.id desc
+        <include refid="limit"/>
     </select>
 
 </mapper>

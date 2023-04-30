@@ -1,8 +1,11 @@
 package ink.whi.service.article.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ink.whi.api.model.enums.YesOrNoEnum;
+import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
+import ink.whi.service.article.repo.entity.TagDO;
 import ink.whi.service.article.repo.mapper.ArticleTagMapper;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +22,13 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
      * @param articleId
      * @return
      */
-    public List<TagDTO> queryArticleTagDetails(Long articleId) {
+    public List<TagDTO> listArticleTagsDetail(Long articleId) {
         return baseMapper.listArticleTagDetails(articleId);
+    }
+
+    public List<ArticleTagDO> listArticleTags(Long articleId) {
+        return lambdaQuery().eq(ArticleTagDO::getArticleId, articleId)
+                .eq(ArticleTagDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .list();
     }
 }

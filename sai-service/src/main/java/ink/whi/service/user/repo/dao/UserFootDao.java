@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.PraiseStatEnum;
 import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.repo.mapper.UserFootMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,5 +53,9 @@ public class UserFootDao extends ServiceImpl<UserFootMapper, UserFootDO> {
                 .eq(UserFootDO::getDocumentType, DocumentTypeEnum.COMMENT.getCode())
                 .eq(UserFootDO::getPraiseStat, PraiseStatEnum.PRAISE.getCode())
                 .count().intValue();
+    }
+
+    public List<SimpleUserInfoDTO> listPraiseUserByArticleId(Long articleId) {
+        return baseMapper.listPraiseUserByArticleId(articleId);
     }
 }

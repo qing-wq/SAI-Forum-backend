@@ -11,6 +11,7 @@ import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
+import ink.whi.service.article.repo.entity.ArticleTagDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.user.repo.entity.UserFootDO;
@@ -57,16 +58,59 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     }
 
     @Override
-    public PageListVo<ArticleDTO> buildArticleListVo(List<ArticleDO> records, long pageSize) {
-        List<ArticleDTO> result = records.stream().map(this::fillArticleRelatedInfo).collect(Collectors.toList());
-        return PageListVo.newVo(result, pageSize);
-    }
-
-    @Override
     public Map<Long, Long> queryArticleCountsByCategory() {
         return articleDao.countArticleByCategoryId();
     }
 
+    /**
+     * 查询作者文章数量
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer queryArticleCount(Long userId) {
+        return articleDao.countArticleByUserId(userId);
+    }
+
+    /**
+     * 查询文章信息
+     * @param articleId
+     * @return
+     */
+    @Override
+    public ArticleDO queryBasicArticle(Long articleId) {
+        return articleDao.getById(articleId);
+    }
+
+    /**
+     * 关联文章推荐（标签|阅读量）
+     *
+     * @param articleId
+     * @param pageParam
+     * @return
+     */
+    @Override
+    public PageListVo<ArticleDTO> queryRecommendArticle(Long articleId, PageParam pageParam) {
+        ArticleDO article = queryBasicArticle(articleId);
+        if (article == null) {
+            throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "文章不存在");
+        }
+        List<ArticleTagDO> tags = articleTagDao.listArticleTags(articleId);
+        List<Long> tagIds = tags.stream().map(ArticleTagDO::getTagId).toList();
+        List<ArticleDO> list = articleDao.listRelatedArticlesOrderByReadCount(article.getCategoryId(), tagIds, pageParam);
+        // 从列表中移除当前文章
+        if (list.removeIf(s -> s.getId().equals(articleId))) {
+            pageParam.setPageSize(pageParam.getPageSize() - 1);
+        }
+        return buildArticleListVo(list, pageParam.getPageSize());
+    }
+
+    /**
+     * 查询文章总信息
+     * @param articleId
+     * @param readUser
+     * @return
+     */
     @Override
     public ArticleDTO queryTotalArticleInfo(Long articleId, Long readUser) {
         ArticleDTO article = queryDetailArticleInfo(articleId);
@@ -91,32 +135,34 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         article.setCount(countService.queryArticleCountInfoByArticleId(articleId));
 
         // 设置文章的点赞列表
-//        article.setPraisedUsers(userFootService.queryArticlePraisedUsers(articleId));
+        article.setPraisedUsers(userFootService.queryArticlePraisedUsers(articleId));
         return article;
     }
 
+    /**
+     * 查询文章详细信息
+     * @param articleId
+     * @return
+     */
     @Override
-    public Integer queryArticleCount(Long userId) {
-        return articleDao.countArticleByUserId(userId);
-    }
-
-    @Override
-    public ArticleDO queryBasicArticle(Long articleId) {
-        return articleDao.getById(articleId);
-    }
-
-    private ArticleDTO queryDetailArticleInfo(Long articleId) {
+    public ArticleDTO queryDetailArticleInfo(Long articleId) {
         ArticleDTO article = articleDao.queryArticleDetail(articleId);
         if (article == null) {
             throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
         }
-        // 更新分类相关信息
+        // 分类信息
         CategoryDTO category = article.getCategory();
         category.setCategory(categoryService.queryCategoryName(category.getCategoryId()));
 
-        // 更新标签信息
-        article.setTags(articleTagDao.queryArticleTagDetails(articleId));
+        // 标签信息
+        article.setTags(articleTagDao.listArticleTagsDetail(articleId));
         return article;
+    }
+
+    @Override
+    public PageListVo<ArticleDTO> buildArticleListVo(List<ArticleDO> records, long pageSize) {
+        List<ArticleDTO> result = records.stream().map(this::fillArticleRelatedInfo).collect(Collectors.toList());
+        return PageListVo.newVo(result, pageSize);
     }
 
     /**
@@ -130,7 +176,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         // 分类信息
         dto.getCategory().setCategory(categoryService.queryCategoryName(record.getCategoryId()));
         // 标签列表
-        dto.setTags(articleTagDao.queryArticleTagDetails(record.getId()));
+        dto.setTags(articleTagDao.listArticleTagsDetail(record.getId()));
         // 阅读计数统计
         dto.setCount(countService.queryArticleCountInfoByArticleId(record.getId()));
         // 作者信息

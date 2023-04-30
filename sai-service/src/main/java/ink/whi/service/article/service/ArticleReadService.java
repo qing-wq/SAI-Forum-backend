@@ -30,4 +30,8 @@ public interface ArticleReadService {
     Integer queryArticleCount(Long userId);
 
     ArticleDO queryBasicArticle(Long articleId);
+
+    PageListVo<ArticleDTO> queryRecommendArticle(Long articleId, PageParam pageParam);
+
+    ArticleDTO queryDetailArticleInfo(Long articleId);
 }

@@ -30,4 +30,7 @@
                 r.document_type = ${@ink.whi.api.model.enums.DocumentTypeEnum@ARTICLE.code}
           AND f.document_user_id = #{userId}
     </select>
+    <select id="listPraiseUserByArticleId" resultType="ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO">
+        select
+    </select>
 </mapper>

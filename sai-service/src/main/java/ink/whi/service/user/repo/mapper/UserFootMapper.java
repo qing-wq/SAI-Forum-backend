@@ -2,8 +2,11 @@ package ink.whi.service.user.repo.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.dao.UserFootDao;
 import ink.whi.service.user.repo.entity.UserFootDO;
+
+import java.util.List;
 
 /**
  * @author: qing
@@ -15,4 +18,6 @@ public interface UserFootMapper extends BaseMapper<UserFootDO> {
     Integer countArticleReadsByUserId(Long userId);
 
     ArticleFootCountDTO countArticleByUserId(Long userId);
+
+    List<SimpleUserInfoDTO> listPraiseUserByArticleId(Long articleId);
 }

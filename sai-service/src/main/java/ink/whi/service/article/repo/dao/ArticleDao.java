@@ -2,6 +2,7 @@ package ink.whi.service.article.repo.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
@@ -27,9 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author: qing
@@ -148,5 +147,27 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
     public List<YearArticleDTO> listYearArticleByUserId(Long userId) {
         return baseMapper.listYearArticleByUserId(userId);
+    }
+
+    /**
+     * 根据分类+标签查询文章，并按阅读数排序
+     * @param categoryId
+     * @param tagIds
+     * @param page
+     * @return
+     */
+    public List<ArticleDO> listRelatedArticlesOrderByReadCount(Long categoryId, List<Long> tagIds, PageParam page) {
+        List<ReadCountDO> readCount = baseMapper.listArticleByCategoryAndTags(categoryId, tagIds, page);
+        if (CollectionUtils.isEmpty(readCount)) {
+            return Collections.emptyList();
+        }
+        List<Long> articleIds = readCount.stream().map(ReadCountDO::getDocumentId).toList();
+        List<ArticleDO> article = baseMapper.selectBatchIds(articleIds);
+        article.sort((o1, o2) -> {
+            int i = articleIds.indexOf(o1.getId());
+            int j = articleIds.indexOf(o2.getId());
+            return Integer.compare(i, j);
+        });
+        return article;
     }
 }

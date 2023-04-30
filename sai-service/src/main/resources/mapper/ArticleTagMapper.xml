@@ -3,7 +3,7 @@
 <mapper namespace="ink.whi.service.article.repo.mapper.ArticleTagMapper">
 
     <select id="listArticleTagDetails" resultType="ink.whi.api.model.vo.article.dto.TagDTO">
-        select a.article_id as articleId, a.tag_id as tagId, t.tag_name as tag
+        select a.tag_id as tagId, t.tag_name as tag
         from article_tag as a
                  left join tag as t on a.tag_id = t.id
         where a.article_id = #{articleId}
