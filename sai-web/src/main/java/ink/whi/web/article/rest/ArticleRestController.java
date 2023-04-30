@@ -7,6 +7,7 @@ import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.api.model.vo.article.rep.ArticlePostReq;
 import ink.whi.api.model.vo.notify.NotifyMsgEvent;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
@@ -17,16 +18,14 @@ import ink.whi.core.utils.NumUtil;
 import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
+import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.service.comment.service.CommentReadService;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.article.vo.ArticleDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 
 import java.util.List;
@@ -43,6 +42,9 @@ public class ArticleRestController {
 
     @Autowired
     private ArticleReadService articleReadService;
+
+    @Autowired
+    private ArticleWriteService articleWriteService;
 
     @Autowired
     private UserService userService;
@@ -111,5 +113,12 @@ public class ArticleRestController {
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
         Optional.ofNullable(notifyType).ifPresent(s -> SpringUtil.publishEvent(new NotifyMsgEvent<UserFootDO>(this, s, foot)));
         return ResVo.ok(true);
+    }
+
+    @Permission(role = UserRole.LOGIN)
+    @PostMapping(path = "post")
+    public ResVo<Long> post(@RequestBody ArticlePostReq articlePostReq) {
+        Long articleId = articleWriteService.saveArticle(articlePostReq);
+        return ResVo.ok(articleId);
     }
 }

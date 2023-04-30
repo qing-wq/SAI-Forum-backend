@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.beust.ah.A;
 import com.google.common.collect.Maps;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
@@ -169,5 +170,10 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
             return Integer.compare(i, j);
         });
         return article;
+    }
+
+    public void saveArticleContent(Long articleId, String content) {
+        ArticleDetailDO detail = ArticleDetailDO.builder().articleId(articleId).content(content).version(1L).deleted(YesOrNoEnum.NO.getCode()).build();
+        articleDetailMapper.insert(detail);
     }
 }

@@ -9,7 +9,9 @@ import ink.whi.service.article.repo.entity.TagDO;
 import ink.whi.service.article.repo.mapper.ArticleTagMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author: qing
@@ -30,5 +32,17 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
         return lambdaQuery().eq(ArticleTagDO::getArticleId, articleId)
                 .eq(ArticleTagDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .list();
+    }
+
+    public void saveBatch(Long articleId, Set<Long> tagIds) {
+        List<ArticleTagDO> list = new ArrayList<>(tagIds.size());
+        tagIds.forEach(s -> {
+            ArticleTagDO tag = new ArticleTagDO();
+            tag.setArticleId(articleId);
+            tag.setTagId(s);
+            tag.setDeleted(YesOrNoEnum.NO.getCode());
+            list.add(tag);
+        });
+        saveBatch(list);
     }
 }

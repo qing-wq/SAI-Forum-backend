@@ -2,17 +2,23 @@ package ink.whi.service.article.repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Tolerate;
 
 /**
  * @author: qing
  * @Date: 2023/4/26
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = true)
 @TableName("article_detail")
 public class ArticleDetailDO extends BaseDO {
+
+    @Tolerate
+    public ArticleDetailDO() {}
 
     private static final long serialVersionUID = 1L;
 
