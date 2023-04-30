@@ -31,6 +31,11 @@
           AND f.document_user_id = #{userId}
     </select>
     <select id="listPraiseUserByArticleId" resultType="ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO">
-        select
+        select u.id as userId,
+               u.user_name as name,
+               u.photo as avatar,
+               u.profile as profile
+        from user_foot f
+        left join user_info u on u.id = f.user_id
     </select>
 </mapper>
