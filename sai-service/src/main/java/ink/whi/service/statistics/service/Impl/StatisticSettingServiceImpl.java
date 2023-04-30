@@ -19,12 +19,15 @@ public class StatisticSettingServiceImpl implements StatisticSettingService {
     private RequestCountDao requestCountDao;
 
     @Override
-    public void saveRequestCount(String ip) {
+    public void saveRequestCount(String host) {
         Date date = Date.valueOf(LocalDate.now());
-        RequestCountDO requestCount = requestCountDao.getRequestCount(ip, date);
+        RequestCountDO requestCount = requestCountDao.getRequestCount(host, date);
         if (requestCount == null) {
             // 请求不存在，保存新纪录
-            RequestCountDO request = RequestCountDO.builder().host(ip).cnt(1).date(date).build();
+            RequestCountDO request = new RequestCountDO();
+            request.setHost(host);
+            request.setDate(date);
+            request.setCnt(1);
             requestCountDao.save(request);
         } else {
             requestCount.setCnt(requestCount.getCnt() + 1);

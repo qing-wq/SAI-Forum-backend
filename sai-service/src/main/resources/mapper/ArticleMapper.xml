@@ -25,7 +25,7 @@
         where a.category_id = #{categoryId}
         and r.document_type = ${@ink.whi.api.model.enums.DocumentTypeEnum@ARTICLE.code}
         and a.status = ${@ink.whi.api.model.enums.PushStatusEnum@ONLINE.code}
-        and a.deleted = ${@ink.whi.api.model.enums.YesOrNotEnum@NO.code}
+        and a.deleted = ${@ink.whi.api.model.enums.YesOrNoEnum@NO.code}
         and t.tag_id in
         <if test="tagIds != null and tagIds.size > 0">
             <foreach collection="tagIds" item="tagId" open="(" close=")" separator=",">

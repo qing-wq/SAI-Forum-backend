@@ -16,11 +16,11 @@ public class RequestCountDao extends ServiceImpl<RequestCountMapper, RequestCoun
 
     /**
      * 根据ip和日期查询请求
-     * @param ip
+     * @param host
      * @param date
      */
-    public RequestCountDO getRequestCount(String ip, Date date) {
-        return lambdaQuery().eq(RequestCountDO::getHost, ip)
+    public RequestCountDO getRequestCount(String host, Date date) {
+        return lambdaQuery().eq(RequestCountDO::getHost, host)
                 .eq(RequestCountDO::getDate, date)
                 .one();
     }
