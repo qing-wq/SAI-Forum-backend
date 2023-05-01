@@ -11,7 +11,7 @@ import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleWriteService;
-import ink.whi.service.article.service.ImageService;
+import ink.whi.core.image.service.ImageService;
 import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,8 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Override
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
-        String content = imageService.mdImgReplace(articlePostReq.getContent());
+        String content = articlePostReq.getContent();
+        // todo: 上传图片
         if (NumUtil.upZero(article.getId())) {
             return insertArticle(article, content, articlePostReq.getTagIds());
         } else {

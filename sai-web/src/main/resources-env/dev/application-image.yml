@@ -1,0 +1,20 @@
+image:
+  abs-tmp-path: /tmp/storage/
+  web-img-path: /forum/image/
+  tmp-upload-path: /tmp/forum/
+  cdn-host:
+  oss:
+    type: local
+    prefix:
+    endpoint:
+    ak:
+    sk:
+    bucket:
+    host:
+
+spring:
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+        - file:${image.abs-tmp-path}

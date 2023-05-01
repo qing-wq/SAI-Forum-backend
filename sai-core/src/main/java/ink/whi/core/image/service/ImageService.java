@@ -1,4 +1,4 @@
-package ink.whi.service.article.service;
+package ink.whi.core.image.service;
 
 /**
  * @author: qing
@@ -6,4 +6,6 @@ package ink.whi.service.article.service;
  */
 public interface ImageService {
     String mdImgReplace(String content);
+
+    String saveImg(String img);
 }

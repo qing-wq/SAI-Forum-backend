@@ -106,7 +106,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     }
 
     /**
-     * 查询文章总信息
+     * 查询文章总信息，用于文章详情页文章信息展示
      * @param articleId
      * @param readUser
      * @return
@@ -140,7 +140,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     }
 
     /**
-     * 查询文章详细信息
+     * 查询文章详细信息，主要用于文章列表展示信息
      * @param articleId
      * @return
      */
