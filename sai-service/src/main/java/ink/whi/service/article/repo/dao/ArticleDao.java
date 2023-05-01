@@ -41,7 +41,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     @Resource
     private ArticleDetailMapper articleDetailMapper;
 
-    @Autowired
+    @Resource
     private ReadCountMapper readCountMapper;
 
     @Autowired
@@ -175,5 +175,23 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     public void saveArticleContent(Long articleId, String content) {
         ArticleDetailDO detail = ArticleDetailDO.builder().articleId(articleId).content(content).version(1L).deleted(YesOrNoEnum.NO.getCode()).build();
         articleDetailMapper.insert(detail);
+    }
+
+    /**
+     * 若文章处于审核状态，则直接更新上一条记录；否则新插入一条记录
+     * 即对于审核之前的内容不保存历史版本，上线后的文章保存历史版本
+     * @param articleId
+     * @param content
+     * @param review
+     */
+    public void updateArticleContent(Long articleId, String content, boolean review) {
+        if (review) {
+            articleDetailMapper.updateContent(articleId, content);
+        } else {
+            ArticleDetailDO detail = articleHelper.findLatestDetail(articleId);
+            detail.setVersion(detail.getVersion() + 1);
+            detail.setContent(content);
+            articleDetailMapper.insert(detail);
+        }
     }
 }

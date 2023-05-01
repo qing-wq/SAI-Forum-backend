@@ -5,4 +5,5 @@ package ink.whi.service.article.service;
  * @Date: 2023/5/1
  */
 public interface ImageService {
+    String mdImgReplace(String content);
 }

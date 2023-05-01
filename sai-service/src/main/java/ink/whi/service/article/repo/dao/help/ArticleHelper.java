@@ -14,6 +14,8 @@ import ink.whi.service.article.repo.mapper.ArticleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 /**
  * @author: qing
  * @Date: 2023/4/28
@@ -21,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleHelper {
 
-    @Autowired
+    @Resource
     private ArticleDetailMapper articleDetailMapper;
 
     public boolean showReviewContent(ArticleDO article) {

@@ -9,15 +9,13 @@ import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
-import ink.whi.service.article.repo.dao.ReadCountDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
-import ink.whi.service.article.repo.entity.ReadCountDO;
 import ink.whi.service.article.service.ArticleWriteService;
+import ink.whi.service.article.service.ImageService;
 import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 import java.util.Set;
 
 /**
@@ -34,7 +32,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     private ArticleTagDao articleTagDao;
 
     @Autowired
-    private ReadCountDao readCountDao;
+    private ImageService imageService;
 
     @Autowired
     private UserFootService userFootService;
@@ -42,17 +40,13 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Override
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
-
+        String content = imageService.mdImgReplace(articlePostReq.getContent());
         if (NumUtil.upZero(article.getId())) {
-            return insertArticle(article, articlePostReq.getContent(), articlePostReq.getTagIds());
+            return insertArticle(article, content, articlePostReq.getTagIds());
         } else {
-            updateArticle(article);
+            updateArticle(article, content, articlePostReq.getTagIds());
             return article.getId();
         }
-    }
-
-    private void updateArticle(ArticleDO article) {
-
     }
 
     private Long insertArticle(ArticleDO article, String content, Set<Long> tagIds) {
@@ -74,4 +68,20 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         // todo: 发布事件
         return articleId;
     }
+
+    private void updateArticle(ArticleDO article, String content, Set<Long> tagIds) {
+        // 若文章处于审核状态，则直接更新上一条记录；否则新插入一条记录
+        boolean review = article.getStatus().equals(PushStatusEnum.REVIEW.getCode());
+        // todo：增加白名单
+        article.setStatus(PushStatusEnum.REVIEW.getCode());
+        articleDao.updateById(article);
+        Long articleId = article.getId();
+
+        articleDao.updateArticleContent(articleId, content, review);
+        articleTagDao.updateTags(articleId, tagIds);
+
+        article.setStatus(PushStatusEnum.REVIEW.getCode());
+        articleDao.updateById(article);
+    }
+
 }

@@ -1,6 +1,8 @@
 package ink.whi.service.article.repo.dao;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ink.whi.api.model.base.BaseDO;
 import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagDTO;
@@ -44,5 +46,24 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
             list.add(tag);
         });
         saveBatch(list);
+    }
+
+    public void updateTags(Long articleId, Set<Long> newTags) {
+        List<ArticleTagDO> oldTags = listArticleTags(articleId);
+        List<ArticleTagDO> delete = new ArrayList<>();
+        oldTags.forEach(s -> {
+            if (newTags.contains(s.getTagId())) {
+                newTags.remove(s.getTagId());
+            } else {
+                delete.add(s);
+            }
+        });
+        if (CollectionUtils.isEmpty(newTags)) {
+            saveBatch(articleId, newTags);
+        }
+        if (CollectionUtils.isEmpty(delete)) {
+            List<Long> ids = delete.stream().map(BaseDO::getId).toList();
+            baseMapper.deleteBatchIds(ids);
+        }
     }
 }
