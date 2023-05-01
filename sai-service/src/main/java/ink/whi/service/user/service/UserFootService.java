@@ -2,6 +2,7 @@ package ink.whi.service.user.service;
 
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
+import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserFootDO;
 
@@ -17,4 +18,8 @@ public interface UserFootService {
     UserFootDO queryUserFoot(Long commentId, Integer code, Long userId);
 
     List<SimpleUserInfoDTO> queryArticlePraisedUsers(Long articleId);
+
+    List<Long> queryUserReadArticleList(Long userId, PageParam pageParam);
+
+    List<Long> queryUserCollectionArticleList(Long userId, PageParam pageParam);
 }

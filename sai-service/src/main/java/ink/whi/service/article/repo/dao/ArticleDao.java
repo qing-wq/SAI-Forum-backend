@@ -194,4 +194,17 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
             articleDetailMapper.insert(detail);
         }
     }
+
+    public List<ArticleDO> listArticlesByUserId(Long userId, PageParam pageParam) {
+        LambdaQueryWrapper<ArticleDO> query = Wrappers.lambdaQuery();
+        query.eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .eq(ArticleDO::getUserId, userId)
+                .last(PageParam.getLimitSql(pageParam))
+                .orderByDesc(ArticleDO::getId);
+        if (!Objects.equals(ReqInfoContext.getReqInfo().getUserId(), userId)) {
+            // 作者本人，可以查看草稿、审核、上线文章；其他用户，只能查看上线的文章
+            query.eq(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode());
+        }
+        return baseMapper.selectList(query);
+    }
 }

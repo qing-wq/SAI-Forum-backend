@@ -31,8 +31,8 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Autowired
     private ArticleTagDao articleTagDao;
 
-    @Autowired
-    private ImageService imageService;
+//    @Autowired
+//    private ImageService imageService;
 
     @Autowired
     private UserFootService userFootService;

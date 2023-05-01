@@ -1,5 +1,6 @@
 package ink.whi.service.article.service;
 
+import ink.whi.api.model.enums.HomeSelectEnum;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
@@ -34,4 +35,6 @@ public interface ArticleReadService {
     PageListVo<ArticleDTO> queryRecommendArticle(Long articleId, PageParam pageParam);
 
     ArticleDTO queryDetailArticleInfo(Long articleId);
+
+    PageListVo<ArticleDTO> queryArticlesByUserAndType(Long userId, PageParam pageParam, HomeSelectEnum select);
 }

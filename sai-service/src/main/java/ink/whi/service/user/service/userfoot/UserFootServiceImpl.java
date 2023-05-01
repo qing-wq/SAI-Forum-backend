@@ -2,6 +2,7 @@ package ink.whi.service.user.service.userfoot;
 
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
+import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.dao.UserFootDao;
 import ink.whi.service.user.repo.entity.UserFootDO;
@@ -24,6 +25,15 @@ public class UserFootServiceImpl implements UserFootService {
     @Autowired
     private UserFootDao userFootDao;
 
+    /**
+     * 保存/更新用户足迹
+     * @param type
+     * @param articleId
+     * @param author
+     * @param readUser
+     * @param operateTypeEnum
+     * @return
+     */
     @Override
     public UserFootDO saveOrUpdateUserFoot(DocumentTypeEnum type, Long articleId, Long author, Long readUser, OperateTypeEnum operateTypeEnum) {
         UserFootDO record = userFootDao.getRecordByDocumentAndUserId(type, articleId, readUser);
@@ -55,6 +65,28 @@ public class UserFootServiceImpl implements UserFootService {
     @Override
     public List<SimpleUserInfoDTO> queryArticlePraisedUsers(Long articleId) {
         return userFootDao.listPraiseUserByArticleId(articleId);
+    }
+
+    /**
+     * 查询用户浏览记录
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    @Override
+    public List<Long> queryUserReadArticleList(Long userId, PageParam pageParam) {
+        return userFootDao.listReadArticleByUserId(userId, pageParam);
+    }
+
+    /**
+     * 查询用户收藏记录
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    @Override
+    public List<Long> queryUserCollectionArticleList(Long userId, PageParam pageParam) {
+        return userFootDao.listCollectedArticlesByUserId(userId, pageParam);
     }
 
     private boolean setUserFootStat(UserFootDO userFootDO, OperateTypeEnum operate) {

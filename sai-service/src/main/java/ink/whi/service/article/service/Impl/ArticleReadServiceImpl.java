@@ -20,10 +20,9 @@ import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -157,6 +156,54 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         // 标签信息
         article.setTags(articleTagDao.listArticleTagsDetail(articleId));
         return article;
+    }
+
+    /**
+     * 查询用户主页展示文章
+     * @param userId
+     * @param pageParam
+     * @param select 用户选择标签
+     * @return
+     */
+    @Override
+    public PageListVo<ArticleDTO> queryArticlesByUserAndType(Long userId, PageParam pageParam, HomeSelectEnum select) {
+        List<ArticleDO> records = null;
+        if (select == HomeSelectEnum.ARTICLE) {
+            // 用户的文章列表
+            records = articleDao.listArticlesByUserId(userId, pageParam);
+        } else if (select == HomeSelectEnum.READ) {
+            // 用户的阅读记录
+            List<Long> articleIds = userFootService.queryUserReadArticleList(userId, pageParam);
+            records = CollectionUtils.isEmpty(articleIds) ? Collections.emptyList() : articleDao.listByIds(articleIds);
+            records = sortByIds(articleIds, records);
+        } else if (select == HomeSelectEnum.COLLECTION) {
+            // 用户的收藏列表
+            List<Long> articleIds = userFootService.queryUserCollectionArticleList(userId, pageParam);
+            records = CollectionUtils.isEmpty(articleIds) ? Collections.emptyList() : articleDao.listByIds(articleIds);
+            records = sortByIds(articleIds, records);
+        }
+
+        if (CollectionUtils.isEmpty(records)) {
+            return PageListVo.emptyVo();
+        }
+        return buildArticleListVo(records, pageParam.getPageSize());
+    }
+
+    /**
+     * 排序
+     *
+     * @param articleIds
+     * @param records
+     * @return
+     */
+    private List<ArticleDO> sortByIds(List<Long> articleIds, List<ArticleDO> records) {
+        List<ArticleDO> articleDOS = new ArrayList<>();
+        Map<Long, ArticleDO> articleDOMap = records.stream().collect(Collectors.toMap(ArticleDO::getId, t -> t));
+        articleIds.forEach(articleId -> {
+            ArticleDO article = articleDOMap.get(articleId);
+            Optional.ofNullable(article).ifPresent(articleDOS::add);
+        });
+        return articleDOS;
     }
 
     @Override
