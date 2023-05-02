@@ -1,4 +1,4 @@
-package ink.whi.web.user;
+package ink.whi.web.user.rest;
 
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.FollowSelectEnum;
@@ -21,10 +21,7 @@ import ink.whi.web.user.vo.UserHomeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,9 +46,16 @@ public class UserRestController {
     @Autowired
     private UserRelationService userRelationService;
 
+    /**
+     * 用户主页接口
+     * @param userId
+     * @param homeSelectType
+     * @param followSelectType
+     * @return
+     */
     @Permission(role = UserRole.LOGIN)
-    @GetMapping(path = "home")
-    public ResVo<UserHomeVo> getUserHome(@RequestParam(name = "userId") Long userId,
+    @GetMapping(path = "/{userId}")
+    public ResVo<UserHomeVo> getUserHome(@PathVariable(name = "userId") Long userId,
                              @RequestParam(name = "homeSelectType", required = false) String homeSelectType,
                              @RequestParam(name = "followSelectType", required = false) String followSelectType) {
         UserHomeVo vo = new UserHomeVo();

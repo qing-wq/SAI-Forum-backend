@@ -69,22 +69,4 @@ public class UserRelationServiceImpl implements UserRelationService {
             }
         });
     }
-
-    /**
-     * 根据登录用户从给定用户列表中，找出已关注的用户id
-     *
-     * @param userIds    主用户列表
-     * @param fansUserId 粉丝用户id
-     * @return 返回fansUserId已经关注过的用户id列表
-     */
-    public Set<Long> getFollowedUserId(List<Long> userIds, Long fansUserId) {
-        if (CollectionUtils.isEmpty(userIds)) {
-            return Collections.emptySet();
-        }
-
-        List<UserRelationDO> relationList = userRelationDao.listUserRelations(fansUserId, userIds);
-        Map<Long, UserRelationDO> relationMap = MapUtils.toMap(relationList, UserRelationDO::getUserId, r -> r);
-        return relationMap.values().stream().filter(s -> s.getFollowState().equals(FollowStateEnum.FOLLOW.getCode())).map(UserRelationDO::getUserId).collect(Collectors.toSet());
-    }
-
 }
