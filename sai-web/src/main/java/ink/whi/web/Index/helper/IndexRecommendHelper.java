@@ -1,4 +1,4 @@
-package ink.whi.web.home.helper;
+package ink.whi.web.Index.helper;
 
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.vo.PageListVo;
@@ -9,7 +9,7 @@ import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.user.service.UserService;
-import ink.whi.web.home.vo.IndexVo;
+import ink.whi.web.Index.vo.IndexVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

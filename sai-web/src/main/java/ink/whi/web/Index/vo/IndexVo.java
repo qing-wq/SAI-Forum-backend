@@ -1,10 +1,9 @@
-package ink.whi.web.home.vo;
+package ink.whi.web.Index.vo;
 
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
-import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import lombok.Data;
 
 import java.util.List;
