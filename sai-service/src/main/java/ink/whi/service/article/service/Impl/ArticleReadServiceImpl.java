@@ -7,6 +7,7 @@ import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.core.utils.MapUtils;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
@@ -198,7 +199,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
      */
     private List<ArticleDO> sortByIds(List<Long> articleIds, List<ArticleDO> records) {
         List<ArticleDO> articleDOS = new ArrayList<>();
-        Map<Long, ArticleDO> articleDOMap = records.stream().collect(Collectors.toMap(ArticleDO::getId, t -> t));
+        Map<Long, ArticleDO> articleDOMap = MapUtils.toMap(articleDOS, ArticleDO::getId, r -> r);
         articleIds.forEach(articleId -> {
             ArticleDO article = articleDOMap.get(articleId);
             Optional.ofNullable(article).ifPresent(articleDOS::add);

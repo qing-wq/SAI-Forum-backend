@@ -25,6 +25,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     // fixme: 本地缓存，如果改为分布式会有问题
+    // key-categoryId value-dto
     private LoadingCache<Long, CategoryDTO> categoryCaches;
 
     private CategoryDao categoryDao;

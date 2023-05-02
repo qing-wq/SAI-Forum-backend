@@ -115,6 +115,11 @@ public class ArticleRestController {
         return ResVo.ok(true);
     }
 
+    /**
+     * 文章发布接口
+     * @param articlePostReq
+     * @return
+     */
     @Permission(role = UserRole.LOGIN)
     @PostMapping(path = "post")
     public ResVo<Long> post(@RequestBody ArticlePostReq articlePostReq) {

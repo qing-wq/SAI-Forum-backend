@@ -15,6 +15,9 @@ import ink.whi.core.image.service.ImageService;
 import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Set;
 
@@ -31,8 +34,10 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Autowired
     private ArticleTagDao articleTagDao;
 
-//    @Autowired
-//    private ImageService imageService;
+    @Autowired
+    private ImageService imageService;
+
+    private TransactionTemplate transactionTemplate;
 
     @Autowired
     private UserFootService userFootService;
@@ -40,14 +45,19 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Override
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
-        String content = articlePostReq.getContent();
-        // todo: 上传图片
-        if (NumUtil.upZero(article.getId())) {
-            return insertArticle(article, content, articlePostReq.getTagIds());
-        } else {
-            updateArticle(article, content, articlePostReq.getTagIds());
-            return article.getId();
-        }
+        String content = imageService.mdImgReplace(articlePostReq.getContent());
+        return transactionTemplate.execute(new TransactionCallback<Long>() {
+            //  article + article_detail + tag 三张表
+            @Override
+            public Long doInTransaction(TransactionStatus status) {
+                if (NumUtil.upZero(article.getId())) {
+                    return insertArticle(article, content, articlePostReq.getTagIds());
+                } else {
+                    updateArticle(article, content, articlePostReq.getTagIds());
+                    return article.getId();
+                }
+            }
+        });
     }
 
     private Long insertArticle(ArticleDO article, String content, Set<Long> tagIds) {

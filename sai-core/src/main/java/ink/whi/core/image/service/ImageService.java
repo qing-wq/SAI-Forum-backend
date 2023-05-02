@@ -1,7 +1,6 @@
 package ink.whi.core.image.service;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * @author: qing
@@ -11,5 +10,10 @@ import org.springframework.stereotype.Service;
 public interface ImageService {
     String mdImgReplace(String content);
 
+    /**
+     * 转存图片
+     * @param img
+     * @return
+     */
     String saveImg(String img);
 }
