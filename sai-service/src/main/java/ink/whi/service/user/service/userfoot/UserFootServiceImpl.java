@@ -4,12 +4,14 @@ import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
+import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.user.repo.dao.UserFootDao;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -30,16 +32,16 @@ public class UserFootServiceImpl implements UserFootService {
      * @param type
      * @param articleId
      * @param author
-     * @param readUser
+     * @param userId
      * @param operateTypeEnum
      * @return
      */
     @Override
-    public UserFootDO saveOrUpdateUserFoot(DocumentTypeEnum type, Long articleId, Long author, Long readUser, OperateTypeEnum operateTypeEnum) {
-        UserFootDO record = userFootDao.getRecordByDocumentAndUserId(type, articleId, readUser);
+    public UserFootDO saveOrUpdateUserFoot(DocumentTypeEnum type, Long articleId, Long author, Long userId, OperateTypeEnum operateTypeEnum) {
+        UserFootDO record = userFootDao.getRecordByDocumentAndUserId(type, articleId,  userId);
         if (record == null) {
             record = new UserFootDO();
-            record.setUserId(readUser);
+            record.setUserId(userId);
             record.setDocumentId(articleId);
             record.setDocumentType(type.getCode());
             record.setDocumentUserId(author);
@@ -87,6 +89,15 @@ public class UserFootServiceImpl implements UserFootService {
     @Override
     public List<Long> queryUserCollectionArticleList(Long userId, PageParam pageParam) {
         return userFootDao.listCollectedArticlesByUserId(userId, pageParam);
+    }
+
+    @Override
+    public void saveCommentFoot(CommentDO comment, Long userId, Long parentCommentId) {
+        // 文章已评 + 父评论已评
+        saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, comment.getArticleId(), userId, comment.getUserId(), OperateTypeEnum.COMMENT);
+        if (parentCommentId != null) {
+            saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, comment.getArticleId(), parentCommentId, comment.getUserId(), OperateTypeEnum.COMMENT);
+        }
     }
 
     private boolean setUserFootStat(UserFootDO userFootDO, OperateTypeEnum operate) {

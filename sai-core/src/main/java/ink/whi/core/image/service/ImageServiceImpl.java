@@ -73,8 +73,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String saveImg(HttpServletRequest request) {
         MultipartFile file = null;
-        if (request instanceof MultipartHttpServletRequest) {
-            MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
+        if (request instanceof MultipartHttpServletRequest req) {
             file = req.getFile("image");
         }
         if (file == null) {

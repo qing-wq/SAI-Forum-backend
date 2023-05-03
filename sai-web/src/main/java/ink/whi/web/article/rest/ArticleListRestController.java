@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 文章列表接口、分页查询接口
+ * 文章列表接口
  * @author: qing
  * @Date: 2023/4/29
  */

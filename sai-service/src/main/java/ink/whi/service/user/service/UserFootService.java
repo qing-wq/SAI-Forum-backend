@@ -4,6 +4,7 @@ import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
+import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.user.repo.entity.UserFootDO;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface UserFootService {
     List<Long> queryUserReadArticleList(Long userId, PageParam pageParam);
 
     List<Long> queryUserCollectionArticleList(Long userId, PageParam pageParam);
+
+    void saveCommentFoot(CommentDO comment, Long userId, Long parentCommentId);
 }
