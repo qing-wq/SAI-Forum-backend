@@ -92,11 +92,11 @@ public class UserFootServiceImpl implements UserFootService {
     }
 
     @Override
-    public void saveCommentFoot(CommentDO comment, Long userId, Long parentCommentId) {
+    public void saveCommentFoot(CommentDO comment, Long userId, Long parentCommentUser) {
         // 文章已评 + 父评论已评
         saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, comment.getArticleId(), userId, comment.getUserId(), OperateTypeEnum.COMMENT);
-        if (parentCommentId != null) {
-            saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, comment.getArticleId(), parentCommentId, comment.getUserId(), OperateTypeEnum.COMMENT);
+        if (parentCommentUser != null && comment.getParentCommentId() != 0) {
+            saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, comment.getParentCommentId(), parentCommentUser, comment.getUserId(), OperateTypeEnum.COMMENT);
         }
     }
 

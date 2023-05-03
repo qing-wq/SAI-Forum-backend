@@ -1,27 +1,37 @@
 package ink.whi.web.comment.rest;
 
 import ink.whi.api.model.context.ReqInfoContext;
+import ink.whi.api.model.enums.DocumentTypeEnum;
+import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.comment.CommentSaveReq;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
+import ink.whi.api.model.vo.notify.NotifyMsgEvent;
+import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
+import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
+import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.comment.service.CommentReadService;
 import ink.whi.service.comment.service.CommentWriteService;
+import ink.whi.service.user.repo.entity.UserFootDO;
+import ink.whi.service.user.service.UserFootService;
 import ink.whi.web.article.vo.ArticleDetailVo;
 import ink.whi.web.base.BaseRestController;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 评论接口
@@ -41,6 +51,9 @@ public class CommentRestController extends BaseRestController {
 
     @Autowired
     private ArticleReadService articleReadService;
+
+    @Autowired
+    private UserFootService userFootService;
 
     /**
      * 评论列表分页接口
@@ -82,5 +95,30 @@ public class CommentRestController extends BaseRestController {
         List<TopCommentDTO> comments = commentReadService.getArticleComments(req.getArticleId(), PageParam.newPageInstance());
         vo.setComments(comments);
         return ResVo.ok(vo);
+    }
+
+    /**
+     * 评论点赞、取消点赞等操作
+     * @param commentId
+     * @param operateType
+     * @return
+     */
+    @Permission(role = UserRole.LOGIN)
+    @GetMapping(path = "favor")
+    public ResVo<String> favor(@RequestParam(name = "commentId") Long commentId,
+                               @RequestParam(name = "type") Integer operateType) {
+        CommentDO comment = commentReadService.queryComment(commentId);
+        if (comment == null) {
+            return ResVo.fail(StatusEnum.COMMENT_NOT_EXISTS, "评论不存在：" + commentId);
+        }
+
+        OperateTypeEnum type = OperateTypeEnum.fromCode(operateType);
+        if (type == null) {
+            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "操作非法: " + operateType);
+        }
+        UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, commentId, comment.getUserId(), ReqInfoContext.getReqInfo().getUserId(), type);
+        NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
+        Optional.ofNullable(notifyType).ifPresent(s -> SpringUtil.publishEvent(new NotifyMsgEvent<>(this, notifyType, foot)));
+        return ResVo.ok("ok");
     }
 }

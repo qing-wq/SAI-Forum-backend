@@ -45,7 +45,11 @@ public class AdminLoginController{
         BaseUserInfoDTO info = userSettingService.passwordLogin(username, password);
         // 签发token
         String token = JwtUtil.createToken(info.getUserId());
-        response.addCookie(new Cookie(SessionService.SESSION_KEY, token));
-        return ResVo.ok(info);
+        if (StringUtils.isNotBlank(token)) {
+            response.addCookie(new Cookie(SessionService.SESSION_KEY, token));
+            return ResVo.ok(info);
+        } else {
+            return ResVo.fail(StatusEnum.LOGIN_FAILED_MIXED, "登录失败，请重试");
+        }
     }
 }

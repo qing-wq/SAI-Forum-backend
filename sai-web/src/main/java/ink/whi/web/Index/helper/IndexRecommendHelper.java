@@ -1,5 +1,6 @@
 package ink.whi.web.Index.helper;
 
+import com.mysql.cj.log.Log;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
@@ -86,6 +87,7 @@ public class IndexRecommendHelper {
 
     /**
      * 用户信息
+     *
      * @return
      */
     private BaseUserInfoDTO userInfo() {

@@ -75,6 +75,11 @@ public class CommentReadServiceImpl implements CommentReadService {
         return result;
     }
 
+    @Override
+    public CommentDO queryComment(Long commentId) {
+        return commentDao.getById(commentId);
+    }
+
     /**
      * 构建父子评论关系
      */

@@ -20,7 +20,6 @@ import ink.whi.service.user.service.UserService;
 import ink.whi.web.user.vo.UserHomeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 用户接口
  * @author: qing
  * @Date: 2023/5/1
  */
@@ -49,8 +49,8 @@ public class UserRestController {
     /**
      * 用户主页接口
      * @param userId
-     * @param homeSelectType
-     * @param followSelectType
+     * @param homeSelectType 主页选择标签
+     * @param followSelectType 关注列选择标签
      * @return
      */
     @Permission(role = UserRole.LOGIN)
