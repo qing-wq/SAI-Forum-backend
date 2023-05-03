@@ -11,10 +11,7 @@ import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagSelectDTO;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
-import ink.whi.core.permission.Permission;
-import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.service.ArticleReadService;
-import ink.whi.service.user.repo.dao.UserRelationDao;
 import ink.whi.service.user.service.UserRelationService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.user.vo.UserHomeVo;
@@ -53,7 +50,7 @@ public class UserRestController {
      * @param followSelectType 关注列选择标签
      * @return
      */
-    @Permission(role = UserRole.LOGIN)
+//    @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "/{userId}")
     public ResVo<UserHomeVo> getUserHome(@PathVariable(name = "userId") Long userId,
                              @RequestParam(name = "homeSelectType", required = false) String homeSelectType,
