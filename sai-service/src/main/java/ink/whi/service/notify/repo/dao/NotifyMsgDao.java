@@ -24,4 +24,16 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .eq(NotifyMsgDO::getState, statEnum.getStat())
                 .count().intValue();
     }
+
+    /**
+     * 查询消息记录，用于幂等校验
+     * @param notify
+     * @return
+     */
+    public NotifyMsgDO getByUserIdRelatedIdAndType(NotifyMsgDO notify) {
+        return lambdaQuery().eq(NotifyMsgDO::getNotifyUserId, notify.getNotifyUserId())
+                .eq(NotifyMsgDO::getRelatedId, notify.getRelatedId())
+                .eq(NotifyMsgDO::getType, notify.getType())
+                .one();
+    }
 }

@@ -3,18 +3,25 @@ package ink.whi.service.notify.repo.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.experimental.Tolerate;
 
 /**
  * @author: qing
  * @Date: 2023/4/27
  */
 @Data
+@Builder
 @Accessors(chain = true)
 @TableName("notify_msg")
 public class NotifyMsgDO extends BaseDO {
     private static final long serialVersionUID = -4043774744889659100L;
+
+//    @Tolerate
+    public NotifyMsgDO() {
+    }
 
     /**
      * 消息关联的主体
