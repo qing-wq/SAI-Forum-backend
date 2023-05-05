@@ -7,7 +7,8 @@ import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
-import ink.whi.api.model.vo.article.rep.ArticlePostReq;
+import ink.whi.api.model.vo.article.dto.CategoryDTO;
+import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.api.model.vo.notify.NotifyMsgEvent;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
@@ -18,12 +19,14 @@ import ink.whi.core.utils.NumUtil;
 import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
-import ink.whi.service.article.service.ArticleWriteService;
+import ink.whi.service.article.service.CategoryService;
+import ink.whi.service.article.service.TagService;
 import ink.whi.service.comment.service.CommentReadService;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.article.vo.ArticleDetailVo;
+import ink.whi.web.base.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
@@ -38,13 +41,14 @@ import java.util.Optional;
  * @Date: 2023/4/28
  */
 @RestController
-public class ArticleRestController {
+@RequestMapping(path = "article")
+public class ArticleRestController extends BaseRestController {
 
     @Autowired
     private ArticleReadService articleReadService;
 
     @Autowired
-    private ArticleWriteService articleWriteService;
+    private TagService tagService;
 
     @Autowired
     private UserService userService;
@@ -54,6 +58,9 @@ public class ArticleRestController {
 
     @Autowired
     private CommentReadService commentReadService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * 文章详情接口
@@ -116,14 +123,26 @@ public class ArticleRestController {
     }
 
     /**
-     * 文章发布接口
-     * @param articlePostReq
+     * 查询所有分类
      * @return
      */
-    @Permission(role = UserRole.LOGIN)
-    @PostMapping(path = "post")
-    public ResVo<Long> post(@RequestBody ArticlePostReq articlePostReq) {
-        Long articleId = articleWriteService.saveArticle(articlePostReq);
-        return ResVo.ok(articleId);
+    @GetMapping(path = "category")
+    public ResVo<List<CategoryDTO>> listCategory() {
+        List<CategoryDTO> list = categoryService.loadAllCategories();
+        return ResVo.ok(list);
+    }
+
+    /**
+     * 查询所有标签
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping(path = "tags")
+    public ResVo<List<TagDTO>> listTags(@RequestParam(name = "page") Long pageNum,
+                                        @RequestParam(name = "pageSize", required = false) Long pageSize) {
+        PageParam pageParam = buildPageParam(pageNum, pageSize);
+        List<TagDTO> list = tagService.queryTagsList(pageParam);
+        return ResVo.ok(list);
     }
 }

@@ -1,6 +1,22 @@
 package ink.whi.web.article.rest;
 
-import org.springframework.web.bind.annotation.RestController;
+import ink.whi.api.model.context.ReqInfoContext;
+import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.vo.ResVo;
+import ink.whi.api.model.vo.article.dto.CategoryDTO;
+import ink.whi.api.model.vo.article.rep.ArticlePostReq;
+import ink.whi.core.permission.Permission;
+import ink.whi.core.permission.UserRole;
+import ink.whi.service.article.repo.entity.ArticleDO;
+import ink.whi.service.article.service.ArticleReadService;
+import ink.whi.service.article.service.ArticleWriteService;
+import ink.whi.service.article.service.CategoryService;
+import io.netty.util.internal.ObjectUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 文章增删改接口
@@ -8,5 +24,32 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2023/4/28
  */
 @RestController
+@RequestMapping(path = "article/api")
 public class ArticleWriteRestController {
+
+    @Autowired
+    private ArticleWriteService articleWriteService;
+
+    /**
+     * 文章发布或更新接口
+     * @param articlePostReq
+     * @return
+     */
+    @Permission(role = UserRole.LOGIN)
+    @PostMapping(path = "post")
+    public ResVo<Long> post(@RequestBody ArticlePostReq articlePostReq) {
+        Long articleId = articleWriteService.saveArticle(articlePostReq);
+        return ResVo.ok(articleId);
+    }
+
+    /**
+     * 文章删除
+     * @param articleId
+     * @return
+     */
+    @GetMapping(path = "delete/{articleId}")
+    public ResVo<String> delete(@PathVariable Long articleId) {
+        articleWriteService.deleteArticle(articleId);
+        return ResVo.ok("ok");
+    }
 }

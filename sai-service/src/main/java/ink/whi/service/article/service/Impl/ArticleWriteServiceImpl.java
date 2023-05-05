@@ -1,15 +1,16 @@
 package ink.whi.service.article.service.Impl;
 
 import ink.whi.api.model.context.ReqInfoContext;
-import ink.whi.api.model.enums.DocumentTypeEnum;
-import ink.whi.api.model.enums.OperateTypeEnum;
-import ink.whi.api.model.enums.PushStatusEnum;
+import ink.whi.api.model.enums.*;
+import ink.whi.api.model.exception.BusinessException;
+import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.rep.ArticlePostReq;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
+import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.core.image.service.ImageService;
 import ink.whi.service.user.service.UserFootService;
@@ -19,6 +20,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -42,6 +44,9 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Autowired
     private UserFootService userFootService;
 
+    @Autowired
+    private ArticleReadService articleReadService;
+
     @Override
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
@@ -53,6 +58,10 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
                 if (NumUtil.upZero(article.getId())) {
                     return insertArticle(article, content, articlePostReq.getTagIds());
                 } else {
+                    ArticleDO record = articleDao.getById(article.getId());
+                    if (!Objects.equals(record.getUserId(), article.getUserId())) {
+                        throw BusinessException.newInstance(StatusEnum.FORBID_ERROR);
+                    }
                     updateArticle(article, content, articlePostReq.getTagIds());
                     return article.getId();
                 }
@@ -95,4 +104,16 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         articleDao.updateById(article);
     }
 
+    @Override
+    public void deleteArticle(Long articleId) {
+        ArticleDO article = articleReadService.queryBasicArticle(articleId);
+        if (article == null) {
+            throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS);
+        }
+        if (!Objects.equals(article.getUserId(), ReqInfoContext.getReqInfo().getUserId())) {
+            throw BusinessException.newInstance(StatusEnum.FORBID_ERROR_MIXED, articleId);
+        }
+        article.setDeleted(YesOrNoEnum.YES.getCode());
+        articleDao.updateById(article);
+    }
 }

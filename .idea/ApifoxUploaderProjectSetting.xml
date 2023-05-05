@@ -9,6 +9,7 @@
         <option value="sai-web:2654035" />
       </array>
     </option>
+    <option name="apifoxSyncFolder" value="true" />
     <option name="yapiTokens" value="" />
   </component>
 </project>

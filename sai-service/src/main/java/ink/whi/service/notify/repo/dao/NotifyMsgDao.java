@@ -31,7 +31,8 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
      * @return
      */
     public NotifyMsgDO getByUserIdRelatedIdAndType(NotifyMsgDO notify) {
-        return lambdaQuery().eq(NotifyMsgDO::getNotifyUserId, notify.getNotifyUserId())
+        return lambdaQuery().eq(NotifyMsgDO::getOperateUserId, notify.getOperateUserId())
+                .eq(NotifyMsgDO::getNotifyUserId, notify.getNotifyUserId())
                 .eq(NotifyMsgDO::getRelatedId, notify.getRelatedId())
                 .eq(NotifyMsgDO::getType, notify.getType())
                 .one();

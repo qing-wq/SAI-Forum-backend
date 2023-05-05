@@ -10,4 +10,6 @@ import ink.whi.api.model.vo.article.rep.ArticlePostReq;
  */
 public interface ArticleWriteService {
     Long saveArticle(ArticlePostReq articlePostReq);
+
+    void deleteArticle(Long article);
 }

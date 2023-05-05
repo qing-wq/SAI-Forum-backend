@@ -3,6 +3,7 @@ package ink.whi.web.hook.listener;
 import ink.whi.api.model.vo.notify.NotifyMsgEvent;
 import ink.whi.api.model.vo.notify.enums.NotifyStatEnum;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
+import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.comment.repo.entity.CommentDO;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<T>> {
 
+    private static final Long ADMIN_ID = 0L;
     private final NotifyMsgDao notifyMsgDao;
     private final ArticleReadService articleReadService;
     private final CommentReadService commentReadService;
@@ -40,14 +42,9 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
             case COMMENT:
                 saveCommentNotify((NotifyMsgEvent<CommentDO>) msgEvent);
                 break;
-//            case DELETE_COMMENT:
-//                saveCommentNotify((NotifyMsgEvent<CommentDO>) msgEvent);
             case REPLY:
                 saveReplyNotify((NotifyMsgEvent<CommentDO>) msgEvent);
                 break;
-//            case DELETE_REPLY:
-//                removeReplyNotify((NotifyMsgEvent<CommentDO>) msgEvent);
-//                break;
             case PRAISE:
             case COLLECT:
                 saveArticleNotify((NotifyMsgEvent<UserFootDO>) msgEvent);
@@ -103,13 +100,16 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
                 .operateUserId(foot.getUserId())
                 .type(msgEvent.getNotifyType().getType())
                 .state(NotifyStatEnum.UNREAD.getStat()).build();
-        notifyMsgDao.save(notify);
+        NotifyMsgDO record = notifyMsgDao.getByUserIdRelatedIdAndType(notify);
+        if (record != null) {
+            // keypoint: 幂等过滤
+            notifyMsgDao.save(notify);
+        }
     }
 
     private void removeArticleNotify(NotifyMsgEvent<UserFootDO> msgEvent) {
         UserFootDO foot = msgEvent.getContent();
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
-                .msg("")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
                 .type(msgEvent.getNotifyType().getType()).build();
@@ -120,15 +120,45 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
     }
 
     private void saveFollowNotify(NotifyMsgEvent<UserRelationDO> msgEvent) {
-
+        UserRelationDO relation = msgEvent.getContent();
+        NotifyMsgDO msg = new NotifyMsgDO().setRelatedId(0L)
+                .setNotifyUserId(relation.getUserId())
+                .setOperateUserId(relation.getFollowUserId())
+                .setType(msgEvent.getNotifyType().getType())
+                .setState(NotifyStatEnum.UNREAD.getStat())
+                .setMsg("");
+        NotifyMsgDO record = notifyMsgDao.getByUserIdRelatedIdAndType(msg);
+        if (record == null) {
+            // 幂等过滤
+            notifyMsgDao.save(msg);
+        }
     }
 
     private void removeFollowNotify(NotifyMsgEvent<UserRelationDO> msgEvent) {
-
+        UserRelationDO relation = msgEvent.getContent();
+        NotifyMsgDO msg = new NotifyMsgDO()
+                .setRelatedId(0L)
+                .setNotifyUserId(relation.getUserId())
+                .setOperateUserId(relation.getFollowUserId())
+                .setType(msgEvent.getNotifyType().getType())
+                .setMsg("");
+        NotifyMsgDO record = notifyMsgDao.getByUserIdRelatedIdAndType(msg);
+        if (record != null) {
+            notifyMsgDao.removeById(record.getId());
+        }
     }
 
-    private void saveRegisterSystemNotify(Long content) {
-
+    private void saveRegisterSystemNotify(Long userId) {
+        NotifyMsgDO msg = new NotifyMsgDO().setRelatedId(0L)
+                .setNotifyUserId(userId)
+                .setOperateUserId(ADMIN_ID)
+                .setType(NotifyTypeEnum.REGISTER.getType())
+                .setState(NotifyStatEnum.UNREAD.getStat())
+                .setMsg(SpringUtil.getConfig("config"));
+        NotifyMsgDO record = notifyMsgDao.getByUserIdRelatedIdAndType(msg);
+        if (record == null) {
+            notifyMsgDao.save(msg);
+        }
     }
 
 }
