@@ -14,10 +14,8 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: qing
@@ -63,6 +61,11 @@ public class NotifyMsgServiceImpl implements NotifyMsgService {
     @Override
     public PageListVo<NotifyMsgDTO> queryUserNotices(Long userId, NotifyTypeEnum typeEnum, PageParam page) {
         List<NotifyMsgDTO> list = notifyMsgDao.listNotifyMsgByUserIdAndType(userId, typeEnum, page);
+        // 将消息设为已读
+        notifyMsgDao.updateNotifyMsgToRead(list);
+        // 更新全局总的消息数
+        ReqInfoContext.getReqInfo().setMsgNum(queryUserNotifyMsgCount(userId));
+        // todo：更新用户关系
         return PageListVo.newVo(list, page.getPageSize());
     }
 }

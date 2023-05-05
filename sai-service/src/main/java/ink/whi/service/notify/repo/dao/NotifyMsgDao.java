@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author: qing
@@ -89,5 +90,16 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
             map.put(type, cnt);
         });
         return map;
+    }
+
+    /**
+     * 将消息状态设置为已读
+     * @param list
+     */
+    public void updateNotifyMsgToRead(List<NotifyMsgDTO> list) {
+        List<Long> ids = list.stream().map(NotifyMsgDTO::getMsgId).toList();
+        List<NotifyMsgDO> record = listByIds(ids);
+        List<NotifyMsgDO> notify = record.stream().map(s -> s.setState(NotifyStatEnum.READ.getStat())).toList();
+        updateBatchById(notify);
     }
 }

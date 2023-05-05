@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 消息接口
  * @author: qing
  * @Date: 2023/5/5
  */
@@ -30,6 +31,11 @@ public class NoticeRestController {
     @Autowired
     private NotifyMsgService notifyService;
 
+    /**
+     * 消息列表
+     * @param type 查看的消息类型，如：评论、回复、点赞、收藏、关注消息、系统消息
+     * @return
+     */
     @GetMapping(path = {"/", "/{type}"})
     public ResVo<NoticeResVo> list(@PathVariable(name = "type", required = false) String type) {
         Long loginUserId = ReqInfoContext.getReqInfo().getUserId();
@@ -46,7 +52,6 @@ public class NoticeRestController {
 
         NoticeResVo vo = new NoticeResVo();
         vo.setList(notifyService.queryUserNotices(loginUserId, typeEnum, PageParam.newPageInstance()));
-
         vo.setSelectType(typeEnum.name().toLowerCase());
         vo.setUnreadCountMap(map);
         return ResVo.ok(vo);

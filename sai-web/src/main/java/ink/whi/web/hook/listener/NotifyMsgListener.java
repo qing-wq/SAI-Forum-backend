@@ -126,7 +126,7 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
                 .setOperateUserId(relation.getFollowUserId())
                 .setType(msgEvent.getNotifyType().getType())
                 .setState(NotifyStatEnum.UNREAD.getStat())
-                .setMsg("");
+                .setMsg("关注用户");
         NotifyMsgDO record = notifyMsgDao.getByUserIdRelatedIdAndType(msg);
         if (record == null) {
             // 幂等过滤
@@ -140,8 +140,7 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
                 .setRelatedId(0L)
                 .setNotifyUserId(relation.getUserId())
                 .setOperateUserId(relation.getFollowUserId())
-                .setType(msgEvent.getNotifyType().getType())
-                .setMsg("");
+                .setType(msgEvent.getNotifyType().getType());
         NotifyMsgDO record = notifyMsgDao.getByUserIdRelatedIdAndType(msg);
         if (record != null) {
             notifyMsgDao.removeById(record.getId());
@@ -154,7 +153,7 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
                 .setOperateUserId(ADMIN_ID)
                 .setType(NotifyTypeEnum.REGISTER.getType())
                 .setState(NotifyStatEnum.UNREAD.getStat())
-                .setMsg(SpringUtil.getConfig("config"));
+                .setMsg(SpringUtil.getConfig("msg.welcome"));
         NotifyMsgDO record = notifyMsgDao.getByUserIdRelatedIdAndType(msg);
         if (record == null) {
             notifyMsgDao.save(msg);
