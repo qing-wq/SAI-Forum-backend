@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 
 
@@ -17,8 +18,8 @@ import java.util.Date;
 @Slf4j
 @Data
 public class JwtUtil {
-    @Value("${jwt.key}")
-    private static String JWT_KEY = "JWT_KEY";
+//    @Value("${jwt.key}")
+//    private String JWT_KEY;
     private static final String TOKEN_PREFIX = "Bearer ";
     public static final String Authorization = "Authorization";
     private static final long ONE_MONTH = 30 * 24 * 60 * 60 * 1000L;
@@ -30,7 +31,7 @@ public class JwtUtil {
      * @return
      */
     public static String createToken(Long userId) {
-        Algorithm algorithm = Algorithm.HMAC256(JWT_KEY);
+        Algorithm algorithm = Algorithm.HMAC256(SpringUtil.getConfig("jwt.key"));
         return JWT.create()
                 .withSubject(Long.toString(userId))
                 .withIssuedAt(new Date(System.currentTimeMillis()))
@@ -45,7 +46,7 @@ public class JwtUtil {
      * @return userId
      */
     public static Long isVerify(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(JWT_KEY);
+        Algorithm algorithm = Algorithm.HMAC256(SpringUtil.getConfig("jwt.key"));
         String userId = JWT.require(algorithm)
                 .build()
                 .verify(token.replace(TOKEN_PREFIX, ""))
@@ -60,7 +61,7 @@ public class JwtUtil {
      * @return
      */
     public static boolean isNeedUpdate(String token) {
-        Date expiresAt = JWT.require(Algorithm.HMAC256(JWT_KEY))
+        Date expiresAt = JWT.require(Algorithm.HMAC256(SpringUtil.getConfig("jwt.key")))
                 .build()
                 .verify(token.replace(TOKEN_PREFIX, ""))
                 .getExpiresAt();

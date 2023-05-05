@@ -113,7 +113,8 @@ public class CommentRestController extends BaseRestController {
         }
 
         OperateTypeEnum type = OperateTypeEnum.fromCode(operateType);
-        if (type == null) {
+        if (type != OperateTypeEnum.PRAISE && type != OperateTypeEnum.CANCEL_PRAISE) {
+            // 评论只能进行点赞操作
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "操作非法: " + operateType);
         }
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, commentId, comment.getUserId(), ReqInfoContext.getReqInfo().getUserId(), type);

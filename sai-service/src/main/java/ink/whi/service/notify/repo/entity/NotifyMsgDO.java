@@ -19,7 +19,7 @@ import lombok.experimental.Tolerate;
 public class NotifyMsgDO extends BaseDO {
     private static final long serialVersionUID = -4043774744889659100L;
 
-//    @Tolerate
+    @Tolerate
     public NotifyMsgDO() {
     }
 
