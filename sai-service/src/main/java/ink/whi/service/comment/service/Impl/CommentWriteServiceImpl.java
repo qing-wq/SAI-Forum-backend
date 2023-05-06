@@ -1,6 +1,6 @@
 package ink.whi.service.comment.service.Impl;
 
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.comment.CommentSaveReq;
 import ink.whi.api.model.vo.notify.NotifyMsgEvent;

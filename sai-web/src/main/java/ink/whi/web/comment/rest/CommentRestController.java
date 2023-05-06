@@ -3,7 +3,7 @@ package ink.whi.web.comment.rest;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.ResVo;
@@ -15,7 +15,6 @@ import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
-import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.comment.repo.entity.CommentDO;
@@ -29,7 +28,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

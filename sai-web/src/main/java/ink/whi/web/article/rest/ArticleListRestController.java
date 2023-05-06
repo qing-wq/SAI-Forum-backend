@@ -1,12 +1,9 @@
 package ink.whi.web.article.rest;
 
-import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.PageListVo;
 import ink.whi.api.model.vo.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
-import ink.whi.service.article.repo.dao.ArticleDao;
-import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.web.base.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;

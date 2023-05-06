@@ -1,7 +1,7 @@
 package ink.whi.web.hook.interceptor;
 
 import ink.whi.api.model.context.ReqInfoContext;
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;

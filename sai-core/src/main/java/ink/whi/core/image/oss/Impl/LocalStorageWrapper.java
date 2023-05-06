@@ -1,7 +1,7 @@
 package ink.whi.core.image.oss.Impl;
 
 import com.github.hui.quick.plugin.base.file.FileWriteUtil;
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.core.config.ImageProperties;
 import ink.whi.core.image.oss.ImageUploader;

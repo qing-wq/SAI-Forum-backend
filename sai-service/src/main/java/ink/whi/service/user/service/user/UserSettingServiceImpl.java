@@ -1,6 +1,6 @@
 package ink.whi.service.user.service.user;
 
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.service.user.repo.dao.UserDao;

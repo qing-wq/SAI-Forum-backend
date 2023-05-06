@@ -1,6 +1,6 @@
 package ink.whi.web.admin.login;
 
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.utils.JwtUtil;

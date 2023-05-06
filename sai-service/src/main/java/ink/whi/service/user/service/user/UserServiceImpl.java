@@ -1,7 +1,7 @@
 package ink.whi.service.user.service.user;
 
 import ink.whi.api.model.context.ReqInfoContext;
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
 import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;

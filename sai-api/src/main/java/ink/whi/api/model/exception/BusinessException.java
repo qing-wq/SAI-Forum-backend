@@ -1,6 +1,5 @@
 package ink.whi.api.model.exception;
 
-import ink.whi.api.model.enums.StatusEnum;
 import lombok.Getter;
 
 import java.io.Serial;

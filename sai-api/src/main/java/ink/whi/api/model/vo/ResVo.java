@@ -1,6 +1,6 @@
 package ink.whi.api.model.vo;
 
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.Status;
 import lombok.Data;
 

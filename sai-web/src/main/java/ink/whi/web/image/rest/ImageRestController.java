@@ -1,6 +1,6 @@
 package ink.whi.web.image.rest;
 
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.core.image.service.ImageService;
 import ink.whi.web.image.vo.ImageVo;

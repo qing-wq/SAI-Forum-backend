@@ -1,6 +1,5 @@
 package ink.whi.api.model.exception;
 
-import ink.whi.api.model.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

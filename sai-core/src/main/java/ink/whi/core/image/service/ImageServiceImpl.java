@@ -5,7 +5,7 @@ import com.github.hui.quick.plugin.base.file.FileReadUtil;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import ink.whi.api.model.enums.StatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.core.image.oss.ImageUploader;
 import ink.whi.core.utils.MdImgLoader;

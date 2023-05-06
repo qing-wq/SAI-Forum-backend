@@ -48,7 +48,7 @@ public class StatisticsSettingsRestController {
     }
 
     /**
-     * 获取最近day天每天的uv值
+     * 获取最近day天每天的uv值chech
      * @param day 天数 默认 7
      * @return
      */
