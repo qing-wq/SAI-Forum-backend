@@ -3,9 +3,13 @@ package ink.whi.service.statistics.repo.dao;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.service.statistics.repo.entity.RequestCountDO;
 import ink.whi.service.statistics.repo.mapper.RequestCountMapper;
+import ink.whi.web.admin.statistics.vo.StatisticsCountVO;
+import ink.whi.web.admin.statistics.vo.StatisticsDayVO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: qing
@@ -23,5 +27,17 @@ public class RequestCountDao extends ServiceImpl<RequestCountMapper, RequestCoun
         return lambdaQuery().eq(RequestCountDO::getHost, host)
                 .eq(RequestCountDO::getDate, date)
                 .one();
+    }
+
+    public Integer getPvTotalCount() {
+        return lambdaQuery().count().intValue();
+    }
+
+    public List<StatisticsDayVO> getPvDayList(Integer day) {
+        return baseMapper.getPvCount(day);
+    }
+
+    public List<StatisticsDayVO> getUvDayList(Integer day) {
+        return baseMapper.getUvCount(day);
     }
 }

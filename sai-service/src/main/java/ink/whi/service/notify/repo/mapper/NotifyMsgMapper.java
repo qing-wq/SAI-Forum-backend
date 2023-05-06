@@ -17,7 +17,7 @@ public interface NotifyMsgMapper extends BaseMapper<NotifyMsgDO> {
      * 文章相关的消息
      * @param userId
      * @param type
-     * @param page
+     * @param pageParam
      * @return
      */
     List<NotifyMsgDTO> listArticleRelatedNotices(Long userId, Integer type, PageParam pageParam);
@@ -26,7 +26,7 @@ public interface NotifyMsgMapper extends BaseMapper<NotifyMsgDO> {
      * 普通消息，如关注等
      * @param userId
      * @param type
-     * @param page
+     * @param pageParam
      * @return
      */
     List<NotifyMsgDTO> listNormalNotices(Long userId, Integer type, PageParam pageParam);

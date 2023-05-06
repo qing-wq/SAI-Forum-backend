@@ -1,6 +1,7 @@
 package ink.whi.service.notify.repo.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.vo.PageParam;
@@ -13,6 +14,7 @@ import io.swagger.models.auth.In;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +82,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
         QueryWrapper<NotifyMsgDO> query = Wrappers.query();
         query.select("type, count(*) as cnt")
                 .eq("notify_user_id", userId)
-                .eq(stat != null, "stat", stat)
+                .eq(stat != null, "state", stat)
                 .groupBy("type");
         List<Map<String, Object>> mapList = listMaps(query);
         Map<Integer, Integer> map = new HashMap<>();
@@ -98,6 +100,9 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
      */
     public void updateNotifyMsgToRead(List<NotifyMsgDTO> list) {
         List<Long> ids = list.stream().map(NotifyMsgDTO::getMsgId).toList();
+        if (CollectionUtils.isEmpty(ids)) {
+            return;
+        }
         List<NotifyMsgDO> record = listByIds(ids);
         List<NotifyMsgDO> notify = record.stream().map(s -> s.setState(NotifyStatEnum.READ.getStat())).toList();
         updateBatchById(notify);

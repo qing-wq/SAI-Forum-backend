@@ -1,4 +1,4 @@
-package ink.whi.web.admin.rest;
+package ink.whi.web.admin.login;
 
 import ink.whi.api.model.enums.StatusEnum;
 import ink.whi.api.model.vo.ResVo;

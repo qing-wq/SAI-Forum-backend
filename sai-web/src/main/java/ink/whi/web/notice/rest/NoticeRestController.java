@@ -10,10 +10,7 @@ import ink.whi.core.permission.UserRole;
 import ink.whi.service.notify.service.NotifyMsgService;
 import ink.whi.web.notice.vo.NoticeResVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +30,7 @@ public class NoticeRestController {
 
     /**
      * 消息列表
-     * @param type 查看的消息类型，如：评论、回复、点赞、收藏、关注消息、系统消息
+     * @param type 查看的消息类型，如：comment、reply、praise、collect、follow、system，默认comment
      * @return
      */
     @GetMapping(path = {"/", "/{type}"})

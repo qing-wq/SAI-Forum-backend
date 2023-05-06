@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import ink.whi.service.user.converter.UserConverter;
 
 /**
+ * 用户后台接口
  * @author: qing
  * @Date: 2023/4/26
  */
@@ -45,5 +46,10 @@ public class UserSettingServiceImpl implements UserSettingService {
             throw BusinessException.newInstance(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
         }
         return UserConverter.toDTO(user);
+    }
+
+    @Override
+    public Integer getUserCount() {
+        return userDao.countUser();
     }
 }

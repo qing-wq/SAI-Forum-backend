@@ -10,4 +10,6 @@ public interface UserSettingService {
     BaseUserInfoDTO passwordLogin(String username, String password);
 
     BaseUserInfoDTO queryBasicUserInfo(Long userId);
-    }
+
+    Integer getUserCount();
+}

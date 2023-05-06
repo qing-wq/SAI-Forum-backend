@@ -3,7 +3,7 @@ package ink.whi.web.hook.filter;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.utils.CrossUtil;
 import ink.whi.core.utils.IpUtil;
-import ink.whi.service.statistics.service.StatisticSettingService;
+import ink.whi.service.statistics.service.StatisticsSettingService;
 import ink.whi.web.global.GlobalInitHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +29,7 @@ public class AuthFilter implements Filter {
     private static final Logger REQ_LOG = LoggerFactory.getLogger("req");
 
     @Autowired
-    private StatisticSettingService statisticSettingService;
+    private StatisticsSettingService statisticSettingService;
 
     @Autowired
     private GlobalInitHelper globalInitService;
