@@ -1,7 +1,7 @@
 package ink.whi.service.statistics.service;
 
-import ink.whi.web.admin.statistics.vo.StatisticsCountVO;
-import ink.whi.web.admin.statistics.vo.StatisticsDayVO;
+import ink.whi.api.model.vo.statistic.dto.StatisticsCountDTO;
+import ink.whi.api.model.vo.statistic.dto.StatisticsDayDTO;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import java.util.List;
 public interface StatisticsSettingService {
     void saveRequestCount(String ip);
 
-    StatisticsCountVO getStatisticsCount();
+    StatisticsCountDTO getStatisticsCount();
 
-    List<StatisticsDayVO> getPvDayList(Integer day);
+    List<StatisticsDayDTO> getPvDayList(Integer day);
 
-    List<StatisticsDayVO> getUvDayList(Integer day);
+    List<StatisticsDayDTO> getUvDayList(Integer day);
 }

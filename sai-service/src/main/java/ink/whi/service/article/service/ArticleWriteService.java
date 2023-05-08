@@ -1,6 +1,6 @@
 package ink.whi.service.article.service;
 
-import ink.whi.api.model.vo.article.rep.ArticlePostReq;
+import ink.whi.api.model.vo.article.req.ArticlePostReq;
 
 /**
  * 文章写接口

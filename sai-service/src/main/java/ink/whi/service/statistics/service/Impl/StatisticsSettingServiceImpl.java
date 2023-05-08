@@ -1,13 +1,12 @@
 package ink.whi.service.statistics.service.Impl;
 
+import ink.whi.api.model.vo.statistic.dto.StatisticsCountDTO;
+import ink.whi.api.model.vo.statistic.dto.StatisticsDayDTO;
 import ink.whi.service.article.service.ArticleSettingsService;
 import ink.whi.service.statistics.repo.dao.RequestCountDao;
 import ink.whi.service.statistics.repo.entity.RequestCountDO;
 import ink.whi.service.statistics.service.StatisticsSettingService;
 import ink.whi.service.user.service.UserSettingService;
-import ink.whi.web.admin.statistics.vo.StatisticsCountVO;
-import ink.whi.web.admin.statistics.vo.StatisticsDayVO;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,12 +48,12 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
      * @return
      */
     @Override
-    public StatisticsCountVO getStatisticsCount() {
+    public StatisticsCountDTO getStatisticsCount() {
         Integer userCount = userSettingService.getUserCount();
         Integer articleCount = articleSettingsService.getArticleCount();
         Integer pvTotalCount = requestCountDao.getPvTotalCount();
 
-        return StatisticsCountVO.builder().articleCount(articleCount).userCount(userCount).pvCount(pvTotalCount).build();
+        return StatisticsCountDTO.builder().articleCount(articleCount).userCount(userCount).pvCount(pvTotalCount).build();
     }
 
     /**
@@ -63,12 +62,12 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
      * @return
      */
     @Override
-    public List<StatisticsDayVO> getPvDayList(Integer day) {
+    public List<StatisticsDayDTO> getPvDayList(Integer day) {
         return requestCountDao.getPvDayList(day);
     }
 
     @Override
-    public List<StatisticsDayVO> getUvDayList(Integer day) {
+    public List<StatisticsDayDTO> getUvDayList(Integer day) {
         return requestCountDao.getUvDayList(day);
     }
 }

@@ -1,4 +1,4 @@
-package ink.whi.web.admin.statistics.vo;
+package ink.whi.api.model.vo.statistic.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +10,10 @@ import lombok.experimental.Tolerate;
  */
 @Data
 @Builder
-public class StatisticsCountVO {
+public class StatisticsCountDTO {
 
     @Tolerate
-    public StatisticsCountVO() {
+    public StatisticsCountDTO() {
     }
 
     /**

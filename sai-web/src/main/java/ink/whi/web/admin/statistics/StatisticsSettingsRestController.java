@@ -1,11 +1,11 @@
 package ink.whi.web.admin.statistics;
 
 import ink.whi.api.model.vo.ResVo;
+import ink.whi.api.model.vo.statistic.dto.StatisticsCountDTO;
+import ink.whi.api.model.vo.statistic.dto.StatisticsDayDTO;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.service.statistics.service.StatisticsSettingService;
-import ink.whi.web.admin.statistics.vo.StatisticsCountVO;
-import ink.whi.web.admin.statistics.vo.StatisticsDayVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +30,8 @@ public class StatisticsSettingsRestController {
      * @return
      */
     @GetMapping(path = "queryTotal")
-    public ResVo<StatisticsCountVO> queryTotal() {
-        StatisticsCountVO statisticsCountDTO = statisticsSettingService.getStatisticsCount();
+    public ResVo<StatisticsCountDTO> queryTotal() {
+        StatisticsCountDTO statisticsCountDTO = statisticsSettingService.getStatisticsCount();
         return ResVo.ok(statisticsCountDTO);
     }
 
@@ -41,9 +41,9 @@ public class StatisticsSettingsRestController {
      * @return
      */
     @GetMapping(path = "pvDayList")
-    public ResVo<List<StatisticsDayVO>> pvDayList(@RequestParam(name = "day", required = false) Integer day) {
+    public ResVo<List<StatisticsDayDTO>> pvDayList(@RequestParam(name = "day", required = false) Integer day) {
         day = (day == null || day == 0) ? DEFAULT_DAY : day;
-        List<StatisticsDayVO> pvDayList = statisticsSettingService.getPvDayList(day);
+        List<StatisticsDayDTO> pvDayList = statisticsSettingService.getPvDayList(day);
         return ResVo.ok(pvDayList);
     }
 
@@ -53,9 +53,9 @@ public class StatisticsSettingsRestController {
      * @return
      */
     @GetMapping(path = "uvDayList")
-    public ResVo<List<StatisticsDayVO>> uvDayList(@RequestParam(name = "day", required = false) Integer day) {
+    public ResVo<List<StatisticsDayDTO>> uvDayList(@RequestParam(name = "day", required = false) Integer day) {
         day = (day == null || day == 0) ? DEFAULT_DAY : day;
-        List<StatisticsDayVO> pvDayList = statisticsSettingService.getUvDayList(day);
+        List<StatisticsDayDTO> pvDayList = statisticsSettingService.getUvDayList(day);
         return ResVo.ok(pvDayList);
     }
 }

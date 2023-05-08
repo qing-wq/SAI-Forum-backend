@@ -1,7 +1,7 @@
 package ink.whi.web.article.rest;
 
 import ink.whi.api.model.vo.ResVo;
-import ink.whi.api.model.vo.article.rep.ArticlePostReq;
+import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.service.ArticleWriteService;

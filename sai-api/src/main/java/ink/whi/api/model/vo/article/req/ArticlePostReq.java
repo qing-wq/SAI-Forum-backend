@@ -1,4 +1,4 @@
-package ink.whi.api.model.vo.article.rep;
+package ink.whi.api.model.vo.article.req;
 
 import ink.whi.api.model.enums.ArticleTypeEnum;
 import ink.whi.api.model.enums.PushStatusEnum;

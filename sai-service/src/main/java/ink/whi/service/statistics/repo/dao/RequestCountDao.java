@@ -1,10 +1,9 @@
 package ink.whi.service.statistics.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ink.whi.api.model.vo.statistic.dto.StatisticsDayDTO;
 import ink.whi.service.statistics.repo.entity.RequestCountDO;
 import ink.whi.service.statistics.repo.mapper.RequestCountMapper;
-import ink.whi.web.admin.statistics.vo.StatisticsCountVO;
-import ink.whi.web.admin.statistics.vo.StatisticsDayVO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -33,11 +32,11 @@ public class RequestCountDao extends ServiceImpl<RequestCountMapper, RequestCoun
         return lambdaQuery().count().intValue();
     }
 
-    public List<StatisticsDayVO> getPvDayList(Integer day) {
+    public List<StatisticsDayDTO> getPvDayList(Integer day) {
         return baseMapper.getPvCount(day);
     }
 
-    public List<StatisticsDayVO> getUvDayList(Integer day) {
+    public List<StatisticsDayDTO> getUvDayList(Integer day) {
         return baseMapper.getUvCount(day);
     }
 }

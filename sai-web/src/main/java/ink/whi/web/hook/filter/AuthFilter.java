@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 
 /**
- * 鉴权Filter
+ * 认证Filter
  * @author: qing
  * @Date: 2023/4/27
  */
@@ -28,10 +29,10 @@ import java.net.URLDecoder;
 public class AuthFilter implements Filter {
     private static final Logger REQ_LOG = LoggerFactory.getLogger("req");
 
-    @Autowired
+    @Resource
     private StatisticsSettingService statisticSettingService;
 
-    @Autowired
+    @Resource
     private GlobalInitHelper globalInitService;
 
     @Override
