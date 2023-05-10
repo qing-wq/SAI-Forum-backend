@@ -1,6 +1,6 @@
 package ink.whi.service.article.service.Impl;
 
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.repo.dao.TagDao;
 import ink.whi.service.article.service.TagService;

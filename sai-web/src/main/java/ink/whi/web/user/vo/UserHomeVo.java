@@ -1,7 +1,7 @@
 package ink.whi.web.user.vo;
 
 import ink.whi.api.model.enums.FollowSelectEnum;
-import ink.whi.api.model.vo.PageListVo;
+import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagSelectDTO;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;

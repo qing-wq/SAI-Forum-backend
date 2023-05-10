@@ -2,17 +2,20 @@ package ink.whi.api.model.vo.article.req;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 保存Category请求参数
+ * Category请求参数
  *
- * @author LouZai
- * @date 2022/9/17
+ * @author qing
+ * @date 2023/5/10
  */
 @Data
 public class CategoryReq implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -2853821147074605115L;
     /**
      * ID
      */

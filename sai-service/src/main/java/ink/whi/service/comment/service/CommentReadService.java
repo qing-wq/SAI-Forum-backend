@@ -1,6 +1,6 @@
 package ink.whi.service.comment.service;
 
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 import ink.whi.service.comment.repo.entity.CommentDO;
 

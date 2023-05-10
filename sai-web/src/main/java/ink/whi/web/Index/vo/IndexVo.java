@@ -1,6 +1,6 @@
 package ink.whi.web.Index.vo;
 
-import ink.whi.api.model.vo.PageListVo;
+import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;

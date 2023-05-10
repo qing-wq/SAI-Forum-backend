@@ -1,6 +1,6 @@
 package ink.whi.service.article.service;
 
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 
 import java.util.List;

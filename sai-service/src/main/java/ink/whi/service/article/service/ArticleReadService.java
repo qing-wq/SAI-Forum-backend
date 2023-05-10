@@ -1,8 +1,8 @@
 package ink.whi.service.article.service;
 
 import ink.whi.api.model.enums.HomeSelectEnum;
-import ink.whi.api.model.vo.PageListVo;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageListVo;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.service.article.repo.entity.ArticleDO;
 

@@ -2,7 +2,7 @@ package ink.whi.service.user.service;
 
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.user.repo.entity.UserFootDO;

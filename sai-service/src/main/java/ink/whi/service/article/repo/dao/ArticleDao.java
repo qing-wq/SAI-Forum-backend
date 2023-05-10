@@ -12,7 +12,7 @@ import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.exception.BusinessException;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
 import ink.whi.service.article.conveter.ArticleConverter;

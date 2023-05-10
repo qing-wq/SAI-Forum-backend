@@ -1,9 +1,8 @@
 package ink.whi.web.Index.helper;
 
-import com.mysql.cj.log.Log;
 import ink.whi.api.model.context.ReqInfoContext;
-import ink.whi.api.model.vo.PageListVo;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageListVo;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;

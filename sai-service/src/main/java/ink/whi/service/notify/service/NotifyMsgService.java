@@ -1,7 +1,7 @@
 package ink.whi.service.notify.service;
 
-import ink.whi.api.model.vo.PageListVo;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageListVo;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.notify.dto.NotifyMsgDTO;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 

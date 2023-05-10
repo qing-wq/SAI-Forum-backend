@@ -2,7 +2,7 @@ package ink.whi.service.user.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.enums.FollowStateEnum;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserRelationDO;
 import ink.whi.service.user.repo.mapper.UserRelationMapper;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author: qing

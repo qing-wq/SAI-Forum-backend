@@ -1,7 +1,6 @@
 package ink.whi.web.base;
 
-import ink.whi.api.model.vo.PageParam;
-import lombok.extern.slf4j.Slf4j;
+import ink.whi.api.model.vo.page.PageParam;
 
 /**
  * @author: qing

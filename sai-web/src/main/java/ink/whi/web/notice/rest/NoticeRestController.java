@@ -1,9 +1,8 @@
 package ink.whi.web.notice.rest;
 
 import ink.whi.api.model.context.ReqInfoContext;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
-import ink.whi.api.model.vo.notify.dto.NotifyMsgDTO;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
@@ -12,7 +11,6 @@ import ink.whi.web.notice.vo.NoticeResVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 /**

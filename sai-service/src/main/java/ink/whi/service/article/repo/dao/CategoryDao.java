@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
+import ink.whi.api.model.vo.page.PageParam;
+import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.entity.CategoryDO;
 import ink.whi.service.article.repo.mapper.CategoryMapper;
 import org.springframework.stereotype.Repository;
@@ -33,5 +35,17 @@ public class CategoryDao extends ServiceImpl<CategoryMapper, CategoryDO> {
                 .eq(CategoryDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .orderByAsc(CategoryDO::getRank)
                 .list();
+    }
+
+    public List<CategoryDTO> listCategory(PageParam pageParam) {
+        List<CategoryDO> list = lambdaQuery().eq(CategoryDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .last(PageParam.getLimitSql(pageParam))
+                .list();
+        return ArticleConverter.toCategoryDtoList(list);
+    }
+
+    public Integer countCategory() {
+        return lambdaQuery().eq(CategoryDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .count().intValue();
     }
 }

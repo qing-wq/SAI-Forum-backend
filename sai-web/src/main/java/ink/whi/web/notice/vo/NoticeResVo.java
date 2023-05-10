@@ -1,6 +1,6 @@
 package ink.whi.web.notice.vo;
 
-import ink.whi.api.model.vo.PageListVo;
+import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.notify.dto.NotifyMsgDTO;
 import lombok.Data;
 

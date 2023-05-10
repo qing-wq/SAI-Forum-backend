@@ -2,7 +2,7 @@ package ink.whi.service.comment.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.enums.YesOrNoEnum;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.comment.repo.mapper.CommentMapper;
 import org.springframework.stereotype.Repository;

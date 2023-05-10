@@ -2,7 +2,7 @@ package ink.whi.service.article.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.base.BaseDO;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.entity.TagDO;

@@ -1,8 +1,8 @@
 package ink.whi.service.user.service.relation;
 
 import ink.whi.api.model.enums.FollowStateEnum;
-import ink.whi.api.model.vo.PageListVo;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageListVo;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.core.utils.MapUtils;
 import ink.whi.service.user.repo.dao.UserRelationDao;

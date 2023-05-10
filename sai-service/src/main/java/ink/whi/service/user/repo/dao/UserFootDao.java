@@ -6,7 +6,7 @@ import ink.whi.api.model.enums.CollectionStatEnum;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.PraiseStatEnum;
 import ink.whi.api.model.enums.ReadStatEnum;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserFootDO;

@@ -2,7 +2,7 @@ package ink.whi.service.user.service.userfoot;
 
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.user.repo.dao.UserFootDao;
@@ -11,7 +11,6 @@ import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;

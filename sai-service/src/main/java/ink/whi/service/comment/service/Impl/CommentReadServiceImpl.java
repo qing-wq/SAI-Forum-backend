@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.PraiseStatEnum;
-import ink.whi.api.model.vo.PageParam;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.comment.dto.BaseCommentDTO;
 import ink.whi.api.model.vo.comment.dto.SubCommentDTO;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;

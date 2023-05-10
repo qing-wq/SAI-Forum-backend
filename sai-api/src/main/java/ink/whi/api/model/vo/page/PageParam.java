@@ -1,4 +1,4 @@
-package ink.whi.api.model.vo;
+package ink.whi.api.model.vo.page;
 
 import lombok.Data;
 
