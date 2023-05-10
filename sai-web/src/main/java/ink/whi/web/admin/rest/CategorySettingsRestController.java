@@ -1,5 +1,6 @@
 package ink.whi.web.admin.rest;
 
+import com.mysql.cj.log.Log;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
  * @author: qing
  * @Date: 2023/5/5
  */
+@Permission(role = UserRole.LOGIN)
 @RestController
+@RequestMapping(path = "admin/category")
 public class CategorySettingsRestController {
 
     @Autowired

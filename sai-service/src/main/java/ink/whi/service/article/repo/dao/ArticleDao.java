@@ -210,4 +210,9 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
         return lambdaQuery().eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .count().intValue();
     }
+
+    public List<ArticleDO> listArticles(PageParam pageParam) {
+        return lambdaQuery().eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .last(PageParam.getLimitSql(pageParam)).list();
+    }
 }
