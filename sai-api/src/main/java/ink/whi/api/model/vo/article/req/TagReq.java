@@ -2,6 +2,7 @@ package ink.whi.api.model.vo.article.req;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -13,6 +14,8 @@ import java.io.Serializable;
 @Data
 public class TagReq implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -5388767717047688998L;
     /**
      * ID
      */
