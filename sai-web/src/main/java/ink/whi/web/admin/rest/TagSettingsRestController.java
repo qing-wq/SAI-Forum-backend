@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 标签后台管理接口
  * @author: qing
  * @Date: 2023/5/10
  */
@@ -25,6 +26,11 @@ public class TagSettingsRestController {
     @Autowired
     private TagSettingService tagSettingService;
 
+    /**
+     * 增加|修改标签
+     * @param req
+     * @return
+     */
     @Permission(role = UserRole.ADMIN)
     @PostMapping(path = "save")
     public ResVo<String> save(@RequestBody TagReq req) {
@@ -32,6 +38,11 @@ public class TagSettingsRestController {
         return ResVo.ok("ok");
     }
 
+    /**
+     * 删除标签
+     * @param tagId
+     * @return
+     */
     @Permission(role = UserRole.ADMIN)
     @GetMapping(path = "delete")
     public ResVo<String> delete(@RequestParam(name = "tagId") Integer tagId) {
@@ -39,6 +50,12 @@ public class TagSettingsRestController {
         return ResVo.ok("ok");
     }
 
+    /**
+     * 修改标签状态
+     * @param tagId
+     * @param pushStatus 1-
+     * @return
+     */
     @Permission(role = UserRole.ADMIN)
     @GetMapping(path = "operate")
     public ResVo<String> operate(@RequestParam(name = "tagId") Integer tagId,
