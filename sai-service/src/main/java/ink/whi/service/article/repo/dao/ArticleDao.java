@@ -3,6 +3,7 @@ package ink.whi.service.article.repo.dao;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
@@ -214,5 +215,17 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     public List<ArticleDO> listArticles(PageParam pageParam) {
         return lambdaQuery().eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .last(PageParam.getLimitSql(pageParam)).list();
+    }
+
+    public List<ArticleDO> listSimpleArticlesByBySearchKey(String key) {
+        LambdaQueryWrapper<ArticleDO> query = Wrappers.lambdaQuery();
+        query.eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .eq(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode())
+                .and(!StringUtils.isEmpty(key),
+                        v -> v.like(ArticleDO::getTitle, key)
+                                .or()
+                                .like(ArticleDO::getShortTitle, key)
+                );
+        return list(query);
     }
 }

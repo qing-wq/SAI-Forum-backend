@@ -3,6 +3,7 @@ package ink.whi.service.article.service.Impl;
 import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
+import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
@@ -20,6 +21,7 @@ import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.CountService;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -189,6 +191,18 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             return PageListVo.emptyVo();
         }
         return buildArticleListVo(records, pageParam.getPageSize());
+    }
+
+    @Override
+    public List<SimpleArticleDTO> querySimpleArticleBySearchKey(String key) {
+        // todo 当key为空时，返回热门推荐
+        if (StringUtils.isBlank(key)) {
+            return Collections.emptyList();
+        }
+        key = key.trim();
+        List<ArticleDO> records = articleDao.listSimpleArticlesByBySearchKey(key);
+        return records.stream().map(s -> new SimpleArticleDTO().setId(s.getId()).setTitle(s.getTitle()))
+                .collect(Collectors.toList());
     }
 
     /**
