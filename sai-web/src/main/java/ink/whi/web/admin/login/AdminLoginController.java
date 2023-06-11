@@ -4,10 +4,13 @@ import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.utils.JwtUtil;
+import ink.whi.core.utils.SessionUtil;
 import ink.whi.service.user.service.SessionService;
 import ink.whi.service.user.service.UserSettingService;
+import ink.whi.web.global.GlobalInitHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,5 +54,17 @@ public class AdminLoginController{
         } else {
             return ResVo.fail(StatusEnum.LOGIN_FAILED_MIXED, "登录失败，请重试");
         }
+    }
+
+    /**
+     * 登出接口
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(path = "logout")
+    public ResVo<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        response.addCookie(SessionUtil.delCookie(SessionService.SESSION_KEY));
+        return ResVo.ok("ok");
     }
 }
