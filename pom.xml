@@ -32,6 +32,7 @@
         <knife4j.version>4.0.0</knife4j.version>
         <qrcode-plugin.version>3.0.0</qrcode-plugin.version>
         <java.jwt.version>4.2.1</java.jwt.version>
+        <ip2region.version>2.6.6</ip2region.version>
     </properties>
 
     <profiles>
@@ -124,6 +125,11 @@
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>${java.jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>${ip2region.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

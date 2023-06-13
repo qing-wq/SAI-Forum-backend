@@ -42,11 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ArticleDao articleDao;
-    private Long userId;
 
     @Override
     public BaseUserInfoDTO queryBasicUserInfo(Long userId) {
-        this.userId = userId;
         UserInfoDO user = userDao.getByUserId(userId);
         if (user == null) {
             throw BusinessException.newInstance(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
