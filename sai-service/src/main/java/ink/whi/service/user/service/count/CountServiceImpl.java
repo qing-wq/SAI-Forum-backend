@@ -1,6 +1,6 @@
 package ink.whi.service.user.service.count;
 
-import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
 import ink.whi.service.comment.service.CommentReadService;
 import ink.whi.service.user.repo.dao.UserFootDao;
 import ink.whi.service.user.service.CountService;

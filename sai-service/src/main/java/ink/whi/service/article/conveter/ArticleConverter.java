@@ -59,7 +59,7 @@ public class ArticleConverter {
         articleDTO.setStatus(articleDO.getStatus());
         articleDTO.setCreateTime(articleDO.getCreateTime().getTime());
         articleDTO.setLastUpdateTime(articleDO.getUpdateTime().getTime());
-        articleDTO.setOfficalStat(articleDO.getOfficialStat());
+        articleDTO.setOfficial(articleDO.getOfficialStat());
         articleDTO.setToppingStat(articleDO.getToppingStat());
         articleDTO.setCreamStat(articleDO.getCreamStat());
 

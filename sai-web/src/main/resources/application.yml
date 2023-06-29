@@ -1,13 +1,25 @@
 server:
-  port: 8080
+  port: 8082
   servlet:
     session:
       timeout: 5m # 设置session的有效期为五分钟
 
 spring:
+  main:
+    allow-circular-references: true
   config:
-    import: application-dal.yml
+    import: application-dal.yml, application-image.yml
 
 
 database:
-  name: sai-forum
+  name: pai_coding
+
+jwt:
+  key: sai-key
+
+security:
+  salt: sai-salt
+  salt-index: 2
+
+msg:
+  welcome: "欢迎来到SAI论坛！"

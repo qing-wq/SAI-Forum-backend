@@ -1,4 +1,4 @@
-package ink.whi.api.model.vo.user.dto;
+package ink.whi.api.model.vo.article.dto;
 
 import lombok.Data;
 

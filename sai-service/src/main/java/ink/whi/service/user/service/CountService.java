@@ -1,6 +1,6 @@
 package ink.whi.service.user.service;
 
-import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
 
 /**
  * @author: qing

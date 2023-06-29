@@ -21,16 +21,6 @@
         <!--内部依赖-->
         <dependency>
             <groupId>ink.whi</groupId>
-            <artifactId>sai-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ink.whi</groupId>
-            <artifactId>sai-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ink.whi</groupId>
             <artifactId>sai-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

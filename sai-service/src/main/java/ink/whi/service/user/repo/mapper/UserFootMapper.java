@@ -1,7 +1,7 @@
 package ink.whi.service.user.repo.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserFootDO;
 

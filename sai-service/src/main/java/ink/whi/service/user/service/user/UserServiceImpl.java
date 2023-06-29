@@ -4,7 +4,7 @@ import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
-import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.service.article.repo.dao.ArticleDao;

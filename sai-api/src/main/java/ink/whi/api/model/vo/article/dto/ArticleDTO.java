@@ -1,7 +1,6 @@
 package ink.whi.api.model.vo.article.dto;
 
 import ink.whi.api.model.enums.SourceTypeEnum;
-import ink.whi.api.model.vo.user.dto.ArticleFootCountDTO;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import lombok.Data;
 
@@ -70,7 +69,7 @@ public class ArticleDTO implements Serializable {
     private String sourceType;
 
     /**
-     * 原文地址
+     * 原文地址(可选)
      */
     private String sourceUrl;
 
@@ -82,7 +81,7 @@ public class ArticleDTO implements Serializable {
     /**
      * 是否官方
      */
-    private Integer officalStat;
+    private Integer official;
 
     /**
      * 是否置顶
