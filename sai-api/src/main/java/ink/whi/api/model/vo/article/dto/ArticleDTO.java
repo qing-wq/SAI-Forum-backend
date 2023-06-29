@@ -4,6 +4,7 @@ import ink.whi.api.model.enums.SourceTypeEnum;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,8 +13,12 @@ import java.util.List;
  * @Date: 2023/4/27
  */@Data
 public class ArticleDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = -793906904770296838L;
 
+    /**
+     * 文章id
+     */
     private Long articleId;
 
     /**

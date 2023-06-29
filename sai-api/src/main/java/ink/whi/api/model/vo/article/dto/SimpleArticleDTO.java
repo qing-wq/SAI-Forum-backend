@@ -3,6 +3,7 @@ package ink.whi.api.model.vo.article.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
 @Data
 @Accessors(chain = true)
 public class SimpleArticleDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3646376715620165839L;
 
     /**
@@ -24,16 +26,6 @@ public class SimpleArticleDTO implements Serializable {
      * 文章标题
      */
     private String title;
-
-    /**
-     * 专栏ID
-     */
-    private Long columnId;
-
-    /**
-     * 专栏标题
-     */
-    private String column;
 
     /**
      * 文章排序

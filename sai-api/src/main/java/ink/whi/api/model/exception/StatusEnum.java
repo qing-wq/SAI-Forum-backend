@@ -36,8 +36,6 @@ public enum StatusEnum {
     UPLOAD_PIC_FAILED(100_500_002, "图片上传失败！"),
 
     ARTICLE_NOT_EXISTS(200_404_001, "文章不存在:%s"),
-    COLUMN_NOT_EXISTS(200_404_002, "专栏不存在:%s"),
-    COLUMN_QUERY_ERROR(200_500_003, "专栏查询异常:%s"),
 
     // 评论相关异常类型
     COMMENT_NOT_EXISTS(300_404_001, "评论不存在:%s"),
