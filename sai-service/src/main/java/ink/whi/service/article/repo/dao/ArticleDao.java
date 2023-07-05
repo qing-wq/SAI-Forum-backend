@@ -177,7 +177,8 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     }
 
     /**
-     * 若文章处于审核状态，则直接更新上一条记录；否则新插入一条记录
+     * 若文章处于审核状态，则直接更新上一条记录；
+     * 对于已发布的文章，新插入一条记录，并将版本号+1
      * 即对于审核之前的内容不保存历史版本，上线后的文章保存历史版本
      * @param articleId
      * @param content

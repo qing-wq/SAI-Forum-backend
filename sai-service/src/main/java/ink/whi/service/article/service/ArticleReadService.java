@@ -40,4 +40,6 @@ public interface ArticleReadService {
     PageListVo<ArticleDTO> queryArticlesByUserAndType(Long userId, PageParam pageParam, HomeSelectEnum select);
 
     List<SimpleArticleDTO> querySimpleArticleBySearchKey(String key);
+
+    String generateSummary(String content);
 }

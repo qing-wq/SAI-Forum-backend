@@ -68,7 +68,7 @@ public class ArticleDO extends BaseDO {
     private String sourceUrl;
 
     /**
-     * 状态：0-未发布，1-已发布
+     * 状态：0-未发布，1-已发布，2-待审核
      *
      * @see PushStatusEnum
      */

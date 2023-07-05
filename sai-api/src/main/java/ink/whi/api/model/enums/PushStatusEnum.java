@@ -18,9 +18,9 @@ public enum PushStatusEnum {
     private final String desc;
 
     public static PushStatusEnum formCode(int code) {
-        for (PushStatusEnum yesOrNoEnum : PushStatusEnum.values()) {
-            if (yesOrNoEnum.getCode() == code) {
-                return yesOrNoEnum;
+        for (PushStatusEnum statusEnum : PushStatusEnum.values()) {
+            if (statusEnum.getCode() == code) {
+                return statusEnum;
             }
         }
         return PushStatusEnum.OFFLINE;

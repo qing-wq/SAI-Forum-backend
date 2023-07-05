@@ -9,6 +9,7 @@ import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.core.utils.ArticleUtil;
 import ink.whi.core.utils.MapUtils;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
@@ -247,5 +248,15 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         dto.setAuthorName(author.getUserName());
         dto.setAuthorAvatar(author.getPhoto());
         return dto;
+    }
+
+    /**
+     * 生成文章摘要
+     * @param content
+     * @return
+     */
+    @Override
+    public String generateSummary(String content) {
+        return ArticleUtil.pickSummary(content);
     }
 }

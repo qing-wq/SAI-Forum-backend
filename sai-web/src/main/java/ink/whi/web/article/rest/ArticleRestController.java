@@ -4,6 +4,7 @@ import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.exception.StatusEnum;
+import ink.whi.api.model.vo.article.req.ContentPostReq;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
@@ -144,5 +145,15 @@ public class ArticleRestController extends BaseRestController {
         PageParam pageParam = buildPageParam(pageNum, pageSize);
         List<TagDTO> list = tagService.queryTagsList(pageParam);
         return ResVo.ok(list);
+    }
+
+    /**
+     * 提取摘要
+     * @param req
+     * @return
+     */
+    @PostMapping(path = "generateSummary")
+    public ResVo<String> generateSummary(@RequestBody ContentPostReq req) {
+        return ResVo.ok(articleReadService.generateSummary(req.getContent()));
     }
 }

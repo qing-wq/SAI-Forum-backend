@@ -90,18 +90,20 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     }
 
     private void updateArticle(ArticleDO article, String content, Set<Long> tagIds) {
-        // 若文章处于审核状态，则直接更新上一条记录；否则新插入一条记录
-        boolean review = article.getStatus().equals(PushStatusEnum.REVIEW.getCode());
-        // todo：增加白名单
-        article.setStatus(PushStatusEnum.REVIEW.getCode());
-        articleDao.updateById(article);
-        Long articleId = article.getId();
+        PushStatusEnum status = PushStatusEnum.formCode(article.getStatus());
 
-        articleDao.updateArticleContent(articleId, content, review);
-        articleTagDao.updateTags(articleId, tagIds);
+        if (status == PushStatusEnum.ONLINE) {
+            // 更新文章后重新进入审核状态
+            article.setStatus(PushStatusEnum.REVIEW.getCode());
+            articleDao.updateById(article);
+            Long articleId = article.getId();
 
-        article.setStatus(PushStatusEnum.REVIEW.getCode());
-        articleDao.updateById(article);
+            articleDao.updateArticleContent(articleId, content, review);
+            articleTagDao.updateTags(articleId, tagIds);
+
+            article.setStatus(PushStatusEnum.REVIEW.getCode());
+            articleDao.updateById(article);
+        }
     }
 
     @Override
