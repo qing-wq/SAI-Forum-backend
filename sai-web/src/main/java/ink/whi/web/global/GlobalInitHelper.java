@@ -57,7 +57,7 @@ public class GlobalInitHelper {
                     reqInfo.setMsgNum(notifyService.queryUserNotifyMsgCount(user.getUserId()));
                     // 更新ip信息
                     // fixme: 学校内属于局域网，私有ip存在问题
-                    sessionService.updateUserIpInfo(user, reqInfo.getClientIp());
+//                    sessionService.updateUserIpInfo(user, reqInfo.getClientIp());
                 }
             }
         }

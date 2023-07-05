@@ -10,7 +10,7 @@ import lombok.Data;
 public class CommentSaveReq {
 
     /**
-     * 评论ID
+     * 评论ID(非必须)
      */
     private Long commentId;
 

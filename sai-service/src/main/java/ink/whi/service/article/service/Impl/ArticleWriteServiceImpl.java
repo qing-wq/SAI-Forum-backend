@@ -58,6 +58,9 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
                 if (NumUtil.upZero(article.getId())) {
                     return insertArticle(article, content, articlePostReq.getTagIds());
                 } else {
+                    if (articlePostReq.getActionType().equalsIgnoreCase("save")) {
+                        // 暂存文章
+                    }
                     ArticleDO record = articleDao.getById(article.getId());
                     if (!Objects.equals(record.getUserId(), article.getUserId())) {
                         throw BusinessException.newInstance(StatusEnum.FORBID_ERROR);
@@ -90,20 +93,18 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     }
 
     private void updateArticle(ArticleDO article, String content, Set<Long> tagIds) {
-        PushStatusEnum status = PushStatusEnum.formCode(article.getStatus());
+        // 文章是否处于审核状态
+        boolean review = article.getStatus() == PushStatusEnum.REVIEW.getCode();
+        Long articleId = article.getId();
 
-        if (status == PushStatusEnum.ONLINE) {
-            // 更新文章后重新进入审核状态
-            article.setStatus(PushStatusEnum.REVIEW.getCode());
-            articleDao.updateById(article);
-            Long articleId = article.getId();
+        // 更新文章、内容、标签
+        article.setStatus(PushStatusEnum.REVIEW.getCode());
+        articleDao.updateById(article);
 
-            articleDao.updateArticleContent(articleId, content, review);
-            articleTagDao.updateTags(articleId, tagIds);
+        articleDao.updateArticleContent(articleId, content, review);
+        articleTagDao.updateTags(articleId, tagIds);
 
-            article.setStatus(PushStatusEnum.REVIEW.getCode());
-            articleDao.updateById(article);
-        }
+
     }
 
     @Override

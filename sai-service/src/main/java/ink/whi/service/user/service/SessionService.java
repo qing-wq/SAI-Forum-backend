@@ -10,5 +10,4 @@ public interface SessionService {
 
     String SESSION_KEY = "sai-";
 
-    void updateUserIpInfo(BaseUserInfoDTO user, String clientIp);
 }

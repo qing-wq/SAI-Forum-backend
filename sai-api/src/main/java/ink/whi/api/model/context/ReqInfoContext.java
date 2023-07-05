@@ -38,10 +38,6 @@ public class ReqInfoContext {
          */
         private String path;
         /**
-         * 客户端ip
-         */
-        private String clientIp;
-        /**
          * referer
          */
         private String referer;

@@ -2,14 +2,12 @@ package ink.whi.web.hook.filter;
 
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.utils.CrossUtil;
-import ink.whi.core.utils.IpUtil;
 import ink.whi.service.statistics.service.StatisticsSettingService;
 import ink.whi.web.global.GlobalInitHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import javax.servlet.*;
@@ -60,7 +58,6 @@ public class AuthFilter implements Filter {
             reqInfo.setHost(request.getHeader("host"));
             reqInfo.setPath(request.getPathInfo());
             reqInfo.setReferer(request.getHeader("referer"));
-            reqInfo.setClientIp(IpUtil.getClientIp(request));
             reqInfo.setUserAgent(request.getHeader("User-Agent"));
             request = this.wrapperRequest(request, reqInfo);
             // 校验token
@@ -94,7 +91,6 @@ public class AuthFilter implements Filter {
         if (StringUtils.isNotBlank(req.getReferer())) {
             msg.append("referer=").append(URLDecoder.decode(req.getReferer())).append("; ");
         }
-        msg.append("remoteIp=").append(req.getClientIp());
         msg.append("; agent=").append(req.getUserAgent());
 
         if (req.getUserId() != null) {
@@ -112,7 +108,7 @@ public class AuthFilter implements Filter {
         REQ_LOG.info("{}", msg);
 
         // todo: 保存请求计数
-        statisticSettingService.saveRequestCount(req.getClientIp());
+//        statisticSettingService.saveRequestCount(req.getClientIp());
     }
 
     private boolean staticURI(HttpServletRequest request) {
