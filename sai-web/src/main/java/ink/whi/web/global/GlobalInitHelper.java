@@ -33,9 +33,6 @@ public class GlobalInitHelper {
     @Autowired
     private NotifyMsgService notifyService;
 
-    @Autowired
-    private SessionService sessionService;
-
     /**
      * 初始化用户信息
      * @param reqInfo
@@ -55,9 +52,6 @@ public class GlobalInitHelper {
                     reqInfo.setUserId(user.getUserId());
                     reqInfo.setUser(user);
                     reqInfo.setMsgNum(notifyService.queryUserNotifyMsgCount(user.getUserId()));
-                    // 更新ip信息
-                    // fixme: 学校内属于局域网，私有ip存在问题
-//                    sessionService.updateUserIpInfo(user, reqInfo.getClientIp());
                 }
             }
         }

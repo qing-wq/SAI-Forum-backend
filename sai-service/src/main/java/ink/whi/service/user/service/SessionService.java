@@ -8,6 +8,6 @@ import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
  */
 public interface SessionService {
 
-    String SESSION_KEY = "sai-";
+    String SESSION_KEY = "sai-session";
 
 }

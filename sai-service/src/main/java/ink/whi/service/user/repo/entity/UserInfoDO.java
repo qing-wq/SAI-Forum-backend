@@ -36,14 +36,24 @@ public class UserInfoDO extends BaseDO {
     private String photo;
 
     /**
-     * 职位
+     * 学号
      */
-    private String position;
+    private String studentId;
 
     /**
-     * 公司
+     * 学院
      */
-    private String company;
+    private String college;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 专业
+     */
+    private String major;
 
     /**
      * 个人简介
@@ -61,8 +71,7 @@ public class UserInfoDO extends BaseDO {
     private Integer deleted;
 
     /**
-     * 0 普通用户
-     * 1 超级管理员
+     * 0-普通用户，1-超级管理员
      */
     private Integer userRole;
 

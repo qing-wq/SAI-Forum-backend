@@ -3,6 +3,8 @@ package ink.whi.web.admin.login;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.core.permission.Permission;
+import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.JwtUtil;
 import ink.whi.core.utils.SessionUtil;
 import ink.whi.service.user.service.SessionService;
@@ -49,7 +51,7 @@ public class AdminLoginController{
         // 签发token
         String token = JwtUtil.createToken(info.getUserId());
         if (StringUtils.isNotBlank(token)) {
-            response.addCookie(new Cookie(SessionService.SESSION_KEY, token));
+            response.addCookie(SessionUtil.newCookie(SessionService.SESSION_KEY, token));
             return ResVo.ok(info);
         } else {
             return ResVo.fail(StatusEnum.LOGIN_FAILED_MIXED, "登录失败，请重试");
@@ -58,12 +60,12 @@ public class AdminLoginController{
 
     /**
      * 登出接口
-     * @param request
      * @param response
      * @return
      */
+    @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "logout")
-    public ResVo<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResVo<String> logout(HttpServletResponse response) {
         response.addCookie(SessionUtil.delCookie(SessionService.SESSION_KEY));
         return ResVo.ok("ok");
     }

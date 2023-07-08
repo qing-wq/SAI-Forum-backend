@@ -23,10 +23,12 @@ import javax.annotation.Resource;
 @Component
 public class ArticleHelper {
 
-    @Resource
-    private ArticleDetailMapper articleDetailMapper;
-
-    public boolean showReviewContent(ArticleDO article) {
+    /**
+     * 查看审核内容鉴权
+     * @param article
+     * @return
+     */
+    public static boolean showReviewContent(ArticleDO article) {
         if (article.getStatus() != PushStatusEnum.REVIEW.getCode()) {
             return true;
         }
@@ -38,14 +40,5 @@ public class ArticleHelper {
 
         // 作者本人和admin超管可以看到审核内容
         return user.getUserId().equals(article.getUserId()) || (user.getRole() != null && user.getRole().equalsIgnoreCase(UserRole.ADMIN.name()));
-    }
-
-    public ArticleDetailDO findLatestDetail(long articleId) {
-        // 查询文章内容
-        LambdaQueryWrapper<ArticleDetailDO> contentQuery = Wrappers.lambdaQuery();
-        contentQuery.eq(ArticleDetailDO::getDeleted, YesOrNoEnum.NO.getCode())
-                .eq(ArticleDetailDO::getArticleId, articleId)
-                .orderByDesc(ArticleDetailDO::getVersion);
-        return articleDetailMapper.selectList(contentQuery).get(0);
     }
 }

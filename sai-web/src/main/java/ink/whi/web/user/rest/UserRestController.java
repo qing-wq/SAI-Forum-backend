@@ -11,6 +11,7 @@ import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagSelectDTO;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
+import ink.whi.core.permission.Permission;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.user.service.UserRelationService;
 import ink.whi.service.user.service.UserService;
@@ -45,20 +46,22 @@ public class UserRestController {
 
     /**
      * 用户主页接口
-     * @param userId
+     * @param userId 如果不填默认为当前登录用户主页
      * @param homeSelectType 主页选择标签
      * @param followSelectType 关注列选择标签
      * @return
      */
-//    @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "/{userId}")
-    public ResVo<UserHomeVo> getUserHome(@PathVariable(name = "userId") Long userId,
+    public ResVo<UserHomeVo> getUserHome(@PathVariable(name = "userId", required = false) Long userId,
                              @RequestParam(name = "homeSelectType", required = false) String homeSelectType,
                              @RequestParam(name = "followSelectType", required = false) String followSelectType) {
         UserHomeVo vo = new UserHomeVo();
         vo.setHomeSelectType(StringUtils.isBlank(homeSelectType) ? HomeSelectEnum.ARTICLE.getCode() : homeSelectType);
         vo.setFollowSelectType(StringUtils.isBlank(followSelectType) ? FollowTypeEnum.FOLLOW.getCode() : followSelectType);
 
+        if (userId == null) {
+            userId = ReqInfoContext.getReqInfo().getUserId();
+        }
         UserStatisticInfoDTO userInfo = userService.queryUserInfoWithStatistic(userId);
         vo.setUserHome(userInfo);
 
@@ -159,5 +162,7 @@ public class UserRestController {
         vo.setFollowList(followList);
     }
 
-    // 创建用户接口
+    public ResVo<Long> register() {
+        return null;
+    }
 }
