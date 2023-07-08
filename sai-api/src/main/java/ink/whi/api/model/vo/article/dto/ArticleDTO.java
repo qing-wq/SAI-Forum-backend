@@ -47,17 +47,17 @@ public class ArticleDTO implements Serializable {
     private String title;
 
     /**
-     * 短标题
+     * 短标题(可选)
      */
     private String shortTitle;
 
     /**
-     * 简介
+     * 摘要
      */
     private String summary;
 
     /**
-     * 封面
+     * 封面(可选)
      */
     private String cover;
 
@@ -67,7 +67,7 @@ public class ArticleDTO implements Serializable {
     private String content;
 
     /**
-     * 文章来源
+     * 文章来源(可选)
      *
      * @see SourceTypeEnum
      */
@@ -79,7 +79,7 @@ public class ArticleDTO implements Serializable {
     private String sourceUrl;
 
     /**
-     * 0 未发布 1 已发布
+     * 0-未发布 1-已发布
      */
     private Integer status;
 

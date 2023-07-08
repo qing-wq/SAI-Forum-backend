@@ -27,10 +27,4 @@ public class ArticleDetailVo {
      * 作者相关信息
      */
     private UserStatisticInfoDTO author;
-
-    /**
-     * 侧边栏信息
-     */
-//    private List<SideBarDTO> sideBarItems;
-
 }

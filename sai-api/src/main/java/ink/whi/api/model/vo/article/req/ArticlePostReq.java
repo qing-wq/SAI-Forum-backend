@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * 发布文章请求参数
+ * 发布文章入参
  *
  * @author qing
  * @date 2023/4/30
@@ -86,7 +86,7 @@ public class ArticlePostReq implements Serializable {
     private String sourceUrl;
 
     /**
-     * POST 发表, SAVE 暂存 DELETE 删除
+     * POST 发表, SAVE 暂存
      */
     private String actionType;
 

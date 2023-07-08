@@ -2,29 +2,23 @@ package ink.whi.service.article.repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
-import io.swagger.models.auth.In;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Tolerate;
+import lombok.experimental.Accessors;
 
 import java.io.Serial;
 
 /**
  * @author: qing
- * @Date: 2023/4/26
+ * @Date: 2023/7/7
  */
 @Data
-@Builder
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-@TableName("article_detail")
-public class ArticleDetailDO extends BaseDO {
-
-    @Tolerate
-    public ArticleDetailDO() {}
-
+@TableName("draft")
+public class DraftDO extends BaseDO {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7520165504247330524L;
 
     /**
      * 文章ID
@@ -32,14 +26,22 @@ public class ArticleDetailDO extends BaseDO {
     private Long articleId;
 
     /**
-     * 版本号
+     * 作者ID
      */
-    private Long version;
+    private Long author;
+
+    /**
+     * 文章标题
+     */
+    private String title;
 
     /**
      * 文章内容
      */
     private String content;
 
+    /**
+     * 删除
+     */
     private Integer deleted;
 }
