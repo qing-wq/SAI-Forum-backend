@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
  * @author: qing
  * @Date: 2023/4/28
  */
+@Component
 public interface ArticleDetailMapper extends BaseMapper<ArticleDetailDO> {
     @Update("update article_detail set content = #{content}, version = version + 1 where article_id = #{articleId} and `deleted` = 0 order by version desc limit 1")
     void updateContent(Long articleId, String content);

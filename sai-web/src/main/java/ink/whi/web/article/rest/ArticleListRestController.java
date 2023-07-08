@@ -1,9 +1,13 @@
 package ink.whi.web.article.rest;
 
+import ink.whi.api.model.context.ReqInfoContext;
+import ink.whi.api.model.vo.article.dto.DraftDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.core.permission.Permission;
+import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.web.base.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 文章列表接口
+ *
  * @author: qing
  * @Date: 2023/4/29
  */
@@ -23,6 +28,7 @@ public class ArticleListRestController extends BaseRestController {
 
     /**
      * 文章分类分页查询接口
+     *
      * @param category
      * @param pageNum
      * @param pageSize
@@ -30,8 +36,8 @@ public class ArticleListRestController extends BaseRestController {
      */
     @GetMapping(path = "category/{category}")
     public ResVo<PageListVo<ArticleDTO>> category(@PathVariable(name = "category") Long category,
-                                      @RequestParam(name = "page") Long pageNum,
-                                      @RequestParam(name = "pageSize", required = false) Long pageSize) {
+                                                  @RequestParam(name = "page") Long pageNum,
+                                                  @RequestParam(name = "pageSize", required = false) Long pageSize) {
         PageParam pageParam = buildPageParam(pageNum, pageSize);
         PageListVo<ArticleDTO> list = articleReadService.queryArticlesByCategory(category, pageParam);
         return ResVo.ok(list);
@@ -39,6 +45,7 @@ public class ArticleListRestController extends BaseRestController {
 
     /**
      * 相关文章推荐接口
+     *
      * @param articleId
      * @param pageNum
      * @param pageSize
@@ -51,5 +58,22 @@ public class ArticleListRestController extends BaseRestController {
         PageParam pageParam = buildPageParam(pageNum, pageSize);
         PageListVo<ArticleDTO> list = articleReadService.queryRecommendArticle(articleId, pageParam);
         return ResVo.ok(list);
+    }
+
+    /**
+     * 获取用户草稿箱列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Permission(role = UserRole.LOGIN)
+    @GetMapping(path = "draft")
+    public ResVo<PageListVo<DraftDTO>> Drafts(@RequestParam(name = "page") Long pageNum,
+                                              @RequestParam(name = "pageSize", required = false) Long pageSize) {
+        PageParam pageParam = buildPageParam(pageNum, pageSize);
+        Long userId = ReqInfoContext.getReqInfo().getUserId();
+        PageListVo<DraftDTO> drafts = articleReadService.listDrafts(userId, pageParam);
+        System.out.println(drafts);
+        return ResVo.ok(drafts);
     }
 }

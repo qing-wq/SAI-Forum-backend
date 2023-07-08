@@ -13,6 +13,7 @@ import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.exception.BusinessException;
+import ink.whi.api.model.vo.article.dto.DraftDTO;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
@@ -20,9 +21,11 @@ import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.help.ArticleHelper;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.repo.entity.ArticleDetailDO;
+import ink.whi.service.article.repo.entity.DraftDO;
 import ink.whi.service.article.repo.entity.ReadCountDO;
 import ink.whi.service.article.repo.mapper.ArticleDetailMapper;
 import ink.whi.service.article.repo.mapper.ArticleMapper;
+import ink.whi.service.article.repo.mapper.DraftMapper;
 import ink.whi.service.article.repo.mapper.ReadCountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,14 +40,11 @@ import java.util.*;
 @Repository
 public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
-    @Resource
+    @Autowired
     private ArticleDetailMapper articleDetailMapper;
 
-    @Resource
-    private ReadCountMapper readCountMapper;
-
     @Autowired
-    private ArticleHelper articleHelper;
+    private ReadCountMapper readCountMapper;
 
     /**
      * 查询文章详情
@@ -61,8 +61,8 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
         // 查询文章正文
         ArticleDTO dto = ArticleConverter.toDto(article);
-        if (articleHelper.showReviewContent(article)) {
-            ArticleDetailDO detail = articleHelper.findLatestDetail(articleId);
+        if (ArticleHelper.showReviewContent(article)) {
+            ArticleDetailDO detail = findLatestDetail(articleId);
             dto.setContent(detail.getContent());
         } else {
             // 对于审核中的文章，只有作者本人才能看到原文
@@ -73,6 +73,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
     /**
      * 查询分类对应文章内容
+     *
      * @param categoryId
      * @param pageParam
      * @return
@@ -151,6 +152,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
     /**
      * 根据分类+标签查询文章，并按阅读数排序
+     *
      * @param categoryId
      * @param tagIds
      * @param page
@@ -180,6 +182,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
      * 若文章处于审核状态，则直接更新上一条记录；
      * 对于已发布的文章，新插入一条记录，并将版本号+1
      * 即对于审核之前的内容不保存历史版本，上线后的文章保存历史版本
+     *
      * @param articleId
      * @param content
      * @param review
@@ -188,7 +191,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
         if (review) {
             articleDetailMapper.updateContent(articleId, content);
         } else {
-            ArticleDetailDO detail = articleHelper.findLatestDetail(articleId);
+            ArticleDetailDO detail = findLatestDetail(articleId);
             detail.setVersion(detail.getVersion() + 1);
             detail.setContent(content);
             articleDetailMapper.insert(detail);
@@ -228,5 +231,19 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
                                 .like(ArticleDO::getShortTitle, key)
                 );
         return list(query);
+    }
+
+    /**
+     * 查询文章内容
+     * @param articleId
+     * @return
+     */
+    public ArticleDetailDO findLatestDetail(long articleId) {
+        // 查询文章内容
+        LambdaQueryWrapper<ArticleDetailDO> contentQuery = Wrappers.lambdaQuery();
+        contentQuery.eq(ArticleDetailDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .eq(ArticleDetailDO::getArticleId, articleId)
+                .orderByDesc(ArticleDetailDO::getVersion);
+        return articleDetailMapper.selectList(contentQuery).get(0);
     }
 }

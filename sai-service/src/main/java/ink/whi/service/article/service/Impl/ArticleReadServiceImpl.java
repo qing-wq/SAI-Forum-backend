@@ -1,8 +1,10 @@
 package ink.whi.service.article.service.Impl;
 
+import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
+import ink.whi.api.model.vo.article.dto.DraftDTO;
 import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
@@ -14,8 +16,10 @@ import ink.whi.core.utils.MapUtils;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
+import ink.whi.service.article.repo.dao.DraftDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
+import ink.whi.service.article.repo.entity.DraftDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.user.repo.entity.UserFootDO;
@@ -55,6 +59,9 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Autowired
     private UserFootService userFootService;
 
+    @Autowired
+    private DraftDao draftDao;
+
     @Override
     public PageListVo<ArticleDTO> queryArticlesByCategory(Long categoryId, PageParam pageParam) {
         List<ArticleDO> list = articleDao.listArticleByCategoryId(categoryId, pageParam);
@@ -68,6 +75,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     /**
      * 查询作者文章数量
+     *
      * @param userId
      * @return
      */
@@ -78,6 +86,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     /**
      * 查询文章信息
+     *
      * @param articleId
      * @return
      */
@@ -111,6 +120,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     /**
      * 查询文章总信息，用于文章详情页文章信息展示
+     *
      * @param articleId
      * @param readUser
      * @return
@@ -145,6 +155,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     /**
      * 查询文章详细信息，主要用于文章列表展示信息
+     *
      * @param articleId
      * @return
      */
@@ -165,9 +176,10 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     /**
      * 查询用户主页展示文章
+     *
      * @param userId
      * @param pageParam
-     * @param select 用户选择标签
+     * @param select    用户选择标签
      * @return
      */
     @Override
@@ -180,6 +192,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             // 用户的阅读记录
             List<Long> articleIds = userFootService.queryUserReadArticleList(userId, pageParam);
             records = CollectionUtils.isEmpty(articleIds) ? Collections.emptyList() : articleDao.listByIds(articleIds);
+            // fixme：排序逻辑优化
             records = sortByIds(articleIds, records);
         } else if (select == HomeSelectEnum.COLLECTION) {
             // 用户的收藏列表
@@ -215,7 +228,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
      */
     private List<ArticleDO> sortByIds(List<Long> articleIds, List<ArticleDO> records) {
         List<ArticleDO> articleDOS = new ArrayList<>();
-        Map<Long, ArticleDO> articleDOMap = MapUtils.toMap(articleDOS, ArticleDO::getId, r -> r);
+        Map<Long, ArticleDO> articleDOMap = MapUtils.toMap(records, ArticleDO::getId, r -> r);
         articleIds.forEach(articleId -> {
             ArticleDO article = articleDOMap.get(articleId);
             Optional.ofNullable(article).ifPresent(articleDOS::add);
@@ -252,11 +265,67 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     /**
      * 生成文章摘要
+     *
      * @param content
      * @return
      */
     @Override
     public String generateSummary(String content) {
         return ArticleUtil.pickSummary(content);
+    }
+
+    /**
+     * 获取草稿箱列表
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    @Override
+    public PageListVo<DraftDTO> listDrafts(Long userId, PageParam pageParam) {
+        return draftDao.listDrafts(userId, pageParam);
+    }
+
+    /**
+     * 查询草稿记录
+     *
+     * @param draftId
+     * @return
+     */
+    @Override
+    public DraftDTO queryDraftById(Long draftId) {
+        DraftDTO dto = draftDao.queryDraftById(draftId);
+        if (dto == null) {
+            throw BusinessException.newInstance(StatusEnum.RECORDS_NOT_EXISTS, draftId);
+        }
+        Long userId = ReqInfoContext.getReqInfo().getUserId();
+        if (!Objects.equals(userId, dto.getAuthor())) {
+            throw BusinessException.newInstance(StatusEnum.FORBID_ERROR_MIXED, "您没有权限查看");
+        }
+        return dto;
+    }
+
+    /**
+     * 查询文章编辑草稿
+     *
+     * @param articleId
+     * @return
+     */
+    @Override
+    public ArticleDTO queryDraftByArticleId(Long articleId) {
+        ArticleDTO detail = queryDetailArticleInfo(articleId);
+        if (detail == null) {
+            throw BusinessException.newInstance(StatusEnum.RECORDS_NOT_EXISTS, articleId);
+        }
+        if (!Objects.equals(detail.getAuthor(), ReqInfoContext.getReqInfo().getUserId())) {
+            throw BusinessException.newInstance(StatusEnum.FORBID_ERROR_MIXED, articleId);
+        }
+        DraftDO draft = draftDao.findLastDraft(articleId);
+        if (draft != null) {
+            // 查询草稿中是否有记录
+            detail.setContent(draft.getContent());
+            detail.setTitle(draft.getTitle());
+        }
+        return detail;
     }
 }
