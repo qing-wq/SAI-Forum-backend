@@ -47,9 +47,6 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     private ImageService imageService;
 
     @Autowired
-    private DraftDao draftDao;
-
-    @Autowired
     private UserFootService userFootService;
 
     @Autowired
@@ -59,7 +56,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     private TransactionTemplate transactionTemplate;
 
     /**
-     * 未发布文章进行发布(insert)/ 已发布文章进行发布(update)
+     * 文章发布
      *
      * @param articlePostReq
      * @return
@@ -68,7 +65,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
         String content = imageService.mdImgReplace(articlePostReq.getContent());
-        article.setStatus(PushStatusEnum.ONLINE.getCode());
+//        article.setStatus(PushStatusEnum.ONLINE.getCode());
         return transactionTemplate.execute(new TransactionCallback<Long>() {
             //  article + article_detail + tag 三张表
             @Override
@@ -135,39 +132,16 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         articleDao.updateById(article);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long saveDraft(DraftSaveReq req) {
-        DraftDO draft = ArticleConverter.toDraftDo(req, ReqInfoContext.getReqInfo().getUserId());
-        String content = imageService.mdImgReplace(req.getContent());
-        draft.setContent(content);
-
-        if (NumUtil.upZero(req.getArticleId())) {
-            // 新增未发布文章草稿
-            draftDao.save(draft);
-            return draft.getId();
-        }
-
-        Long articleId = req.getArticleId();
-        // 新增发布文章草稿
-        DraftDO draftRecord = draftDao.findLastDraft(articleId);
-        if (draftRecord == null) {
-            // 不存在则创建一个
-            draftDao.save(draft);
-            return draft.getId();
-        }
-        // 存在则直接更新记录
-        draft.setId(draftRecord.getId());
-        draftDao.updateById(draft);
-        return draft.getId();
-    }
-
     /**
-     * 删除文章草稿记录
-     * @param articleId
+     * 更新草稿
+     * @param req
      */
     @Override
-    public void deletedArticleDraft(Long articleId) {
-        draftDao.deletedArticleDraft(articleId);
+    public void updateDraft(ArticlePostReq req) {
+        if (req.getArticleId() == null) {
+            throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "id不能为空");
+        }
+        DraftDO draft = ArticleConverter.toDraftDo(req, ReqInfoContext.getReqInfo().getUserId());
+        articleDao.updateDraft(draft);
     }
 }

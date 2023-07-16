@@ -45,7 +45,7 @@ public class ArticleConverter {
         return article;
     }
 
-    public static DraftDO toDraftDo(DraftSaveReq req, Long author) {
+    public static DraftDO toDraftDo(ArticlePostReq req, Long author) {
         DraftDO draft = new DraftDO();
         draft.setAuthor(author);
         draft.setArticleId(req.getArticleId());

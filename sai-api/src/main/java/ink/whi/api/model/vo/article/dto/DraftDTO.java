@@ -1,8 +1,6 @@
 package ink.whi.api.model.vo.article.dto;
 
-import ink.whi.api.model.vo.article.req.DraftSaveReq;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;

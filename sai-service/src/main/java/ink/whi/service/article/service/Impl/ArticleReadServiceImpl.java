@@ -274,58 +274,19 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         return ArticleUtil.pickSummary(content);
     }
 
-    /**
-     * 获取草稿箱列表
-     *
-     * @param userId
-     * @param pageParam
-     * @return
-     */
     @Override
-    public PageListVo<DraftDTO> listDrafts(Long userId, PageParam pageParam) {
-        return draftDao.listDrafts(userId, pageParam);
+    public PageListVo<ArticleDTO> listDraft(Long userId, PageParam pageParam) {
+        List<ArticleDO> list = articleDao.listDrafts(userId, pageParam);
+        return PageListVo.newVo(ArticleConverter.toArticleDtoList(list), pageParam.getPageSize());
     }
 
-    /**
-     * 查询草稿记录
-     *
-     * @param draftId
-     * @return
-     */
     @Override
-    public DraftDTO queryDraftById(Long draftId) {
-        DraftDTO dto = draftDao.queryDraftById(draftId);
-        if (dto == null) {
-            throw BusinessException.newInstance(StatusEnum.RECORDS_NOT_EXISTS, draftId);
-        }
-        Long userId = ReqInfoContext.getReqInfo().getUserId();
-        if (!Objects.equals(userId, dto.getAuthor())) {
-            throw BusinessException.newInstance(StatusEnum.FORBID_ERROR_MIXED, "您没有权限查看");
-        }
-        return dto;
+    public ArticleDTO queryArticleDraft(Long articleId) {
+        return null;
     }
 
-    /**
-     * 查询文章编辑草稿
-     *
-     * @param articleId
-     * @return
-     */
     @Override
-    public ArticleDTO queryDraftByArticleId(Long articleId) {
-        ArticleDTO detail = queryDetailArticleInfo(articleId);
-        if (detail == null) {
-            throw BusinessException.newInstance(StatusEnum.RECORDS_NOT_EXISTS, articleId);
-        }
-        if (!Objects.equals(detail.getAuthor(), ReqInfoContext.getReqInfo().getUserId())) {
-            throw BusinessException.newInstance(StatusEnum.FORBID_ERROR_MIXED, articleId);
-        }
-        DraftDO draft = draftDao.findLastDraft(articleId);
-        if (draft != null) {
-            // 查询草稿中是否有记录
-            detail.setContent(draft.getContent());
-            detail.setTitle(draft.getTitle());
-        }
-        return detail;
+    public ArticleDTO queryDraftById(Long draftId) {
+        return articleDao.queryArticleDetail(draftId);
     }
 }

@@ -27,7 +27,7 @@ public class ArticleListRestController extends BaseRestController {
     private ArticleReadService articleReadService;
 
     /**
-     * 文章分类分页查询接口
+     * 文章列表分类分页接口
      *
      * @param category
      * @param pageNum
@@ -58,22 +58,5 @@ public class ArticleListRestController extends BaseRestController {
         PageParam pageParam = buildPageParam(pageNum, pageSize);
         PageListVo<ArticleDTO> list = articleReadService.queryRecommendArticle(articleId, pageParam);
         return ResVo.ok(list);
-    }
-
-    /**
-     * 获取用户草稿箱列表
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    @Permission(role = UserRole.LOGIN)
-    @GetMapping(path = "draft")
-    public ResVo<PageListVo<DraftDTO>> Drafts(@RequestParam(name = "page") Long pageNum,
-                                              @RequestParam(name = "pageSize", required = false) Long pageSize) {
-        PageParam pageParam = buildPageParam(pageNum, pageSize);
-        Long userId = ReqInfoContext.getReqInfo().getUserId();
-        PageListVo<DraftDTO> drafts = articleReadService.listDrafts(userId, pageParam);
-        System.out.println(drafts);
-        return ResVo.ok(drafts);
     }
 }

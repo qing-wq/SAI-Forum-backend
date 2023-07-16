@@ -4,7 +4,6 @@ import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.exception.StatusEnum;
-import ink.whi.api.model.vo.article.dto.DraftDTO;
 import ink.whi.api.model.vo.article.req.ContentPostReq;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
@@ -20,7 +19,6 @@ import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
-import ink.whi.service.article.repo.entity.DraftDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.article.service.TagService;
@@ -160,19 +158,6 @@ public class ArticleRestController extends BaseRestController {
     }
 
     /**
-     * 获取草稿详情
-     * @param draftId
-     * @return
-     */
-    @Permission(role = UserRole.LOGIN)
-    @GetMapping(path = "draft/{draftId}")
-    public ResVo<DraftDTO> draft(@PathVariable Long draftId) {
-        DraftDTO dto = articleReadService.queryDraftById(draftId);
-        return ResVo.ok(dto);
-    }
-
-
-    /**
      * 已上线文章编辑
      * @param articleId
      * @return
@@ -180,7 +165,7 @@ public class ArticleRestController extends BaseRestController {
     @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "article/{articleId}")
     public ResVo<ArticleDTO> edit(@PathVariable Long articleId) {
-        ArticleDTO dto = articleReadService.queryDraftByArticleId(articleId);
+        ArticleDTO dto = articleReadService.queryArticleDraft(articleId);
         return ResVo.ok(dto);
     }
 }

@@ -1,7 +1,6 @@
 package ink.whi.service.article.service;
 
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
-import ink.whi.api.model.vo.article.req.DraftSaveReq;
 
 /**
  * 文章写接口
@@ -14,7 +13,5 @@ public interface ArticleWriteService {
 
     void deleteArticle(Long article);
 
-    Long saveDraft(DraftSaveReq draftSaveReq);
-
-    void deletedArticleDraft(Long articleId);
+    void updateDraft(ArticlePostReq articlePostReq);
 }

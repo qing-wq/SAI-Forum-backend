@@ -41,5 +41,10 @@ public class ArticleDetailDO extends BaseDO {
      */
     private String content;
 
+    /**
+     * 文章副本
+     */
+    private String copy;
+
     private Integer deleted;
 }

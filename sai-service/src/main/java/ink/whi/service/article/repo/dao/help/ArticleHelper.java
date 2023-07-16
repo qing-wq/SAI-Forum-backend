@@ -1,20 +1,11 @@
 package ink.whi.service.article.repo.dao.help;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.PushStatusEnum;
-import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.repo.entity.ArticleDO;
-import ink.whi.service.article.repo.entity.ArticleDetailDO;
-import ink.whi.service.article.repo.mapper.ArticleDetailMapper;
-import ink.whi.service.article.repo.mapper.ArticleMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @author: qing
@@ -24,12 +15,13 @@ import javax.annotation.Resource;
 public class ArticleHelper {
 
     /**
-     * 查看审核内容鉴权
+     * 查看内容鉴权
      * @param article
      * @return
      */
-    public static boolean showReviewContent(ArticleDO article) {
-        if (article.getStatus() != PushStatusEnum.REVIEW.getCode()) {
+    public static boolean showContent(ArticleDO article) {
+        // 只能查看已上线的文章
+        if (article.getStatus() == PushStatusEnum.ONLINE.getCode()) {
             return true;
         }
 

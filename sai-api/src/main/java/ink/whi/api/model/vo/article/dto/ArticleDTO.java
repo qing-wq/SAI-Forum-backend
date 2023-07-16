@@ -79,7 +79,7 @@ public class ArticleDTO implements Serializable {
     private String sourceUrl;
 
     /**
-     * 0-未发布 1-已发布
+     * 状态：0-未发布，1-已发布，2-待审核
      */
     private Integer status;
 

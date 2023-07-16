@@ -7,13 +7,13 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
+import ink.whi.api.model.base.BaseDO;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.exception.BusinessException;
-import ink.whi.api.model.vo.article.dto.DraftDTO;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
@@ -25,12 +25,10 @@ import ink.whi.service.article.repo.entity.DraftDO;
 import ink.whi.service.article.repo.entity.ReadCountDO;
 import ink.whi.service.article.repo.mapper.ArticleDetailMapper;
 import ink.whi.service.article.repo.mapper.ArticleMapper;
-import ink.whi.service.article.repo.mapper.DraftMapper;
 import ink.whi.service.article.repo.mapper.ReadCountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -61,7 +59,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
         // 查询文章正文
         ArticleDTO dto = ArticleConverter.toDto(article);
-        if (ArticleHelper.showReviewContent(article)) {
+        if (ArticleHelper.showContent(article)) {
             ArticleDetailDO detail = findLatestDetail(articleId);
             dto.setContent(detail.getContent());
         } else {
@@ -245,5 +243,17 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
                 .eq(ArticleDetailDO::getArticleId, articleId)
                 .orderByDesc(ArticleDetailDO::getVersion);
         return articleDetailMapper.selectList(contentQuery).get(0);
+    }
+
+    public void updateDraft(DraftDO draft) {
+        articleDetailMapper.updateContent(draft.getId(), draft.getContent());
+    }
+
+    public List<ArticleDO> listDrafts(Long userId, PageParam pageParam) {
+        return lambdaQuery().eq(ArticleDO::getUserId, userId)
+                .eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .last(PageParam.getLimitSql(pageParam))
+                .orderByDesc(BaseDO::getCreateTime)
+                .list();
     }
 }

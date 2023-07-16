@@ -11,9 +11,14 @@ import java.io.Serializable;
  * @Date: 2023/7/6
  */
 @Data
-public class DraftSaveReq implements Serializable {
+public class DraftSaveReq extends ArticlePostReq implements Serializable {
     @Serial
     private static final long serialVersionUID = -4091390798510714255L;
+
+    /**
+     * 可选
+     */
+    private Long draftId;
 
     /**
      * 文章ID(可选)
