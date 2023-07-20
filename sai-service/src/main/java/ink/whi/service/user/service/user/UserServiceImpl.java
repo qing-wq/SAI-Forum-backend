@@ -7,10 +7,12 @@ import ink.whi.api.model.vo.article.dto.YearArticleDTO;
 import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
+import ink.whi.api.model.vo.user.req.UserSaveReq;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.user.repo.dao.UserDao;
 import ink.whi.service.user.repo.dao.UserRelationDao;
+import ink.whi.service.user.repo.entity.UserDO;
 import ink.whi.service.user.repo.entity.UserInfoDO;
 import ink.whi.service.user.repo.entity.UserRelationDO;
 import ink.whi.service.user.service.CountService;
@@ -19,8 +21,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ink.whi.service.user.converter.UserConverter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author: qing
@@ -113,5 +117,26 @@ public class UserServiceImpl implements UserService {
             userHomeDTO.setFollowed(Boolean.FALSE);
         }
         return userHomeDTO;
+    }
+
+    /**
+     * 创建用户
+     * @param req
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long saveUser(UserSaveReq req) {
+        UserDO user = UserConverter.toUserDo(req);
+        UserDO record = userDao.getUserByName(user.getUserName());
+        if (record != null) {
+            throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "用户已存在");
+        }
+        userDao.saveUser(user);
+        UserInfoDO userInfo = UserConverter.toUserInfoDo(req);
+        userInfo.setUserId(user.getId());
+        userInfo.setUserName("默认用户" + UUID.randomUUID());
+        userDao.save(userInfo);
+        return user.getId();
     }
 }

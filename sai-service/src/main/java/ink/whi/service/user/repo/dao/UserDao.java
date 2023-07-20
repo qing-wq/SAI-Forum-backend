@@ -40,4 +40,8 @@ public class UserDao extends ServiceImpl<UserInfoMapper, UserInfoDO> {
                 .eq(UserInfoDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .count().intValue();
     }
+
+    public void saveUser(UserDO user) {
+        userMapper.insert(user);
+    }
 }

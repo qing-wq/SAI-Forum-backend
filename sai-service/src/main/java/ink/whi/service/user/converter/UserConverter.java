@@ -1,10 +1,15 @@
 package ink.whi.service.user.converter;
 
+import ink.whi.api.model.enums.LoginTypeEnum;
 import ink.whi.api.model.enums.RoleEnum;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
+import ink.whi.api.model.vo.user.req.UserSaveReq;
+import ink.whi.service.user.repo.entity.UserDO;
 import ink.whi.service.user.repo.entity.UserInfoDO;
 import org.springframework.beans.BeanUtils;
+
+import java.util.UUID;
 
 /**
  * 实体转换
@@ -31,5 +36,19 @@ public class UserConverter {
         UserStatisticInfoDTO userHomeDTO = new UserStatisticInfoDTO();
         BeanUtils.copyProperties(baseUserInfoDTO, userHomeDTO);
         return userHomeDTO;
+    }
+
+    public static UserDO toUserDo(UserSaveReq req) {
+        UserDO user = new UserDO();
+        user.setUserName(req.getUserName());
+        user.setPassword(req.getPassword());
+        user.setLoginType(LoginTypeEnum.PASSWORD_LOGIN.getCode());
+        return user;
+    }
+
+    public static UserInfoDO toUserInfoDo(UserSaveReq req) {
+        UserInfoDO info = new UserInfoDO();
+        BeanUtils.copyProperties(req, info);
+        return info;
     }
 }

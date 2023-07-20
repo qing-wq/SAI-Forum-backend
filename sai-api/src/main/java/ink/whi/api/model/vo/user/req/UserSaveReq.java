@@ -16,13 +16,33 @@ public class UserSaveReq implements Serializable {
 
     private Long userId;
 
+    /**
+     * 用户名
+     */
     private String userName;
 
+    /**
+     * 密码
+     */
     private String password;
 
+    /**
+     * 学号
+     */
     private String studentId;
 
+    /**
+     * 学院
+     */
     private String college;
 
+    /**
+     * 邮箱
+     */
     private String email;
+
+    /**
+     * 专业
+     */
+    private String major;
 }

@@ -4,6 +4,7 @@ import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.FollowSelectEnum;
 import ink.whi.api.model.enums.FollowTypeEnum;
 import ink.whi.api.model.enums.HomeSelectEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
@@ -11,6 +12,7 @@ import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagSelectDTO;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
+import ink.whi.api.model.vo.user.req.UserSaveReq;
 import ink.whi.core.permission.Permission;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.user.service.UserRelationService;
@@ -162,7 +164,17 @@ public class UserRestController {
         vo.setFollowList(followList);
     }
 
-    public ResVo<Long> register() {
-        return null;
+    /**
+     * 用户注册
+     * @param req
+     * @return
+     */
+    @PostMapping(path = "register")
+    public ResVo<Long> register(@RequestBody UserSaveReq req) {
+        if (StringUtils.isBlank(req.getUserName()) || StringUtils.isBlank(req.getPassword())) {
+            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "账号密码不能为空");
+        }
+        Long userId = userService.saveUser(req);
+        return ResVo.ok(userId);
     }
 }

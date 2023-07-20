@@ -67,4 +67,15 @@ public class DraftRestController extends BaseRestController {
         articleWriteService.updateDraft(articlePostReq);
         return ResVo.ok("ok");
     }
+
+    /**
+     * 删除草稿
+     * @param draftId
+     * @return
+     */
+    @GetMapping(path = "del")
+    public ResVo<String> del(Long draftId) {
+        articleWriteService.deleteArticle(draftId);
+        return ResVo.ok("ok");
+    }
 }
