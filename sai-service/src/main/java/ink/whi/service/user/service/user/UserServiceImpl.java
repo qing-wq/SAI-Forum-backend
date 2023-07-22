@@ -5,6 +5,7 @@ import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
 import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.article.req.UserInfoSaveReq;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
@@ -138,5 +139,13 @@ public class UserServiceImpl implements UserService {
         userInfo.setUserName("默认用户" + UUID.randomUUID());
         userDao.save(userInfo);
         return user.getId();
+    }
+
+    @Override
+    public void saveUserInfo(UserInfoSaveReq req) {
+        UserInfoDO info = UserConverter.toDo(req);
+        UserInfoDO record = userDao.getByUserId(req.getUserId());
+        info.setId(record.getId());
+        userDao.updateById(info);
     }
 }

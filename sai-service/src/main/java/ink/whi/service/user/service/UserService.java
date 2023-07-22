@@ -1,5 +1,6 @@
 package ink.whi.service.user.service;
 
+import ink.whi.api.model.vo.article.req.UserInfoSaveReq;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
@@ -16,4 +17,6 @@ public interface UserService {
     UserStatisticInfoDTO querySimpleUserInfoWithStatistic(Long userId);
 
     Long saveUser(UserSaveReq req);
+
+    void saveUserInfo(UserInfoSaveReq req);
 }

@@ -2,6 +2,7 @@ package ink.whi.service.user.repo.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.enums.FollowStateEnum;
+import ink.whi.api.model.vo.article.req.UserRelationReq;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserRelationDO;
@@ -62,5 +63,11 @@ public class UserRelationDao extends ServiceImpl<UserRelationMapper, UserRelatio
     public List<UserRelationDO> listUserRelations(Long followUserId, Collection<Long> targetUserId) {
         return lambdaQuery().eq(UserRelationDO::getFollowUserId, followUserId)
                 .in(UserRelationDO::getUserId, targetUserId).list();
+    }
+
+    public UserRelationDO getUserRelationRecord(Long userId, Long followUserId) {
+        return lambdaQuery().eq(UserRelationDO::getUserId, userId)
+                .eq(UserRelationDO::getFollowUserId, followUserId)
+                .one();
     }
 }

@@ -5,6 +5,8 @@ import ink.whi.api.model.enums.FollowSelectEnum;
 import ink.whi.api.model.enums.FollowTypeEnum;
 import ink.whi.api.model.enums.HomeSelectEnum;
 import ink.whi.api.model.exception.StatusEnum;
+import ink.whi.api.model.vo.article.req.UserInfoSaveReq;
+import ink.whi.api.model.vo.article.req.UserRelationReq;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
@@ -14,12 +16,15 @@ import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
 import ink.whi.core.permission.Permission;
+import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.user.service.UserRelationService;
 import ink.whi.service.user.service.UserService;
+import ink.whi.web.base.BaseRestController;
 import ink.whi.web.user.vo.UserHomeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping(path = "user")
-public class UserRestController {
+public class UserRestController extends BaseRestController {
     private static final List<String> homeSelectTags = Arrays.asList("article", "read", "follow", "collection");
     private static final List<String> followSelectTags = Arrays.asList("follow", "fans");
     @Autowired
@@ -176,5 +181,58 @@ public class UserRestController {
         }
         Long userId = userService.saveUser(req);
         return ResVo.ok(userId);
+    }
+
+    /**
+     * 用户关注
+     *
+     * @param req
+     * @return
+     * @throws Exception
+     */
+    @Permission(role = UserRole.LOGIN)
+    @PostMapping(path = "follow")
+    public ResVo<Boolean> saveUserRelation(@RequestBody UserRelationReq req) {
+        userRelationService.saveUserRelation(req);
+        return ResVo.ok(true);
+    }
+
+    /**
+     * 保存用户信息
+     *
+     * @param req
+     * @return
+     * @throws Exception
+     */
+    @Permission(role = UserRole.LOGIN)
+    @PostMapping(path = "saveInfo")
+    @Transactional(rollbackFor = Exception.class)
+    public ResVo<Boolean> saveUserInfo(@RequestBody UserInfoSaveReq req) {
+        Long userId = ReqInfoContext.getReqInfo().getUserId();
+        req.setUserId(userId);
+        userService.saveUserInfo(req);
+        return ResVo.ok(true);
+    }
+
+    /**
+     * 用户的文章列表分页接口
+     *
+     * @param userId
+     * @param homeSelectType 类型为article
+     * @return
+     */
+    @GetMapping(path = "articleList")
+    public ResVo<PageListVo<ArticleDTO>> articleList(@RequestParam(name = "userId") Long userId,
+                                             @RequestParam(name = "homeSelectType") String homeSelectType,
+                                             @RequestParam("page") Long page,
+                                             @RequestParam(name = "pageSize", required = false) Long pageSize) {
+        HomeSelectEnum select = HomeSelectEnum.fromCode(homeSelectType);
+        if (select == HomeSelectEnum.ARTICLE) {
+            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS);
+        }
+
+        PageParam pageParam = buildPageParam(page, pageSize);
+        PageListVo<ArticleDTO> dto = articleReadService.queryArticlesByUserAndType(userId, pageParam, select);
+        return ResVo.ok(dto);
     }
 }

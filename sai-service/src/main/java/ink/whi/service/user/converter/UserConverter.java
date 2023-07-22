@@ -2,6 +2,7 @@ package ink.whi.service.user.converter;
 
 import ink.whi.api.model.enums.LoginTypeEnum;
 import ink.whi.api.model.enums.RoleEnum;
+import ink.whi.api.model.vo.article.req.UserInfoSaveReq;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
@@ -50,5 +51,14 @@ public class UserConverter {
         UserInfoDO info = new UserInfoDO();
         BeanUtils.copyProperties(req, info);
         return info;
+    }
+
+    public static UserInfoDO toDo(UserInfoSaveReq req) {
+        if (req == null) {
+            return null;
+        }
+        UserInfoDO userInfoDO = new UserInfoDO();
+        BeanUtils.copyProperties(req, userInfoDO);
+        return userInfoDO;
     }
 }

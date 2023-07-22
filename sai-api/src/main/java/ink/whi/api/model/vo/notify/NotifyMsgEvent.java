@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.context.ApplicationEvent;
 
+import java.io.Serial;
+
 /**
  * @author qing
  * @date 2022/4/30
@@ -16,6 +18,9 @@ import org.springframework.context.ApplicationEvent;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class NotifyMsgEvent<T> extends ApplicationEvent {
+
+    @Serial
+    private static final long serialVersionUID = 3769329609100817957L;
 
     private NotifyTypeEnum notifyType;
 

@@ -1,10 +1,14 @@
 package ink.whi.service.user.service.relation;
 
 import ink.whi.api.model.enums.FollowStateEnum;
+import ink.whi.api.model.vo.article.req.UserRelationReq;
+import ink.whi.api.model.vo.notify.NotifyMsgEvent;
+import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.core.utils.MapUtils;
+import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.user.repo.dao.UserRelationDao;
 import ink.whi.service.user.repo.entity.UserRelationDO;
 import ink.whi.service.user.service.UserRelationService;
@@ -68,5 +72,21 @@ public class UserRelationServiceImpl implements UserRelationService {
                 follow.setFollowed(false);
             }
         });
+    }
+
+    @Override
+    public void saveUserRelation(UserRelationReq req) {
+        UserRelationDO record = userRelationDao.getUserRelationRecord(req.getUserId(), req.getFollowUserId());
+        FollowStateEnum state = req.getFollowed() ? FollowStateEnum.FOLLOW : FollowStateEnum.CANCEL_FOLLOW;
+        if (record == null) {
+            record = new UserRelationDO().setUserId(req.getUserId()).setFollowUserId(req.getFollowUserId()).setFollowState(state.getCode());
+            userRelationDao.save(record);
+            // 发布消息
+            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.FOLLOW, record));
+            return;
+        }
+
+        record.setFollowState(state.getCode());
+        SpringUtil.publishEvent(new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, record));
     }
 }
