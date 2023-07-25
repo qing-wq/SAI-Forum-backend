@@ -57,6 +57,5 @@ public class GlobalInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        ReqInfoContext.clear();
     }
 }

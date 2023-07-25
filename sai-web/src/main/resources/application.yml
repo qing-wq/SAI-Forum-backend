@@ -3,6 +3,7 @@ server:
   servlet:
     session:
       timeout: 5m # 设置session的有效期为五分钟
+  address: 0.0.0.0
 
 spring:
   main:

@@ -5,6 +5,7 @@ import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ContentPostReq;
+import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
@@ -140,10 +141,10 @@ public class ArticleRestController extends BaseRestController {
      * @return
      */
     @GetMapping(path = "tags")
-    public ResVo<List<TagDTO>> listTags(@RequestParam(name = "page") Long pageNum,
-                                        @RequestParam(name = "pageSize", required = false) Long pageSize) {
+    public ResVo<PageListVo<TagDTO>> listTags(@RequestParam(name = "page") Long pageNum,
+                                              @RequestParam(name = "pageSize", required = false) Long pageSize) {
         PageParam pageParam = buildPageParam(pageNum, pageSize);
-        List<TagDTO> list = tagService.queryTagsList(pageParam);
+        PageListVo<TagDTO> list = tagService.queryTagsList(pageParam);
         return ResVo.ok(list);
     }
 

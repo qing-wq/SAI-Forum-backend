@@ -1,5 +1,6 @@
 package ink.whi.service.article.service.Impl;
 
+import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.repo.dao.TagDao;
@@ -20,7 +21,8 @@ public class TagServiceImpl implements TagService {
     private TagDao tagDao;
 
     @Override
-    public List<TagDTO> queryTagsList(PageParam pageParam) {
-        return tagDao.listTags(pageParam);
+    public PageListVo<TagDTO> queryTagsList(PageParam pageParam) {
+        List<TagDTO> list = tagDao.listTags(pageParam);
+        return PageListVo.newVo(list, pageParam.getPageSize());
     }
 }
