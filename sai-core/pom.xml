@@ -109,6 +109,13 @@
             <artifactId>flexmark-all</artifactId>
             <version>0.62.2</version>
         </dependency>
+
+        <!--  RabbitMQ  -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.5.1</version>
+        </dependency>
     </dependencies>
 
 </project>
