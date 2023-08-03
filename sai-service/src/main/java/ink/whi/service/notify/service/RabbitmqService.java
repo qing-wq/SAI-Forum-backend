@@ -14,6 +14,13 @@ public interface RabbitmqService {
     boolean enabled();
 
     /**
+     * 发布消息(默认队列)
+     *
+     * @param message
+     */
+    void publishMsg(String message);
+
+    /**
      * 发布消息
      *
      * @param exchange

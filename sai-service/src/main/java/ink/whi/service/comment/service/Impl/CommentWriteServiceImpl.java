@@ -4,7 +4,9 @@ import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.comment.CommentSaveReq;
 import ink.whi.api.model.vo.notify.NotifyMsgEvent;
+import ink.whi.api.model.vo.notify.RabbitmqMsg;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
+import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
@@ -13,6 +15,7 @@ import ink.whi.service.comment.converter.CommentConverter;
 import ink.whi.service.comment.repo.dao.CommentDao;
 import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.comment.service.CommentWriteService;
+import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,9 @@ public class CommentWriteServiceImpl implements CommentWriteService {
 
     @Autowired
     private ArticleReadService articleReadService;
+
+    @Autowired
+    private RabbitmqService rabbitmqService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -61,9 +67,9 @@ public class CommentWriteServiceImpl implements CommentWriteService {
         userFootService.saveCommentFoot(comment, article.getUserId(), parentCommentUser);
 
         // 发布事件
-        SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.COMMENT, comment));
+        rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(NotifyTypeEnum.COMMENT, comment)));
         if (NumUtil.upZero(parentCommentUser)){
-            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.REPLY, comment));
+            rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(NotifyTypeEnum.REPLY, comment)));
         }
         return comment;
     }

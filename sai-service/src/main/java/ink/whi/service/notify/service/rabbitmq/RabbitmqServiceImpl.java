@@ -34,6 +34,15 @@ public class RabbitmqServiceImpl implements RabbitmqService {
     }
 
     @Override
+    public void publishMsg(String message) {
+        publishMsg(
+                CommonConstants.EXCHANGE_NAME_DIRECT,
+                BuiltinExchangeType.DIRECT,
+                CommonConstants.QUEUE_KEY_PRAISE,
+                message);
+    }
+
+    @Override
     public void publishMsg(String exchange,
                            BuiltinExchangeType exchangeType,
                            String routingKey,

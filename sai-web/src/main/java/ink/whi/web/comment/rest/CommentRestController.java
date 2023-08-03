@@ -4,6 +4,7 @@ import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.exception.StatusEnum;
+import ink.whi.api.model.vo.notify.RabbitmqMsg;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
@@ -13,6 +14,7 @@ import ink.whi.api.model.vo.notify.NotifyMsgEvent;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
+import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.entity.ArticleDO;
@@ -20,6 +22,7 @@ import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.comment.service.CommentReadService;
 import ink.whi.service.comment.service.CommentWriteService;
+import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.web.article.vo.ArticleDetailVo;
@@ -52,6 +55,9 @@ public class CommentRestController extends BaseRestController {
 
     @Autowired
     private UserFootService userFootService;
+
+    @Autowired
+    private RabbitmqService rabbitmqService;
 
     /**
      * 评论列表分页接口
@@ -117,7 +123,7 @@ public class CommentRestController extends BaseRestController {
         }
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, commentId, comment.getUserId(), ReqInfoContext.getReqInfo().getUserId(), type);
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-        Optional.ofNullable(notifyType).ifPresent(s -> SpringUtil.publishEvent(new NotifyMsgEvent<>(this, notifyType, foot)));
+        Optional.ofNullable(notifyType).ifPresent(s -> rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(s, foot))));
         return ResVo.ok("ok");
     }
 }

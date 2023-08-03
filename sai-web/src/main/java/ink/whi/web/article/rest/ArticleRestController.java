@@ -21,6 +21,7 @@ import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.NumUtil;
+import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
@@ -38,6 +39,7 @@ import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -127,14 +129,7 @@ public class ArticleRestController extends BaseRestController {
 
         // 消息通知
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-//        Optional.ofNullable(notifyType).ifPresent(s -> SpringUtil.publishEvent(new NotifyMsgEvent<UserFootDO>(this, s, foot)));
-
-        // 使用rabbitmq做消息通知
-        rabbitmqService.publishMsg(
-                CommonConstants.EXCHANGE_NAME_DIRECT,
-                BuiltinExchangeType.DIRECT,
-                CommonConstants.QUEUE_KEY_PRAISE,
-                JsonUtil.toStr(new RabbitmqMsg<>(notifyType, foot)));
+        Optional.ofNullable(notifyType).ifPresent(s ->rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(s, foot))));
         return ResVo.ok(true);
     }
 
