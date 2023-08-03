@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 消息事件监听器
+ * fixme: 添加RabbitMq之后废弃
  *
  * @author: qing
  * @Date: 2023/5/4

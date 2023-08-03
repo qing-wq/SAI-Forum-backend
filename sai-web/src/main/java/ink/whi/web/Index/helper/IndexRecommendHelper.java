@@ -37,6 +37,7 @@ public class IndexRecommendHelper {
     public IndexVo buildIndexVo(String activeTab) {
         IndexVo vo = new IndexVo();
         CategoryDTO category = categories(activeTab, vo);
+        // fixme: 使用并行调度优化
         vo.setArticles(articleList(category.getCategoryId()));
         vo.setCurrentCategory(category.getCategory());
         vo.setCategoryId(category.getCategoryId());

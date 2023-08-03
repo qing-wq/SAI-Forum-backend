@@ -62,7 +62,7 @@ public class DraftRestController extends BaseRestController {
      * @param articlePostReq
      * @return
      */
-    @GetMapping(path = "update")
+    @PostMapping(path = "update")
     public ResVo<String> autoSave(@RequestBody ArticlePostReq articlePostReq) {
         articleWriteService.updateDraft(articlePostReq);
         return ResVo.ok("ok");

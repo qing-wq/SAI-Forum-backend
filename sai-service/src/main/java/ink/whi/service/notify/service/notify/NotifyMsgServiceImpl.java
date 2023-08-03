@@ -1,4 +1,4 @@
-package ink.whi.service.notify.service.Impl;
+package ink.whi.service.notify.service.notify;
 
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.vo.page.PageListVo;

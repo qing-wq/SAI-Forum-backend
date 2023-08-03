@@ -33,6 +33,7 @@ public class IndexHomeController {
     public ResVo<IndexVo> index(HttpServletRequest request) {
         String activeTab = request.getParameter("category");
         IndexVo vo = indexRecommendHelper.buildIndexVo(activeTab);
+        // fixme: 增加全局参数msgCount
         return ResVo.ok(vo);
     }
 }
