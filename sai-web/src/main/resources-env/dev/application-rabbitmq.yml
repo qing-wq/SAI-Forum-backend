@@ -4,5 +4,5 @@ rabbitmq:
   username: admin
   password: admin
   virtualhost: /
-  switch_flag: false
+  enable: true
   pool_size: 5

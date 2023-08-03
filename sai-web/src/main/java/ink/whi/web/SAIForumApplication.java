@@ -2,7 +2,6 @@ package ink.whi.web;
 
 import ink.whi.web.hook.interceptor.GlobalInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -13,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableAsync
 @ServletComponentScan
 @SpringBootApplication
-public class SaiForumApplication implements WebMvcConfigurer{
+public class SAIForumApplication implements WebMvcConfigurer{
 
     @Autowired
     private GlobalInterceptor globalInterceptor;
@@ -24,6 +23,6 @@ public class SaiForumApplication implements WebMvcConfigurer{
     }
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(SaiForumApplication.class).allowCircularReferences(true).run(args);
+        new SpringApplicationBuilder(SAIForumApplication.class).allowCircularReferences(true).run(args);
     }
 }

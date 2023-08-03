@@ -1,29 +1,32 @@
 package ink.whi.web.article.rest;
 
+import com.rabbitmq.client.BuiltinExchangeType;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ContentPostReq;
+import ink.whi.api.model.vo.notify.RabbitmqMsg;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.article.dto.TagDTO;
-import ink.whi.api.model.vo.notify.NotifyMsgEvent;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.core.article.MarkdownConverter;
+import ink.whi.core.common.CommonConstants;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
+import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.NumUtil;
-import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.article.service.TagService;
 import ink.whi.service.comment.service.CommentReadService;
+import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
@@ -33,8 +36,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 文章查询接口
@@ -63,6 +67,9 @@ public class ArticleRestController extends BaseRestController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RabbitmqService rabbitmqService;
 
     /**
      * 文章详情接口
@@ -105,7 +112,7 @@ public class ArticleRestController extends BaseRestController {
     @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "favor")
     public ResVo<Boolean> favor(@RequestParam(name = "articleId") Long articleId,
-                                @RequestParam(name = "operate") Integer operateType) {
+                                @RequestParam(name = "operate") Integer operateType) throws IOException, TimeoutException {
         OperateTypeEnum type = OperateTypeEnum.fromCode(operateType);
         if (type == null) {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "参数非法：" + operateType);
@@ -120,7 +127,14 @@ public class ArticleRestController extends BaseRestController {
 
         // 消息通知
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-        Optional.ofNullable(notifyType).ifPresent(s -> SpringUtil.publishEvent(new NotifyMsgEvent<UserFootDO>(this, s, foot)));
+//        Optional.ofNullable(notifyType).ifPresent(s -> SpringUtil.publishEvent(new NotifyMsgEvent<UserFootDO>(this, s, foot)));
+
+        // 使用rabbitmq做消息通知
+        rabbitmqService.publishMsg(
+                CommonConstants.EXCHANGE_NAME_DIRECT,
+                BuiltinExchangeType.DIRECT,
+                CommonConstants.QUEUE_KEY_PRAISE,
+                JsonUtil.toStr(new RabbitmqMsg<>(notifyType, foot)));
         return ResVo.ok(true);
     }
 

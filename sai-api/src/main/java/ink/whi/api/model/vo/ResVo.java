@@ -4,6 +4,7 @@ import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.Status;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Data
 public class ResVo<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = -510306209659393854L;
 
     private Status status;
