@@ -1,6 +1,7 @@
 package ink.whi.web;
 
 import ink.whi.web.hook.interceptor.GlobalInterceptor;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableAsync
+@EnableRabbit
 @ServletComponentScan
 @SpringBootApplication
 public class SAIForumApplication implements WebMvcConfigurer{

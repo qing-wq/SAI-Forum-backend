@@ -2,7 +2,7 @@ package ink.whi.service.notify.service.rabbitmq;
 
 import com.rabbitmq.client.*;
 import ink.whi.api.model.vo.notify.RabbitmqMsg;
-import ink.whi.core.common.CommonConstants;
+import ink.whi.core.common.RabbitmqConfig;
 import ink.whi.core.rabbitmq.RabbitmqConnection;
 import ink.whi.core.rabbitmq.RabbitmqConnectionPool;
 import ink.whi.core.utils.JsonUtil;
@@ -10,6 +10,8 @@ import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.notify.service.ProcessMsgService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +38,9 @@ public class RabbitmqServiceImpl implements RabbitmqService {
     @Override
     public void publishMsg(String message) {
         publishMsg(
-                CommonConstants.EXCHANGE_NAME_DIRECT,
+                RabbitmqConfig.EXCHANGE_NAME_DIRECT,
                 BuiltinExchangeType.DIRECT,
-                CommonConstants.QUEUE_KEY_PRAISE,
+                RabbitmqConfig.QUEUE_KEY_PRAISE,
                 message);
     }
 
@@ -48,7 +50,6 @@ public class RabbitmqServiceImpl implements RabbitmqService {
                            String routingKey,
                            String message) {
         try {
-
             //创建连接
             RabbitmqConnection rabbitmqConnection = RabbitmqConnectionPool.getConnection();
             Connection connection = rabbitmqConnection.getConnection();
@@ -92,8 +93,8 @@ public class RabbitmqServiceImpl implements RabbitmqService {
 
                     // fixme: 用工厂 + 策略模式优化
                     processMsgService.processMsg(message, JsonUtil.toObj(message, RabbitmqMsg.class));
-//                    consumerService.processMsg(JsonUtil.toObj(message, NotifyMsg.class));
 
+                    // ack
                     channel.basicAck(envelope.getDeliveryTag(), false);
                 }
             };
@@ -118,8 +119,8 @@ public class RabbitmqServiceImpl implements RabbitmqService {
             step++;
             try {
                 log.info("processConsumerMsg cycle.");
-                consumerMsg(CommonConstants.EXCHANGE_NAME_DIRECT, CommonConstants.QUEUE_NAME_PRAISE,
-                        CommonConstants.QUEUE_KEY_PRAISE);
+                consumerMsg(RabbitmqConfig.EXCHANGE_NAME_DIRECT, RabbitmqConfig.QUEUE_NAME_PRAISE,
+                        RabbitmqConfig.QUEUE_KEY_PRAISE);
                 if (step.equals(stepTotal)) {
                     Thread.sleep(10000);
                     step = 0;
@@ -128,5 +129,14 @@ public class RabbitmqServiceImpl implements RabbitmqService {
 
             }
         }
+    }
+
+    @RabbitListener(queues = RabbitmqConfig.QUEUE_NAME_PRAISE)
+    public void handleDelivery(Message body) {
+        String message = new String(body.getBody(), StandardCharsets.UTF_8);
+        log.info("Consumer msg: {}", message);
+
+        // fixme: 用工厂 + 策略模式优化
+        processMsgService.processMsg(message, JsonUtil.toObj(message, RabbitmqMsg.class));
     }
 }

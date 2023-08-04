@@ -4,7 +4,7 @@ import com.rabbitmq.client.BuiltinExchangeType;
 import ink.whi.api.model.vo.notify.RabbitmqMsg;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.cache.RedisClient;
-import ink.whi.core.common.CommonConstants;
+import ink.whi.core.common.RabbitmqConfig;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.repo.dao.UserFootDao;
@@ -39,9 +39,9 @@ public class RabbitmqTest extends BasicTest {
         try {
             String message = "{\"notifyType\":\"PRAISE\",\"content\":{\"id\":2,\"createTime\":1681572523000,\"updateTime\":1682328515000,\"userId\":3,\"documentId\":101,\"documentType\":1,\"documentUserId\":1,\"collectionStat\":0,\"readStat\":1,\"commentStat\":0,\"praiseStat\":0}}\n";
             rabbitmqService.publishMsg(
-                    CommonConstants.EXCHANGE_NAME_DIRECT,
+                    RabbitmqConfig.EXCHANGE_NAME_DIRECT,
                     BuiltinExchangeType.DIRECT,
-                    CommonConstants.QUEUE_KEY_PRAISE,
+                    RabbitmqConfig.QUEUE_KEY_PRAISE,
                     message);
         } catch (Exception e) {
             e.printStackTrace();
