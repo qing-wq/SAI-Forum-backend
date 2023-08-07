@@ -10,7 +10,11 @@ import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.notify.service.ProcessMsgService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,7 +114,6 @@ public class RabbitmqServiceImpl implements RabbitmqService {
     @Override
     public void processConsumerMsg() {
         log.info("Begin to processConsumerMsg.");
-
         Integer stepTotal = 1;
         Integer step = 0;
 
@@ -131,12 +134,14 @@ public class RabbitmqServiceImpl implements RabbitmqService {
         }
     }
 
-    @RabbitListener(queues = RabbitmqConfig.QUEUE_NAME_PRAISE)
+    @RabbitListener(bindings = @QueueBinding(
+            exchange = @Exchange(name = RabbitmqConfig.EXCHANGE_NAME_DIRECT),
+            value = @Queue(name = RabbitmqConfig.QUEUE_NAME_PRAISE),
+            key = RabbitmqConfig.QUEUE_KEY_PRAISE
+    ))
     public void handleDelivery(Message body) {
         String message = new String(body.getBody(), StandardCharsets.UTF_8);
         log.info("Consumer msg: {}", message);
-
-        // fixme: 用工厂 + 策略模式优化
         processMsgService.processMsg(message, JsonUtil.toObj(message, RabbitmqMsg.class));
     }
 }
