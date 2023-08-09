@@ -7,8 +7,16 @@ import ink.whi.api.model.vo.notify.dto.NotifyMsgDTO;
 import ink.whi.api.model.vo.notify.enums.NotifyStatEnum;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.utils.NumUtil;
+import ink.whi.core.utils.SpringUtil;
+import ink.whi.service.article.repo.entity.ArticleDO;
+import ink.whi.service.article.service.ArticleReadService;
+import ink.whi.service.comment.repo.entity.CommentDO;
+import ink.whi.service.comment.service.CommentReadService;
 import ink.whi.service.notify.repo.dao.NotifyMsgDao;
+import ink.whi.service.notify.repo.entity.NotifyMsgDO;
 import ink.whi.service.notify.service.NotifyMsgService;
+import ink.whi.service.user.repo.entity.UserFootDO;
+import ink.whi.service.user.repo.entity.UserRelationDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +32,17 @@ public class NotifyMsgServiceImpl implements NotifyMsgService {
     @Autowired
     private NotifyMsgDao notifyMsgDao;
 
+    @Autowired
+    private ArticleReadService articleReadService;
+
+    @Autowired
+    private CommentReadService commentReadService;
+
+    /**
+     * 查询用户未读消息数
+     * @param userId
+     * @return
+     */
     @Override
     public int queryUserNotifyMsgCount(Long userId) {
         return notifyMsgDao.countByUserIdAndStat(userId, NotifyStatEnum.UNREAD);
@@ -55,6 +74,13 @@ public class NotifyMsgServiceImpl implements NotifyMsgService {
         result.put(type.name().toLowerCase(), map.getOrDefault(type.getType(), 0));
     }
 
+    /**
+     * 根据消息类型查询用户消息
+     * @param userId
+     * @param typeEnum
+     * @param page
+     * @return
+     */
     @Override
     public PageListVo<NotifyMsgDTO> queryUserNotices(Long userId, NotifyTypeEnum typeEnum, PageParam page) {
         List<NotifyMsgDTO> list = notifyMsgDao.listNotifyMsgByUserIdAndType(userId, typeEnum, page);
@@ -64,5 +90,88 @@ public class NotifyMsgServiceImpl implements NotifyMsgService {
         ReqInfoContext.getReqInfo().setMsgNum(queryUserNotifyMsgCount(userId));
         // todo：更新用户关系
         return PageListVo.newVo(list, page.getPageSize());
+    }
+
+    /**
+     * 用户评论消息
+     * @param comment
+     */
+    @Override
+    public void saveCommentNotify(CommentDO comment) {
+        ArticleDO article = articleReadService.queryBasicArticle(comment.getArticleId());
+        notifyMsgDao.saveCommentNotify(comment, article.getUserId());
+    }
+
+    /**
+     * 用户回复消息
+     * @param comment
+     */
+    @Override
+    public void saveReplyNotify(CommentDO comment) {
+        CommentDO parentComment = commentReadService.queryComment(comment.getParentCommentId());
+        notifyMsgDao.saveReplyNotify(comment, parentComment.getUserId());
+    }
+
+    /**
+     * 文章点赞消息
+     * @param foot
+     */
+    @Override
+    public void saveArticlePraise(UserFootDO foot){
+        notifyMsgDao.saveArticlePraise(foot);
+    }
+
+    /**
+     * 文章收藏消息
+     * @param foot
+     */
+    @Override
+    public void saveArticleCollect(UserFootDO foot){
+        notifyMsgDao.saveArticleCollect(foot);
+    }
+
+    /**
+     * 文章取消点赞消息
+     * @param foot
+     */
+    @Override
+    public void removeArticlePraise(UserFootDO foot) {
+        notifyMsgDao.removeArticlePraise(foot);
+    }
+
+    /**
+     * 文章取消收藏消息
+     * @param foot
+     */
+    @Override
+    public void removeArticleCollect(UserFootDO foot) {
+        notifyMsgDao.removeArticleCollect(foot);
+    }
+
+    /**
+     * 用户关注消息
+     * @param relation
+     */
+    @Override
+    public void saveFollowNotify(UserRelationDO relation) {
+        notifyMsgDao.saveFollowNotify(relation);
+    }
+
+    /**
+     * 用户取消关注消息
+     * @param relation
+     */
+    @Override
+    public void removeFollowNotify(UserRelationDO relation) {
+        notifyMsgDao.removeFollowNotify(relation);
+    }
+
+    /**
+     * 用户注册系统消息
+     * @param userId
+     */
+    @Override
+    public void saveRegisterSystemNotify(Long userId) {
+        notifyMsgDao.saveRegisterSystemNotify(userId);
     }
 }

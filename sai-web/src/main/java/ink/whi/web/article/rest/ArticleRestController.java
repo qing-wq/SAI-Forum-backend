@@ -5,7 +5,6 @@ import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ContentPostReq;
-import ink.whi.api.model.vo.notify.RabbitmqMsg;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;

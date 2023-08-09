@@ -1,21 +1,12 @@
 package ink.whi.service.notify.service.rabbitmq;
 
 import com.rabbitmq.client.*;
-import ink.whi.api.model.vo.notify.RabbitmqMsg;
-import ink.whi.core.common.RabbitmqConfig;
 import ink.whi.core.rabbitmq.RabbitmqConnection;
 import ink.whi.core.rabbitmq.RabbitmqConnectionPool;
-import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.notify.service.RabbitmqService;
-import ink.whi.service.notify.service.ProcessMsgService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.ExchangeTypes;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +23,7 @@ import java.util.concurrent.TimeoutException;
 public class RabbitmqServiceImpl implements RabbitmqService {
 
     @Autowired
-    private ProcessMsgService processMsgService;
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public boolean enabled() {
@@ -41,11 +32,11 @@ public class RabbitmqServiceImpl implements RabbitmqService {
 
     @Override
     public void publishMsg(String message) {
-        publishMsg(
-                RabbitmqConfig.EXCHANGE_NAME_DIRECT,
-                BuiltinExchangeType.DIRECT,
-                RabbitmqConfig.QUEUE_KEY_PRAISE,
-                message);
+//        publishMsg(
+//                RabbitmqConfig.EXCHANGE_NAME_DIRECT,
+//                BuiltinExchangeType.DIRECT,
+//                RabbitmqConfig.QUEUE_KEY_PRAISE,
+//                message);
     }
 
     @Override
@@ -62,7 +53,7 @@ public class RabbitmqServiceImpl implements RabbitmqService {
             // 声明exchange中的消息为可持久化，不自动删除
             channel.exchangeDeclare(exchange, exchangeType, true, false, null);
             // 发布消息
-            channel.basicPublish(exchange, routingKey, MessageProperties.MINIMAL_BASIC, message.getBytes());
+            channel.basicPublish(exchange, routingKey, MessageProperties.MINIMAL_BASIC, message.getBytes(StandardCharsets.UTF_8));
             log.info("Publish msg: {}", message);
             channel.close();
             RabbitmqConnectionPool.returnConnection(rabbitmqConnection);
@@ -96,7 +87,7 @@ public class RabbitmqServiceImpl implements RabbitmqService {
                     log.info("Consumer msg: {}", message);
 
                     // fixme: 用工厂 + 策略模式优化
-                    processMsgService.processMsg(message, JsonUtil.toObj(message, RabbitmqMsg.class));
+//                    processMsgService.processMsg(message, JsonUtil.toObj(message, RabbitmqMsg.class));
 
                     // ack
                     channel.basicAck(envelope.getDeliveryTag(), false);
@@ -122,8 +113,8 @@ public class RabbitmqServiceImpl implements RabbitmqService {
             step++;
             try {
                 log.info("processConsumerMsg cycle.");
-                consumerMsg(RabbitmqConfig.EXCHANGE_NAME_DIRECT, RabbitmqConfig.QUEUE_NAME_PRAISE,
-                        RabbitmqConfig.QUEUE_KEY_PRAISE);
+//                consumerMsg(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.QUEUE_NAME_PRAISE,
+//                        BlogMqConstants.QUEUE_KEY_PRAISE);
                 if (step.equals(stepTotal)) {
                     Thread.sleep(10000);
                     step = 0;
@@ -132,16 +123,5 @@ public class RabbitmqServiceImpl implements RabbitmqService {
 
             }
         }
-    }
-
-    @RabbitListener(bindings = @QueueBinding(
-            exchange = @Exchange(name = RabbitmqConfig.EXCHANGE_NAME_DIRECT),
-            value = @Queue(name = RabbitmqConfig.QUEUE_NAME_PRAISE),
-            key = RabbitmqConfig.QUEUE_KEY_PRAISE
-    ))
-    public void handleDelivery(Message body) {
-        String message = new String(body.getBody(), StandardCharsets.UTF_8);
-        log.info("Consumer msg: {}", message);
-        processMsgService.processMsg(message, JsonUtil.toObj(message, RabbitmqMsg.class));
     }
 }
