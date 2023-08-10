@@ -14,13 +14,14 @@ import org.springframework.stereotype.Component;
 import static ink.whi.core.rabbitmq.UserMqConstants.*;
 
 /**
- * @author: qing
- * @Date: 2023/8/10
+ * @author  qing
+ * @Date  2023/8/10
  */
 @Slf4j
 @Component
 public class UserListener {
-    public static final String USER_OPERATE_QUEUE = "user.operate.queue";
+    public static final String USER_FOLLOW_QUEUE = "user.follow.queue";
+    public static final String USER_CANCEL_FOLLOW_QUEUE = "user.cancel.follow.queue";
 
     @Autowired
     private NotifyMsgService notifyService;
@@ -31,11 +32,11 @@ public class UserListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = USER_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = USER_OPERATE_QUEUE),
+            value = @Queue(name = USER_FOLLOW_QUEUE),
             key = USER_FOLLOW_KEY
     ))
     public void saveFollowNotify(UserRelationDO relation) {
-        log.info("[用户 {} 关注了用户 {} ]", relation.getFollowUserId(), relation.getUserId());
+        log.info("[INFO]  用户 {} 关注了用户 {} ", relation.getFollowUserId(), relation.getUserId());
         notifyService.saveFollowNotify(relation);
     }
 
@@ -45,11 +46,11 @@ public class UserListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = USER_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = USER_OPERATE_QUEUE),
+            value = @Queue(name = USER_CANCEL_FOLLOW_QUEUE),
             key = USER_CANCEL_FOLLOW_KEY
     ))
     public void removeFollowNotify(UserRelationDO relation) {
-        log.info("[用户 {} 取关了用户 {} ]", relation.getFollowUserId(), relation.getUserId());
+        log.info("[INFO]  用户 {} 取关了用户 {} ", relation.getFollowUserId(), relation.getUserId());
         notifyService.removeFollowNotify(relation);
     }
 }

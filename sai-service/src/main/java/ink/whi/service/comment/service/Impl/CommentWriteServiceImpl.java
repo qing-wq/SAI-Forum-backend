@@ -4,6 +4,7 @@ import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.comment.CommentSaveReq;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
+import ink.whi.core.rabbitmq.BlogMqConstants;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
@@ -14,6 +15,7 @@ import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.comment.service.CommentWriteService;
 import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.service.UserFootService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +39,7 @@ public class CommentWriteServiceImpl implements CommentWriteService {
     private ArticleReadService articleReadService;
 
     @Autowired
-    private RabbitmqService rabbitmqService;
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -64,9 +66,9 @@ public class CommentWriteServiceImpl implements CommentWriteService {
         userFootService.saveCommentFoot(comment, article.getUserId(), parentCommentUser);
 
         // 发布事件
-        rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(NotifyTypeEnum.COMMENT, comment)));
+        rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_COMMENT_KEY, comment);
         if (NumUtil.upZero(parentCommentUser)){
-            rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(NotifyTypeEnum.REPLY, comment)));
+            rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_REPLY_KEY, comment);
         }
         return comment;
     }

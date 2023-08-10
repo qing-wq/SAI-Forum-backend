@@ -12,6 +12,7 @@ import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
+import ink.whi.core.rabbitmq.BlogMqConstants;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.entity.ArticleDO;
@@ -25,6 +26,7 @@ import ink.whi.service.user.service.UserFootService;
 import ink.whi.web.article.vo.ArticleDetailVo;
 import ink.whi.web.base.BaseRestController;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +56,7 @@ public class CommentRestController extends BaseRestController {
     private UserFootService userFootService;
 
     @Autowired
-    private RabbitmqService rabbitmqService;
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 评论列表分页接口
@@ -101,7 +103,7 @@ public class CommentRestController extends BaseRestController {
     /**
      * 评论点赞、取消点赞等操作
      * @param commentId
-     * @param operateType
+     * @param operateType 2-点赞 4-取消点赞
      * @return
      */
     @Permission(role = UserRole.LOGIN)
@@ -120,7 +122,7 @@ public class CommentRestController extends BaseRestController {
         }
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, commentId, comment.getUserId(), ReqInfoContext.getReqInfo().getUserId(), type);
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-        Optional.ofNullable(notifyType).ifPresent(s -> rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(s, foot))));
+        Optional.ofNullable(notifyType).ifPresent(s -> rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_PRAISE_KEY, foot));
         return ResVo.ok("ok");
     }
 }

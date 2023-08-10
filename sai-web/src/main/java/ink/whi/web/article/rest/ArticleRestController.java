@@ -16,6 +16,7 @@ import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.core.article.MarkdownConverter;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
+import ink.whi.core.rabbitmq.BlogMqConstants;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
@@ -29,6 +30,7 @@ import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.article.vo.ArticleDetailVo;
 import ink.whi.web.base.BaseRestController;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
@@ -65,7 +67,7 @@ public class ArticleRestController extends BaseRestController {
     private CategoryService categoryService;
 
     @Autowired
-    private RabbitmqService rabbitmqService;
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 文章详情接口
@@ -123,7 +125,7 @@ public class ArticleRestController extends BaseRestController {
 
         // 消息通知
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-        Optional.ofNullable(notifyType).ifPresent(s ->rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(s, foot))));
+        Optional.ofNullable(notifyType).ifPresent(s ->rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_PRAISE_KEY, foot));
         return ResVo.ok(true);
     }
 

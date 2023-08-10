@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @Getter
 @ToString
-@ConfigurationProperties(prefix = "rabbitmq")
+//@ConfigurationProperties(prefix = "rabbitmq")
 public class RabbitmqProperties {
 
     /**

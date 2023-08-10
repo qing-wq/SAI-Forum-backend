@@ -6,12 +6,15 @@ import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
+import ink.whi.core.rabbitmq.BlogMqConstants;
+import ink.whi.core.rabbitmq.UserMqConstants;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.MapUtils;
 import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.repo.dao.UserRelationDao;
 import ink.whi.service.user.repo.entity.UserRelationDO;
 import ink.whi.service.user.service.UserRelationService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +33,7 @@ public class UserRelationServiceImpl implements UserRelationService {
     private UserRelationDao userRelationDao;
 
     @Autowired
-    private RabbitmqService rabbitmqService;
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public PageListVo<FollowUserInfoDTO> getUserFollowList(Long userId, PageParam pageParam) {
@@ -85,11 +88,11 @@ public class UserRelationServiceImpl implements UserRelationService {
             record = new UserRelationDO().setUserId(req.getUserId()).setFollowUserId(req.getFollowUserId()).setFollowState(state.getCode());
             userRelationDao.save(record);
             // 发布消息
-            rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(NotifyTypeEnum.FOLLOW, record)));
+            rabbitTemplate.convertAndSend(UserMqConstants.USER_TOPIC_EXCHANGE, UserMqConstants.USER_FOLLOW_KEY, record);
             return;
         }
 
         record.setFollowState(state.getCode());
-        rabbitmqService.publishMsg(JsonUtil.toStr(new RabbitmqMsg<>(req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, record)));
+        rabbitTemplate.convertAndSend(UserMqConstants.USER_TOPIC_EXCHANGE, UserMqConstants.USER_CANCEL_FOLLOW_KEY, record);
     }
 }

@@ -15,14 +15,19 @@ import org.springframework.stereotype.Component;
 import static ink.whi.core.rabbitmq.BlogMqConstants.*;
 
 /**
- * @author: qing
- * @Date: 2023/8/10
+ * @author qing
+ * @Date 2023/8/10
  */
 @Slf4j
 @Component
 public class BlogListener {
-    public static final String BLOG_OPERATE_QUEUE = "blog.operate.queue";
-
+    public static final String BLOG_PRAISE_QUEUE = "blog.praise.queue";
+    public static final String BLOG_COLLECT_QUEUE = "blog.collect.queue";
+    public static final String BLOG_COMMENT_QUEUE = "blog.comment.queue";
+    public static final String BLOG_REPLY_QUEUE = "blog.reply.queue";
+    public static final String BLOG_CANCEL_PRAISE_QUEUE = "blog.praise.cancel.queue";
+    public static final String BLOG_CANCEL_COLLECT_QUEUE = "blog.collect.cancel.queue";
+    public static final String SYSTEM_QUEUE = "system.queue";
     @Autowired
     private NotifyMsgService notifyService;
 
@@ -32,11 +37,11 @@ public class BlogListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = BLOG_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = BLOG_OPERATE_QUEUE),
+            value = @Queue(name = BLOG_COMMENT_QUEUE),
             key = BLOG_COMMENT_KEY
     ))
     public void saveCommentNotify(CommentDO comment) {
-        log.info("[用户 {} 评论了文章 {} ]: {}", comment.getUserId(), comment.getArticleId(), comment.getContent());
+        log.info("[INFO] 用户 {} 评论了文章 {}:{}", comment.getUserId(), comment.getArticleId(), comment.getContent());
         notifyService.saveCommentNotify(comment);
     }
 
@@ -46,11 +51,11 @@ public class BlogListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = BLOG_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = BLOG_OPERATE_QUEUE),
+            value = @Queue(name = BLOG_REPLY_QUEUE),
             key = BLOG_REPLY_KEY
     ))
     public void saveReplyNotify(CommentDO comment) {
-        log.info("[用户 {} 评论了文章 {} ]: {}", comment.getUserId(), comment.getArticleId(), comment.getContent());
+        log.info("[用户 {} 回复了文章 {} ] {}", comment.getUserId(), comment.getArticleId(), comment.getContent());
         notifyService.saveReplyNotify(comment);
     }
 
@@ -60,11 +65,11 @@ public class BlogListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = BLOG_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = BLOG_OPERATE_QUEUE),
+            value = @Queue(name = BLOG_PRAISE_QUEUE),
             key = BLOG_PRAISE_KEY
     ))
     public void saveArticlePraise(UserFootDO foot) {
-        log.info("[用户 {} 点赞了文章 {} ]", foot.getUserId(), foot.getDocumentId());
+        log.info("[INFO] 用户 {} 点赞了文章 {} ", foot.getUserId(), foot.getDocumentId());
         notifyService.saveArticlePraise(foot);
     }
 
@@ -74,11 +79,11 @@ public class BlogListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = BLOG_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = BLOG_OPERATE_QUEUE),
+            value = @Queue(name = BLOG_COLLECT_QUEUE),
             key = BLOG_COLLECT_KEY
     ))
     public void saveArticleCollect(UserFootDO foot) {
-        log.info("[用户 {} 收藏了文章 {} ]", foot.getUserId(), foot.getDocumentId());
+        log.info("[INFO] 用户 {} 收藏了文章 {} ", foot.getUserId(), foot.getDocumentId());
         notifyService.saveArticleCollect(foot);
     }
 
@@ -88,11 +93,11 @@ public class BlogListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = BLOG_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = BLOG_OPERATE_QUEUE),
+            value = @Queue(name = BLOG_CANCEL_PRAISE_QUEUE),
             key = BLOG_CANCEL_PRAISE_KEY
     ))
     public void removeArticlePraise(UserFootDO foot) {
-        log.info("[用户 {} 取消收藏点赞 {} ]", foot.getUserId(), foot.getDocumentId());
+        log.info("[INFO] 用户 {} 取消点赞 {} ", foot.getUserId(), foot.getDocumentId());
         notifyService.removeArticlePraise(foot);
     }
 
@@ -102,11 +107,11 @@ public class BlogListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = BLOG_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = BLOG_OPERATE_QUEUE),
+            value = @Queue(name = BLOG_CANCEL_COLLECT_QUEUE),
             key = BLOG_CANCEL_COLLECT_KEY
     ))
     public void removeArticleCollect(UserFootDO foot) {
-        log.info("[用户 {} 取消收藏文章 {} ]", foot.getUserId(), foot.getDocumentId());
+        log.info("[INFO] 用户 {} 取消收藏文章 {} ", foot.getUserId(), foot.getDocumentId());
         notifyService.removeArticleCollect(foot);
     }
 
@@ -116,11 +121,11 @@ public class BlogListener {
      */
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(name = BLOG_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC),
-            value = @Queue(name = BLOG_OPERATE_QUEUE),
+            value = @Queue(name = SYSTEM_QUEUE),
             key = SYSTEM_KEY
     ))
     public void saveRegisterSystemNotify(Long userId) {
-        log.info("[用户 {} 注册]", userId);
+        log.info("[INFO] 用户 {} 注册", userId);
         notifyService.saveRegisterSystemNotify(userId);
     }
 }
