@@ -109,6 +109,10 @@ public class UserServiceImpl implements UserService {
         Integer fansCount = userRelationDao.queryUserFansCount(userId);
         userHomeDTO.setFansCount(fansCount);
 
+        // 关注人数
+        int followsCount = userRelationDao.queryUserFollowsCount(userId);
+        userHomeDTO.setFollowCount(followsCount);
+
         // 是否关注
         Long followUserId = ReqInfoContext.getReqInfo().getUserId();
         if (followUserId != null) {
