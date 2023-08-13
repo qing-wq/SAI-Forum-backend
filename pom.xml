@@ -33,6 +33,8 @@
         <qrcode-plugin.version>3.0.0</qrcode-plugin.version>
         <java.jwt.version>4.2.1</java.jwt.version>
         <ip2region.version>2.6.6</ip2region.version>
+        <hutool-all.version>5.8.15</hutool-all.version>
+        <rabbitmq.version>5.9.0</rabbitmq.version>
     </properties>
 
     <profiles>
@@ -130,6 +132,16 @@
                 <groupId>org.lionsoul</groupId>
                 <artifactId>ip2region</artifactId>
                 <version>${ip2region.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${rabbitmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool-all.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
