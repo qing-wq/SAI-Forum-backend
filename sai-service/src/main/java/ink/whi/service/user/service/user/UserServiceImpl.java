@@ -1,6 +1,7 @@
 package ink.whi.service.user.service.user;
 
 import ink.whi.api.model.context.ReqInfoContext;
+import ink.whi.api.model.enums.FollowStateEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
@@ -25,6 +26,7 @@ import ink.whi.service.user.converter.UserConverter;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -117,7 +119,7 @@ public class UserServiceImpl implements UserService {
         Long followUserId = ReqInfoContext.getReqInfo().getUserId();
         if (followUserId != null) {
             UserRelationDO userRelationDO = userRelationDao.getUserRelationByUserId(userId, followUserId);
-            userHomeDTO.setFollowed((userRelationDO == null) ? Boolean.FALSE : Boolean.TRUE);
+            userHomeDTO.setFollowed(userRelationDO != null && Objects.equals(userRelationDO.getFollowState(), FollowStateEnum.FOLLOW.getCode()));
         } else {
             userHomeDTO.setFollowed(Boolean.FALSE);
         }

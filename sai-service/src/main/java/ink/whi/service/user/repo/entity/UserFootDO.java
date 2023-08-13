@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * 用户足迹表
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
  * @date 2023/4/26
  */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName("user_foot")
 public class UserFootDO extends BaseDO {

@@ -87,6 +87,7 @@ public class UserRelationServiceImpl implements UserRelationService {
         }
 
         record.setFollowState(state.getCode());
+        userRelationDao.updateById(record);
         SpringUtil.publishEvent(new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, record));
     }
 }
