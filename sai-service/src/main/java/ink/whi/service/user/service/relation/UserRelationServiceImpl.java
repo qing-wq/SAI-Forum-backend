@@ -93,6 +93,7 @@ public class UserRelationServiceImpl implements UserRelationService {
         }
 
         record.setFollowState(state.getCode());
+        userRelationDao.updateById(record);
         rabbitTemplate.convertAndSend(UserMqConstants.USER_TOPIC_EXCHANGE, UserMqConstants.USER_CANCEL_FOLLOW_KEY, record);
     }
 }

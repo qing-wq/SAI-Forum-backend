@@ -193,6 +193,11 @@ public class UserRestController extends BaseRestController {
     @Permission(role = UserRole.LOGIN)
     @PostMapping(path = "follow")
     public ResVo<Boolean> saveUserRelation(@RequestBody UserRelationReq req) {
+        Long userId = ReqInfoContext.getReqInfo().getUserId();
+        req.setFollowUserId(userId);
+        if (Objects.equals(req.getUserId(), userId)) {
+            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "操作非法：不允许关注自己");
+        }
         userRelationService.saveUserRelation(req);
         return ResVo.ok(true);
     }
