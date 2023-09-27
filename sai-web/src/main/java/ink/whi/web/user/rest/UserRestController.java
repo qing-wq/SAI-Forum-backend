@@ -12,6 +12,7 @@ import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagSelectDTO;
+import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
@@ -194,6 +195,8 @@ public class UserRestController extends BaseRestController {
     @PostMapping(path = "follow")
     public ResVo<Boolean> saveUserRelation(@RequestBody UserRelationReq req) {
         Long userId = ReqInfoContext.getReqInfo().getUserId();
+        // 校验关注的用户是否存在
+        BaseUserInfoDTO userInfo = userService.queryBasicUserInfo(req.getUserId());
         req.setFollowUserId(userId);
         if (Objects.equals(req.getUserId(), userId)) {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "操作非法：不允许关注自己");

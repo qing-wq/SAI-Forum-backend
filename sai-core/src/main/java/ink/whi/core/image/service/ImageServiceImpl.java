@@ -50,7 +50,10 @@ public class ImageServiceImpl implements ImageService {
                 String fileType = null;
                 if (index > 0) {
                     // 从url中获取文件类型
-                    fileType = path.substring(index + 1);
+                    String urlFileType = path.substring(index + 1);
+                    if (!(validateStaticImg(urlFileType) == null)) {
+                        fileType = urlFileType;
+                    }
                 }
                 return imageUploader.upload(stream, fileType);
             } catch (Exception e) {
@@ -104,7 +107,7 @@ public class ImageServiceImpl implements ImageService {
         try {
             String ans = imgReplaceCache.get(img);
             if (StringUtils.isBlank(ans)) {
-                return buildUploadFailImgUrl(img);
+                throw BusinessException.newInstance(StatusEnum.UPLOAD_PIC_FAILED);
             }
             return ans;
         } catch (Exception e) {
@@ -119,7 +122,7 @@ public class ImageServiceImpl implements ImageService {
     /**
      * 图片格式校验
      *
-     * @param mime
+     * @param mime 图片类型
      * @return
      */
     private String validateStaticImg(String mime) {

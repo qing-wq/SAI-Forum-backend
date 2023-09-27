@@ -1,10 +1,10 @@
 package ink.whi.core.image.oss.Impl;
 
 import com.github.hui.quick.plugin.base.file.FileWriteUtil;
-import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
-import ink.whi.core.config.ImageProperties;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.core.image.oss.ImageUploader;
+import ink.whi.core.config.ImageProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import java.util.Random;
 @Component
 @ConditionalOnExpression(value = "#{'local'.equals(environment.getProperty('image.oss.type'))}")
 public class LocalStorageWrapper implements ImageUploader {
+    private static final String PREFIX = "/images/";
 
     @Autowired
     private ImageProperties imageProperties;
@@ -75,7 +76,7 @@ public class LocalStorageWrapper implements ImageUploader {
             String fileName = genTmpFileName();
 
             FileWriteUtil.FileInfo file = FileWriteUtil.saveFileByStream(input, path, fileName, fileType);
-            return imageProperties.buildImgUrl(imageProperties.getWebImgPath() + file.getFilename() + "." + file.getFileType());
+            return imageProperties.buildImgUrl(PREFIX + fileName + "." + file.getFileType());
         } catch (Exception e) {
             log.error("Parse img from httpRequest to BufferedImage error! e:", e);
             throw BusinessException.newInstance(StatusEnum.UPLOAD_PIC_FAILED);
