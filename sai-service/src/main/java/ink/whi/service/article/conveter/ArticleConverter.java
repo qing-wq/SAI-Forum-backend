@@ -34,7 +34,8 @@ public class ArticleConverter {
         article.setId(req.getArticleId());
         article.setTitle(req.getTitle());
         article.setShortTitle(req.getShortTitle());
-        article.setArticleType(ArticleTypeEnum.valueOf(req.getArticleType().toUpperCase()).getCode());
+        // todo: 默认为文章类型
+        article.setArticleType(req.getArticleType() == null ? ArticleTypeEnum.BLOG.getCode() : ArticleTypeEnum.valueOf(req.getArticleType().toUpperCase()).getCode());
         article.setPicture(req.getCover() == null ? "" : req.getCover());
         article.setCategoryId(req.getCategoryId());
         article.setSource(req.getSource());

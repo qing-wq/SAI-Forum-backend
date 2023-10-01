@@ -59,7 +59,7 @@ public class ArticlePostReq implements Serializable {
     private String cover;
 
     /**
-     * 文章类型
+     * 文章类型 0-帖子, 1-博客, 2-帖子
      *
      * @see ArticleTypeEnum
      */
