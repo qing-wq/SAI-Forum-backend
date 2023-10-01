@@ -65,6 +65,9 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String mdImgReplace(String content) {
+        if (StringUtils.isBlank(content)) {
+            return "";
+        }
         List<MdImgLoader.MdImg> imgList = MdImgLoader.loadImgs(content);
         for (MdImgLoader.MdImg img : imgList) {
             String newImg = saveImg(img.getUrl());

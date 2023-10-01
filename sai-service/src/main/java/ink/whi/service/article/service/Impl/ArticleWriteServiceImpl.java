@@ -4,18 +4,13 @@ import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
-import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
-import ink.whi.api.model.vo.article.req.DraftSaveReq;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
-import ink.whi.service.article.repo.dao.DraftDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
-import ink.whi.service.article.repo.entity.ArticleDetailDO;
 import ink.whi.service.article.repo.entity.DraftDO;
-import ink.whi.service.article.repo.mapper.DraftMapper;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.core.image.service.ImageService;
@@ -23,7 +18,6 @@ import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -70,7 +64,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
             //  article + article_detail + tag 三张表
             @Override
             public Long doInTransaction(TransactionStatus status) {
-                if (NumUtil.upZero(article.getId())) {
+                if (!NumUtil.upZero(articlePostReq.getArticleId())) {
                     // 新增文章记录
                     return insertArticle(article, content, articlePostReq.getTagIds());
                 } else {
@@ -96,7 +90,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         articleDao.saveArticleContent(articleId, content);
 
         // 保存标签
-        articleTagDao.saveBatch(articleId, tagIds);
+        articleTagDao.insertBatch(articleId, tagIds);
 
         // 发布文章，阅读计数+1
         articleDao.incrReadCount(articleId);
@@ -107,15 +101,15 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     }
 
     private void updateArticle(ArticleDO article, String content, Set<Long> tagIds) {
-        // 文章是否处于审核状态
-        boolean review = article.getStatus() == PushStatusEnum.REVIEW.getCode();
+        // 文章是否处于未发布状态
+        boolean unPublish = article.getStatus() != PushStatusEnum.ONLINE.getCode();
         Long articleId = article.getId();
 
         // 更新文章、内容、标签
         article.setStatus(PushStatusEnum.REVIEW.getCode());
         articleDao.updateById(article);
 
-        articleDao.updateArticleContent(articleId, content, review);
+        articleDao.updateArticleContent(articleId, content, unPublish);
         articleTagDao.updateTags(articleId, tagIds);
     }
 
@@ -128,12 +122,12 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         if (!Objects.equals(article.getUserId(), ReqInfoContext.getReqInfo().getUserId())) {
             throw BusinessException.newInstance(StatusEnum.FORBID_ERROR_MIXED, articleId);
         }
-        article.setDeleted(YesOrNoEnum.YES.getCode());
-        articleDao.updateById(article);
+        articleDao.deleteArticle(article);
     }
 
     /**
      * 更新草稿
+     *
      * @param req
      */
     @Override
@@ -143,5 +137,15 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         }
         DraftDO draft = ArticleConverter.toDraftDo(req, ReqInfoContext.getReqInfo().getUserId());
         articleDao.updateDraft(draft);
+    }
+
+    @Override
+    public Long initArticle(ArticlePostReq articlePostReq) {
+        ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
+        // 存草稿
+        article.setStatus(PushStatusEnum.OFFLINE.getCode());
+        articleDao.save(article);
+        articleDao.saveArticleContent(article.getId(), "");
+        return article.getId();
     }
 }

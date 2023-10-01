@@ -1,13 +1,12 @@
 package ink.whi.service.article.repo.dao;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.base.BaseDO;
 import ink.whi.api.model.enums.YesOrNoEnum;
-import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
-import ink.whi.service.article.repo.entity.TagDO;
 import ink.whi.service.article.repo.mapper.ArticleTagMapper;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +22,7 @@ import java.util.Set;
 public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
     /**
      * 查询文章标签详情
+     *
      * @param articleId
      * @return
      */
@@ -36,7 +36,10 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
                 .list();
     }
 
-    public void saveBatch(Long articleId, Set<Long> tagIds) {
+    public void insertBatch(Long articleId, Set<Long> tagIds) {
+        if (CollectionUtils.isEmpty(tagIds)) {
+            return;
+        }
         List<ArticleTagDO> list = new ArrayList<>(tagIds.size());
         tagIds.forEach(s -> {
             ArticleTagDO tag = new ArticleTagDO();
@@ -48,6 +51,12 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
         saveBatch(list);
     }
 
+    /**
+     * 使用新标签替换旧标签
+     *
+     * @param articleId
+     * @param newTags
+     */
     public void updateTags(Long articleId, Set<Long> newTags) {
         List<ArticleTagDO> oldTags = listArticleTags(articleId);
         List<ArticleTagDO> delete = new ArrayList<>();
@@ -59,11 +68,19 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
             }
         });
         if (CollectionUtils.isEmpty(newTags)) {
-            saveBatch(articleId, newTags);
+            insertBatch(articleId, newTags);
         }
-        if (CollectionUtils.isEmpty(delete)) {
+        if (!CollectionUtils.isEmpty(delete)) {
             List<Long> ids = delete.stream().map(BaseDO::getId).toList();
             baseMapper.deleteBatchIds(ids);
         }
+    }
+
+    public void deleteArticleTags(Long articleId) {
+        LambdaQueryChainWrapper<ArticleTagDO> query = lambdaQuery().eq(ArticleTagDO::getArticleId, articleId)
+                .eq(ArticleTagDO::getDeleted, YesOrNoEnum.NO.getCode());
+        ArticleTagDO update = new ArticleTagDO();
+        update.setDeleted(YesOrNoEnum.YES.getCode());
+        update(update, query);
     }
 }

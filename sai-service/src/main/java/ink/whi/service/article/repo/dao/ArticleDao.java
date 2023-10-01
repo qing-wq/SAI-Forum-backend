@@ -44,6 +44,10 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     @Autowired
     private ReadCountMapper readCountMapper;
 
+    @Autowired
+    private ArticleTagDao articleTagDao;
+
+
     /**
      * 查询文章详情
      *
@@ -203,8 +207,10 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
                 .last(PageParam.getLimitSql(pageParam))
                 .orderByDesc(ArticleDO::getId);
         if (!Objects.equals(ReqInfoContext.getReqInfo().getUserId(), userId)) {
-            // 作者本人，可以查看草稿、审核、上线文章；其他用户，只能查看上线的文章
+            // 作者本人，可以查看审核、上线文章；其他用户，只能查看上线的文章
             query.eq(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode());
+        } else {
+            query.in(ArticleDO::getStatus, PushStatusEnum.OFFLINE.getCode(), PushStatusEnum.REVIEW.getCode());
         }
         return baseMapper.selectList(query);
     }
@@ -252,8 +258,24 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     public List<ArticleDO> listDrafts(Long userId, PageParam pageParam) {
         return lambdaQuery().eq(ArticleDO::getUserId, userId)
                 .eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .eq(ArticleDO::getStatus, PushStatusEnum.OFFLINE.getCode())
                 .last(PageParam.getLimitSql(pageParam))
                 .orderByDesc(BaseDO::getCreateTime)
                 .list();
+    }
+
+    public void deleteArticle(ArticleDO article) {
+        article.setDeleted(YesOrNoEnum.YES.getCode());
+        updateById(article);
+        Long articleId = article.getId();
+
+        // 删除文章内容
+        LambdaQueryWrapper<ArticleDetailDO> detailWrapper = Wrappers.lambdaQuery();
+        detailWrapper.eq(ArticleDetailDO::getArticleId, articleId);
+        ArticleDetailDO update = ArticleDetailDO.builder().deleted(YesOrNoEnum.YES.getCode()).build();
+        articleDetailMapper.update(update, detailWrapper);
+
+        // 删除文章标签
+        articleTagDao.deleteArticleTags(articleId);
     }
 }

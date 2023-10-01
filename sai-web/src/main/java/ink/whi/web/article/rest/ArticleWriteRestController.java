@@ -23,7 +23,7 @@ public class ArticleWriteRestController {
     private ArticleWriteService articleWriteService;
 
     /**
-     * 文章发布或更新、创建草稿接口
+     * 文章发布或更新
      * @param articlePostReq
      * @return
      */
@@ -31,6 +31,18 @@ public class ArticleWriteRestController {
     @PostMapping(path = "post")
     public ResVo<Long> post(@RequestBody ArticlePostReq articlePostReq) {
         Long articleId = articleWriteService.saveArticle(articlePostReq);
+        return ResVo.ok(articleId);
+    }
+
+    /**
+     * 创建草稿
+     * @param articlePostReq
+     * @return
+     */
+    @Permission(role = UserRole.LOGIN)
+    @PostMapping(path = "init")
+    public ResVo<Long> init(@RequestBody ArticlePostReq articlePostReq) {
+        Long articleId = articleWriteService.initArticle(articlePostReq);
         return ResVo.ok(articleId);
     }
 

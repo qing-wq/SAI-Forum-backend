@@ -36,7 +36,7 @@ public class DraftRestController extends BaseRestController {
      * @return
      */
     @Permission(role = UserRole.LOGIN)
-    @GetMapping(path = "draft")
+    @GetMapping(path = "list")
     public ResVo<PageListVo<ArticleDTO>> Drafts(@RequestParam(name = "page") Long pageNum,
                                               @RequestParam(name = "pageSize", required = false) Long pageSize) {
         PageParam pageParam = buildPageParam(pageNum, pageSize);

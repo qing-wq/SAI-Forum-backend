@@ -14,4 +14,6 @@ public interface ArticleWriteService {
     void deleteArticle(Long article);
 
     void updateDraft(ArticlePostReq articlePostReq);
+
+    Long initArticle(ArticlePostReq articlePostReq);
 }
