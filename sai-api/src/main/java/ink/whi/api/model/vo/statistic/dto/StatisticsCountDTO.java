@@ -30,4 +30,9 @@ public class StatisticsCountDTO {
      * 文章数量
      */
     private Integer articleCount;
+
+    /**
+     * 文章相关计数
+     */
+    private ArticleStatisticCountDTO articleStatisticCount;
 }

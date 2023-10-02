@@ -1,11 +1,13 @@
 package ink.whi.service.statistics.service.Impl;
 
+import ink.whi.api.model.vo.statistic.dto.ArticleStatisticCountDTO;
 import ink.whi.api.model.vo.statistic.dto.StatisticsCountDTO;
 import ink.whi.api.model.vo.statistic.dto.StatisticsDayDTO;
 import ink.whi.service.article.service.ArticleSettingsService;
 import ink.whi.service.statistics.repo.dao.RequestCountDao;
 import ink.whi.service.statistics.repo.entity.RequestCountDO;
 import ink.whi.service.statistics.service.StatisticsSettingService;
+import ink.whi.service.user.service.UserFootSettingsService;
 import ink.whi.service.user.service.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
 
     @Autowired
     private ArticleSettingsService articleSettingsService;
+
+    @Autowired
+    private UserFootSettingsService userFootSettingsService;
 
     @Override
     public void saveRequestCount(String host) {
@@ -53,8 +58,12 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
         Integer userCount = userSettingService.getUserCount();
         Integer articleCount = articleSettingsService.getArticleCount();
         Integer pvTotalCount = requestCountDao.getPvTotalCount();
+        ArticleStatisticCountDTO statistic = userFootSettingsService.getStatisticArticleTotalCount();
 
-        return StatisticsCountDTO.builder().articleCount(articleCount).userCount(userCount).pvCount(pvTotalCount).build();
+        return StatisticsCountDTO.builder().articleCount(articleCount)
+                .userCount(userCount)
+                .pvCount(pvTotalCount)
+                .articleStatisticCount(statistic).build();
     }
 
     /**
@@ -63,8 +72,8 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
      * @return
      */
     @Override
-    public List<StatisticsDayDTO> getPvDayList(Integer day) {
-        return requestCountDao.getPvDayList(day);
+    public List<StatisticsDayDTO> getPvAndUvDayList(Integer day) {
+        return requestCountDao.getPvAndUvDayList(day);
     }
 
     @Override

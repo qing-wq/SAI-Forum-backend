@@ -38,4 +38,13 @@
         from user_foot f
         left join user_info u on u.id = f.user_id
     </select>
+    <select id="getStatisticArticleCountDTO"
+            resultType="ink.whi.api.model.vo.statistic.dto.ArticleStatisticCountDTO">
+        select sum(if (f.praise_stat =${@ink.whi.api.model.enums.PraiseStatEnum@PRAISE.code}, 1, 0)) as likeCount,
+               sum(if (f.collection_stat =${@ink.whi.api.model.enums.CollectionStatEnum@COLLECTION.code}, 1, 0)) as collectCount,
+               sum(if (f.comment_stat =${@ink.whi.api.model.enums.CommentStatEnum@COMMENT.code}, 1, 0)) as commentCount,
+               sum(if (f.read_stat =${@ink.whi.api.model.enums.ReadStatEnum@READ.code}, 1, 0)) as readCount
+        from user_foot f
+        where f.document_type = ${@ink.whi.api.model.enums.DocumentTypeEnum@ARTICLE.code}
+    </select>
 </mapper>

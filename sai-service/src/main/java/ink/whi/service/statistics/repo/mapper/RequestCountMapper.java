@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2023/4/27
  */
 public interface RequestCountMapper extends BaseMapper<RequestCountDO> {
-    List<StatisticsDayDTO> getPvCount(Integer day);
+    List<StatisticsDayDTO> getPvAndUvCount(Integer day);
 
     List<StatisticsDayDTO> getUvCount(Integer day);
 }

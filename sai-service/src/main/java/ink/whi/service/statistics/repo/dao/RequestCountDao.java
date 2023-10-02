@@ -7,7 +7,6 @@ import ink.whi.service.statistics.repo.mapper.RequestCountMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +31,8 @@ public class RequestCountDao extends ServiceImpl<RequestCountMapper, RequestCoun
         return lambdaQuery().count().intValue();
     }
 
-    public List<StatisticsDayDTO> getPvDayList(Integer day) {
-        return baseMapper.getPvCount(day);
+    public List<StatisticsDayDTO> getPvAndUvDayList(Integer day) {
+        return baseMapper.getPvAndUvCount(day);
     }
 
     public List<StatisticsDayDTO> getUvDayList(Integer day) {

@@ -8,6 +8,7 @@ import ink.whi.api.model.enums.PraiseStatEnum;
 import ink.whi.api.model.enums.ReadStatEnum;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.statistic.dto.ArticleStatisticCountDTO;
 import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.repo.mapper.UserFootMapper;
@@ -80,5 +81,9 @@ public class UserFootDao extends ServiceImpl<UserFootMapper, UserFootDO> {
                 .last(PageParam.getLimitSql(pageParam))
                 .list();
         return list.stream().map(UserFootDO::getDocumentId).toList();
+    }
+
+    public ArticleStatisticCountDTO getArticleTotalCount() {
+        return baseMapper.getStatisticArticleCountDTO();
     }
 }

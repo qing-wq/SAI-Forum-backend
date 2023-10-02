@@ -36,23 +36,23 @@ public class StatisticsSettingsRestController {
     }
 
     /**
-     * 获取最近day天每天的pv值
+     * 获取pv,uv值列表
      * @param day 天数 默认 7
      * @return
      */
-    @GetMapping(path = "pvDayList")
-    public ResVo<List<StatisticsDayDTO>> pvDayList(@RequestParam(name = "day", required = false) Integer day) {
+    @GetMapping(path = "dayList")
+    public ResVo<List<StatisticsDayDTO>> pvAndUvDayList(@RequestParam(name = "day", required = false) Integer day) {
         day = (day == null || day == 0) ? DEFAULT_DAY : day;
-        List<StatisticsDayDTO> pvDayList = statisticsSettingService.getPvDayList(day);
+        List<StatisticsDayDTO> pvDayList = statisticsSettingService.getPvAndUvDayList(day);
         return ResVo.ok(pvDayList);
     }
 
     /**
-     * 获取最近day天每天的uv值chech
+     * 获取uv值列表
      * @param day 天数 默认 7
      * @return
      */
-    @GetMapping(path = "uvDayList")
+//    @GetMapping(path = "uvDayList")
     public ResVo<List<StatisticsDayDTO>> uvDayList(@RequestParam(name = "day", required = false) Integer day) {
         day = (day == null || day == 0) ? DEFAULT_DAY : day;
         List<StatisticsDayDTO> pvDayList = statisticsSettingService.getUvDayList(day);

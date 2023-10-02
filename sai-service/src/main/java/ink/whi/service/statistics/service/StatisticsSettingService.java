@@ -14,7 +14,7 @@ public interface StatisticsSettingService {
 
     StatisticsCountDTO getStatisticsCount();
 
-    List<StatisticsDayDTO> getPvDayList(Integer day);
+    List<StatisticsDayDTO> getPvAndUvDayList(Integer day);
 
     List<StatisticsDayDTO> getUvDayList(Integer day);
 }

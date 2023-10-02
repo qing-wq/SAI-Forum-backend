@@ -15,8 +15,13 @@ public class StatisticsDayDTO {
     private String date;
 
     /**
-     * 数量
+     * pv
      */
-    private Integer count;
+    private Integer pv;
+
+    /**
+     * uv
+     */
+    private Integer uv;
 }
 
