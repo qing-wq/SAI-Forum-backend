@@ -51,6 +51,7 @@ public class GlobalInitHelper {
                 if (user != null) {
                     reqInfo.setUserId(user.getUserId());
                     reqInfo.setUser(user);
+                    // 未读消息数
                     reqInfo.setMsgNum(notifyService.queryUserNotifyMsgCount(user.getUserId()));
                 }
             }

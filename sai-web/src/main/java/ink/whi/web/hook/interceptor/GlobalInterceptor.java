@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * @author: qing
@@ -47,7 +48,7 @@ public class GlobalInterceptor implements AsyncHandlerInterceptor {
             }
 
             // admin
-            if (permission.role() == UserRole.ADMIN && !UserRole.ADMIN.name().equalsIgnoreCase(ReqInfoContext.getReqInfo().getUser().getRole())) {
+            if (permission.role() == UserRole.ADMIN && !Objects.equals(UserRole.ADMIN.name(), ReqInfoContext.getReqInfo().getUser().getRole())) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 return false;
             }

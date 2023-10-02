@@ -87,7 +87,7 @@ public class ArticleDO extends BaseDO {
     /**
      * 是否加精
      */
-    private Integer creamStat;
+    private Integer recommendStat;
 
     private Integer deleted;
 }

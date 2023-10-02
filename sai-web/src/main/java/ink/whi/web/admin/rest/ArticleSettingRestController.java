@@ -80,7 +80,7 @@ public class ArticleSettingRestController {
      * @return
      */
     @GetMapping(path = "list")
-    public ResVo<PageVo<ArticleDTO>> list(@RequestParam(name = "pageNumber", required = false) Integer pageNumber, @RequestParam(name = "pageSize", required = false) Integer pageSize) {
+    public ResVo<PageVo<ArticleDTO>> list(@RequestParam(name = "pageNumber", required = false) Long pageNumber, @RequestParam(name = "pageSize", required = false) Long pageSize) {
         pageNumber = NumUtil.nullOrZero(pageNumber) ? 1 : pageNumber;
         pageSize = NumUtil.nullOrZero(pageSize) ? 10 : pageSize;
         PageVo<ArticleDTO> articleDTOPageVo = articleSettingService.getArticleList(PageParam.newPageInstance(pageNumber, pageSize));

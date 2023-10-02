@@ -1,6 +1,5 @@
 package ink.whi.web.admin.rest;
 
-import com.mysql.cj.log.Log;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
@@ -57,8 +56,8 @@ public class CategorySettingsRestController {
 
     @ResponseBody
     @GetMapping(path = "list")
-    public ResVo<PageVo<CategoryDTO>> list(@RequestParam(name = "pageNumber", required = false) Integer pageNumber,
-                                           @RequestParam(name = "pageSize", required = false) Integer pageSize) {
+    public ResVo<PageVo<CategoryDTO>> list(@RequestParam(name = "pageNumber", required = false) Long pageNumber,
+                                           @RequestParam(name = "pageSize", required = false) Long pageSize) {
         pageNumber = NumUtil.nullOrZero(pageNumber) ? 1 : pageNumber;
         pageSize = NumUtil.nullOrZero(pageSize) ? 10 : pageSize;
         PageVo<CategoryDTO> categoryDTOPageVo = categorySettingService.getCategoryList(PageParam.newPageInstance(pageNumber, pageSize));

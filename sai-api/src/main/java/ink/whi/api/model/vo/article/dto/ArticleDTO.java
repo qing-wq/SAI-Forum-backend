@@ -94,9 +94,9 @@ public class ArticleDTO implements Serializable {
     private Integer toppingStat;
 
     /**
-     * 是否加精
+     * 是否推荐
      */
-    private Integer creamStat;
+    private Integer recommendStat;
 
     /**
      * 创建时间

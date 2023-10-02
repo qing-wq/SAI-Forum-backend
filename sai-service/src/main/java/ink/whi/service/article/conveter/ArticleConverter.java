@@ -9,7 +9,6 @@ import ink.whi.api.model.vo.article.dto.DraftDTO;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.api.model.vo.article.req.CategoryReq;
-import ink.whi.api.model.vo.article.req.DraftSaveReq;
 import ink.whi.api.model.vo.article.req.TagReq;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.repo.entity.CategoryDO;
@@ -74,7 +73,7 @@ public class ArticleConverter {
         articleDTO.setLastUpdateTime(articleDO.getUpdateTime().getTime());
         articleDTO.setOfficial(articleDO.getOfficialStat());
         articleDTO.setToppingStat(articleDO.getToppingStat());
-        articleDTO.setCreamStat(articleDO.getCreamStat());
+        articleDTO.setRecommendStat(articleDO.getRecommendStat());
 
         // 设置分类信息
         articleDTO.setCategory(new CategoryDTO(articleDO.getCategoryId(), null));

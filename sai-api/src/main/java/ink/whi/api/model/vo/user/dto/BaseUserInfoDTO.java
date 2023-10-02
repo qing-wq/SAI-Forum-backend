@@ -23,7 +23,7 @@ public class BaseUserInfoDTO extends BaseDTO {
     private String userName;
 
     /**
-     * 用户角色
+     * 用户角色 必须是String
      */
     private String role;
 

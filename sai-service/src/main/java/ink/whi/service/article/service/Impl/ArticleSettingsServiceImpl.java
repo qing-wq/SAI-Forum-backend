@@ -4,13 +4,11 @@ import ink.whi.api.model.enums.ArticleEventEnum;
 import ink.whi.api.model.enums.OperateArticleEnum;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;
-import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.page.PageVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
-import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
@@ -112,7 +110,7 @@ public class ArticleSettingsServiceImpl implements ArticleSettingsService {
             case TOPPING, CANCEL_TOPPING ->
                     compareAndUpdate(articleDO::getToppingStat, articleDO::setToppingStat, operate.getDbStatCode());
             case CREAM, CANCEL_CREAM ->
-                    compareAndUpdate(articleDO::getCreamStat, articleDO::setCreamStat, operate.getDbStatCode());
+                    compareAndUpdate(articleDO::getRecommendStat, articleDO::setRecommendStat, operate.getDbStatCode());
             default -> false;
         };
     }
