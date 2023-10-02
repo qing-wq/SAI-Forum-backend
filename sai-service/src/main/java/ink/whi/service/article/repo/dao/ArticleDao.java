@@ -44,6 +44,9 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     @Autowired
     private ReadCountMapper readCountMapper;
 
+    @Autowired
+    private ArticleTagDao articleTagDao;
+
     /**
      * 查询文章详情
      *
@@ -255,5 +258,20 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
                 .last(PageParam.getLimitSql(pageParam))
                 .orderByDesc(BaseDO::getCreateTime)
                 .list();
+    }
+
+    public void deleteArticle(ArticleDO article) {
+        article.setDeleted(YesOrNoEnum.YES.getCode());
+        updateById(article);
+        Long articleId = article.getId();
+
+        // 删除文章内容
+        LambdaQueryWrapper<ArticleDetailDO> detailWrapper = Wrappers.lambdaQuery();
+        detailWrapper.eq(ArticleDetailDO::getArticleId, articleId);
+        ArticleDetailDO update = ArticleDetailDO.builder().deleted(YesOrNoEnum.YES.getCode()).build();
+        articleDetailMapper.update(update, detailWrapper);
+
+        // 删除文章标签
+        articleTagDao.deleteArticleTags(articleId);
     }
 }
