@@ -18,6 +18,7 @@ import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -131,12 +132,19 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
      * @param req
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateDraft(ArticlePostReq req) {
         if (req.getArticleId() == null) {
             throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "id不能为空");
         }
-        DraftDO draft = ArticleConverter.toDraftDo(req, ReqInfoContext.getReqInfo().getUserId());
-        articleDao.updateDraft(draft);
+        Long authorId = ReqInfoContext.getReqInfo().getUserId();
+        Long articleId = req.getArticleId();
+        ArticleDO article = ArticleConverter.toArticleDo(req, authorId);
+        // 存草稿
+        article.setStatus(PushStatusEnum.OFFLINE.getCode());
+        articleDao.updateById(article);
+        articleDao.updateArticleContent(articleId, req.getContent(), true);
+        articleTagDao.updateTags(articleId, req.getTagIds());
     }
 
     @Override

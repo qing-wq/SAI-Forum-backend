@@ -58,7 +58,7 @@ public class DraftRestController extends BaseRestController {
     }
 
     /**
-     * 自动保存
+     * 自动保存草稿
      * @param articlePostReq
      * @return
      */

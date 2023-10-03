@@ -45,7 +45,7 @@ public interface ArticleReadService {
 
     PageListVo<ArticleDTO> listDraft(Long userId, PageParam pageParam);
 
-    ArticleDTO queryArticleDraft(Long articleId);
+    ArticleDTO queryOnlineArticleDraft(Long articleId);
 
     ArticleDTO queryDraftById(Long draftId);
 }

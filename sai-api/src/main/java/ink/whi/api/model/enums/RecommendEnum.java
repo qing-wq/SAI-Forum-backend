@@ -9,12 +9,12 @@ import lombok.Getter;
  * @date 2022/7/19
  */
 @Getter
-public enum CreamStatEnum {
+public enum RecommendEnum {
 
-    NOT_CREAM(0, "不加精"),
-    CREAM(1, "加精");
+    NOT_RECOMMEND(0, "不加精"),
+    RECOMMEND(1, "加精");
 
-    CreamStatEnum(Integer code, String desc) {
+    RecommendEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -22,12 +22,12 @@ public enum CreamStatEnum {
     private final Integer code;
     private final String desc;
 
-    public static CreamStatEnum formCode(Integer code) {
-        for (CreamStatEnum value : CreamStatEnum.values()) {
+    public static RecommendEnum formCode(Integer code) {
+        for (RecommendEnum value : RecommendEnum.values()) {
             if (value.getCode().equals(code)) {
                 return value;
             }
         }
-        return CreamStatEnum.NOT_CREAM;
+        return RecommendEnum.NOT_RECOMMEND;
     }
 }

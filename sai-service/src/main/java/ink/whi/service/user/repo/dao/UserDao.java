@@ -4,13 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.enums.YesOrNoEnum;
+import ink.whi.api.model.vo.page.PageParam;
+import ink.whi.api.model.vo.user.dto.StatisticUserInfoDTO;
 import ink.whi.service.user.repo.entity.UserDO;
 import ink.whi.service.user.repo.entity.UserInfoDO;
 import ink.whi.service.user.repo.mapper.UserInfoMapper;
 import ink.whi.service.user.repo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: qing
@@ -43,5 +46,9 @@ public class UserDao extends ServiceImpl<UserInfoMapper, UserInfoDO> {
 
     public void saveUser(UserDO user) {
         userMapper.insert(user);
+    }
+
+    public List<StatisticUserInfoDTO> getUserList(PageParam pageParam) {
+        return baseMapper.getUserList(pageParam);
     }
 }

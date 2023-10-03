@@ -171,7 +171,8 @@ public class ArticleRestController extends BaseRestController {
     @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "article/{articleId}")
     public ResVo<ArticleDTO> edit(@PathVariable Long articleId) {
-        ArticleDTO dto = articleReadService.queryArticleDraft(articleId);
+        ArticleDTO dto = articleReadService.queryOnlineArticleDraft(articleId);
         return ResVo.ok(dto);
     }
+
 }

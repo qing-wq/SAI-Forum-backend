@@ -186,10 +186,10 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
      *
      * @param articleId
      * @param content
-     * @param review
+     * @param unPublish
      */
-    public void updateArticleContent(Long articleId, String content, boolean review) {
-        if (review) {
+    public void updateArticleContent(Long articleId, String content, boolean unPublish) {
+        if (unPublish) {
             articleDetailMapper.updateContent(articleId, content);
         } else {
             ArticleDetailDO detail = findLatestDetail(articleId);
@@ -206,8 +206,10 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
                 .last(PageParam.getLimitSql(pageParam))
                 .orderByDesc(ArticleDO::getId);
         if (!Objects.equals(ReqInfoContext.getReqInfo().getUserId(), userId)) {
-            // 作者本人，可以查看草稿、审核、上线文章；其他用户，只能查看上线的文章
+            // 作者本人，可以查看审核、上线文章；其他用户，只能查看上线的文章
             query.eq(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode());
+        } else {
+            query.in(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode(), PushStatusEnum.REVIEW.getCode());
         }
         return baseMapper.selectList(query);
     }
@@ -236,6 +238,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
     /**
      * 查询文章内容
+     *
      * @param articleId
      * @return
      */
@@ -273,5 +276,34 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
         // 删除文章标签
         articleTagDao.deleteArticleTags(articleId);
+    }
+
+    /**
+     * 获取上线文章的草稿
+     * @param articleId
+     * @return
+     */
+    public ArticleDTO getArticleDraft(Long articleId) {
+        // 查询文章记录
+        ArticleDO article = getArticleById(articleId);
+
+        // 查询文章正文
+        ArticleDTO dto = ArticleConverter.toDto(article);
+        ArticleDetailDO detail = findLatestDetail(articleId);
+        if (ArticleHelper.isOnline(article) && detail.getCopy() != null) {
+            // 如果是上线文章且存在副本，就返回副本
+            dto.setContent(detail.getCopy());
+        } else {
+            dto.setContent(detail.getContent());
+        }
+        return dto;
+    }
+
+    public ArticleDO getArticleById(Long articleId) {
+        ArticleDO article = baseMapper.selectById(articleId);
+        if (article == null || Objects.equals(article.getDeleted(), YesOrNoEnum.YES.getCode())) {
+            throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
+        }
+        return article;
     }
 }

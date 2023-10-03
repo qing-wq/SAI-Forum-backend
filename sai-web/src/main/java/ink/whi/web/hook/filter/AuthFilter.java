@@ -108,7 +108,7 @@ public class AuthFilter implements Filter {
         REQ_LOG.info("{}", msg);
 
         // todo: 保存请求计数
-//        statisticSettingService.saveRequestCount(req.getClientIp());
+        statisticSettingService.saveRequestCount(req.getHost());
     }
 
     private boolean staticURI(HttpServletRequest request) {

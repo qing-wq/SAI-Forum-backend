@@ -18,7 +18,7 @@ public class SimpleUserInfoDTO implements Serializable {
     private static final long serialVersionUID = 4802653694786272120L;
 
     /**
-     * 作者
+     * 用户id
      */
     private Long userId;
 

@@ -41,16 +41,16 @@ public enum OperateArticleEnum {
             return ToppingStatEnum.NOT_TOPPING.getCode();
         }
     },
-    CREAM(5, "加精"){
+    RECOMMEND(5, "加精"){
         @Override
         public int getDbStatCode() {
-            return CreamStatEnum.CREAM.getCode();
+            return RecommendEnum.RECOMMEND.getCode();
         }
     },
-    CANCEL_CREAM(6, "不加精"){
+    CANCEL_RECOMMEND(6, "不加精"){
         @Override
         public int getDbStatCode() {
-            return CreamStatEnum.NOT_CREAM.getCode();
+            return RecommendEnum.NOT_RECOMMEND.getCode();
         }
     };
 

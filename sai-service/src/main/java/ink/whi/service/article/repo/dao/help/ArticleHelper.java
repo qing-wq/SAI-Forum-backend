@@ -33,4 +33,8 @@ public class ArticleHelper {
         // 作者本人和admin超管可以看到审核内容
         return user.getUserId().equals(article.getUserId()) || (user.getRole() != null && user.getRole().equalsIgnoreCase(UserRole.ADMIN.name()));
     }
+
+    public static boolean isOnline(ArticleDO article) {
+        return article.getStatus() == PushStatusEnum.ONLINE.getCode();
+    }
 }

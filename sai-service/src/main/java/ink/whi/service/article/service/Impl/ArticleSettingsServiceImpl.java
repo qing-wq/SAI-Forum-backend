@@ -109,7 +109,7 @@ public class ArticleSettingsServiceImpl implements ArticleSettingsService {
                     compareAndUpdate(articleDO::getOfficialStat, articleDO::setOfficialStat, operate.getDbStatCode());
             case TOPPING, CANCEL_TOPPING ->
                     compareAndUpdate(articleDO::getToppingStat, articleDO::setToppingStat, operate.getDbStatCode());
-            case CREAM, CANCEL_CREAM ->
+            case RECOMMEND, CANCEL_RECOMMEND ->
                     compareAndUpdate(articleDO::getRecommendStat, articleDO::setRecommendStat, operate.getDbStatCode());
             default -> false;
         };

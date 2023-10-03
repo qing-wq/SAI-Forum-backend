@@ -2,7 +2,10 @@ package ink.whi.service.user.service.user;
 
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
+import ink.whi.api.model.vo.page.PageParam;
+import ink.whi.api.model.vo.page.PageVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.api.model.vo.user.dto.StatisticUserInfoDTO;
 import ink.whi.service.user.repo.dao.UserDao;
 import ink.whi.service.user.repo.entity.UserDO;
 import ink.whi.service.user.repo.entity.UserInfoDO;
@@ -11,6 +14,8 @@ import ink.whi.service.user.service.help.UserPwdEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ink.whi.service.user.converter.UserConverter;
+
+import java.util.List;
 
 /**
  * 用户后台接口
@@ -51,5 +56,11 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public Integer getUserCount() {
         return userDao.countUser();
+    }
+
+    @Override
+    public PageVo<StatisticUserInfoDTO> getUserList(PageParam pageParam) {
+        List<StatisticUserInfoDTO> list = userDao.getUserList(pageParam);
+        return PageVo.build(list, pageParam.getPageSize(), pageParam.getPageNum(), getUserCount());
     }
 }

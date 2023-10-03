@@ -1,6 +1,9 @@
 package ink.whi.service.user.service;
 
+import ink.whi.api.model.vo.page.PageParam;
+import ink.whi.api.model.vo.page.PageVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.api.model.vo.user.dto.StatisticUserInfoDTO;
 
 /**
  * @author: qing
@@ -12,4 +15,6 @@ public interface UserSettingService {
     BaseUserInfoDTO queryBasicUserInfo(Long userId);
 
     Integer getUserCount();
+
+    PageVo<StatisticUserInfoDTO> getUserList(PageParam pageParam);
 }

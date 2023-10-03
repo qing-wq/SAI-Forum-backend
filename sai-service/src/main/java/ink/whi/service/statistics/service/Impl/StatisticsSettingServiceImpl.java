@@ -63,7 +63,7 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
         return StatisticsCountDTO.builder().articleCount(articleCount)
                 .userCount(userCount)
                 .pvCount(pvTotalCount)
-                .articleStatisticCount(statistic).build();
+                .articleStatistic(statistic).build();
     }
 
     /**

@@ -1,4 +1,4 @@
-package ink.whi.web.admin.statistics;
+package ink.whi.web.admin.rest;
 
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.statistic.dto.StatisticsCountDTO;

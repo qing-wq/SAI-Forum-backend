@@ -47,7 +47,7 @@ public class ArticleSettingRestController {
     /**
      * 修改文章置顶、官方、加精等状态
      * @param articleId
-     * @param operateType
+     * @param operateType 1-官方 2-非官方 3-置顶 4-取消置顶 5-推荐 6-不推荐
      * @return
      */
     @Permission(role = UserRole.ADMIN)

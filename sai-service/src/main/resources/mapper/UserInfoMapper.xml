@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ink.whi.service.user.repo.mapper.UserInfoMapper">
+    <sql id="limit">
+        <if test="pageParam != null">
+            limit #{pageParam.offset}, #{pageParam.limit}
+        </if>
+    </sql>
+
+    <select id="getUserList" resultType="ink.whi.api.model.vo.user.dto.StatisticUserInfoDTO">
+        select *
+        from user_info u
+        where deleted = ${@ink.whi.api.model.enums.YesOrNoEnum@NO.code}
+
+        <include refid="limit"/>
+    </select>
+</mapper>

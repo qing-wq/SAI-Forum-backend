@@ -34,5 +34,5 @@ public class StatisticsCountDTO {
     /**
      * 文章相关计数
      */
-    private ArticleStatisticCountDTO articleStatisticCount;
+    private ArticleStatisticCountDTO articleStatistic;
 }

@@ -1,10 +1,8 @@
 package ink.whi.service.article.service.Impl;
 
-import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
-import ink.whi.api.model.vo.article.dto.DraftDTO;
 import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
@@ -19,7 +17,6 @@ import ink.whi.service.article.repo.dao.ArticleTagDao;
 import ink.whi.service.article.repo.dao.DraftDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
-import ink.whi.service.article.repo.entity.DraftDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.user.repo.entity.UserFootDO;
@@ -281,8 +278,8 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     }
 
     @Override
-    public ArticleDTO queryArticleDraft(Long articleId) {
-        return null;
+    public ArticleDTO queryOnlineArticleDraft(Long articleId) {
+        return articleDao.getArticleDraft(articleId);
     }
 
     @Override
