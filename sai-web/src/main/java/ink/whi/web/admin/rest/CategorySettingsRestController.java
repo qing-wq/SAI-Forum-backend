@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
  * @author: qing
  * @Date: 2023/5/5
  */
-@Permission(role = UserRole.LOGIN)
 @RestController
+@Permission(role = UserRole.LOGIN)
 @RequestMapping(path = "admin/category")
 public class CategorySettingsRestController {
 

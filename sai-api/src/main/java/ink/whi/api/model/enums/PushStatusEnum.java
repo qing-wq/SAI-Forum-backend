@@ -23,6 +23,6 @@ public enum PushStatusEnum {
                 return statusEnum;
             }
         }
-        return PushStatusEnum.OFFLINE;
+        return null;
     }
 }

@@ -37,7 +37,8 @@ public class ArticleSettingRestController {
     @Permission(role = UserRole.ADMIN)
     @PostMapping(path = "save")
     public ResVo<String> save(@RequestBody ArticlePostReq req) {
-        if (req.getStatus() != PushStatusEnum.OFFLINE.getCode() && req.getStatus() != PushStatusEnum.ONLINE.getCode() && req.getStatus() != PushStatusEnum.REVIEW.getCode()) {
+        PushStatusEnum status = PushStatusEnum.formCode(req.getStatus());
+        if (status == null) {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "发布状态不合法!");
         }
         articleSettingService.updateArticle(req);

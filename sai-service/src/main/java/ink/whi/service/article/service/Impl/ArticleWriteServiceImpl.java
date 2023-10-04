@@ -42,6 +42,9 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     private ArticleTagDao articleTagDao;
 
     @Autowired
+    private ImageService imageService;
+
+    @Autowired
     private ArticleProperties articleProperties;
 
     @Autowired
@@ -62,8 +65,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Override
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
-        String content = articlePostReq.getContent();
-//        String content = imageService.mdImgReplace(articlePostReq.getContent());
+        String content = imageService.mdImgReplace(articlePostReq.getContent());
         return transactionTemplate.execute(new TransactionCallback<Long>() {
             //  article + article_detail + tag 三张表
             @Override
@@ -169,6 +171,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Override
     public void updateArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
+        String content = imageService.mdImgReplace(articlePostReq.getContent());
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             //  article + article_detail + tag 三张表
             @Override
@@ -179,7 +182,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
                     throw BusinessException.newInstance(StatusEnum.FORBID_ERROR);
                 }
                 Long articleId = article.getId();
-                articleDao.updateArticleCopy(articleId, articlePostReq.getContent());
+                articleDao.updateArticleCopy(articleId, content);
             }
         });
     }

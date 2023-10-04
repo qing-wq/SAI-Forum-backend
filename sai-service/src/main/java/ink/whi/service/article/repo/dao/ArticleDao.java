@@ -201,6 +201,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
             ArticleDetailDO detail = findLatestDetail(articleId);
             detail.setVersion(detail.getVersion() + 1);
             detail.setContent(content);
+            detail.setId(null);
             articleDetailMapper.insert(detail);
         }
     }
@@ -319,6 +320,6 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     public void updateArticleCopy(Long articleId, String content) {
         ArticleDetailDO detail = findLatestDetail(articleId);
         detail.setCopy(content);
-        articleDetailMapper.insert(detail);
+        articleDetailMapper.updateById(detail);
     }
 }
