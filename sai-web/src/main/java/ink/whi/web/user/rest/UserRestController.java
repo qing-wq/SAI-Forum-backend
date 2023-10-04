@@ -25,7 +25,6 @@ import ink.whi.web.base.BaseRestController;
 import ink.whi.web.user.vo.UserHomeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -214,7 +213,6 @@ public class UserRestController extends BaseRestController {
      */
     @Permission(role = UserRole.LOGIN)
     @PostMapping(path = "saveInfo")
-    @Transactional(rollbackFor = Exception.class)
     public ResVo<Boolean> saveUserInfo(@RequestBody UserInfoSaveReq req) {
         Long userId = ReqInfoContext.getReqInfo().getUserId();
         req.setUserId(userId);

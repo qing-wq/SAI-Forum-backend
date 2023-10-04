@@ -45,36 +45,15 @@ public class DraftRestController extends BaseRestController {
         return ResVo.ok(drafts);
     }
 
-    /**
-     * 获取草稿详情
-     * @param draftId
-     * @return
-     */
-    @Permission(role = UserRole.LOGIN)
-    @GetMapping(path = "draft/{draftId}")
-    public ResVo<ArticleDTO> draft(@PathVariable Long draftId) {
-        ArticleDTO dto = articleReadService.queryDraftById(draftId);
-        return ResVo.ok(dto);
-    }
-
-    /**
-     * 自动保存草稿
-     * @param articlePostReq
-     * @return
-     */
-    @PostMapping(path = "update")
-    public ResVo<String> autoSave(@RequestBody ArticlePostReq articlePostReq) {
-        articleWriteService.updateDraft(articlePostReq);
-        return ResVo.ok("ok");
-    }
 
     /**
      * 删除草稿
      * @param draftId
      * @return
      */
-    @GetMapping(path = "del")
-    public ResVo<String> del(Long draftId) {
+    @Permission(role = UserRole.LOGIN)
+    @GetMapping(path = "del/{draftId}")
+    public ResVo<String> del(@PathVariable Long draftId) {
         articleWriteService.deleteArticle(draftId);
         return ResVo.ok("ok");
     }

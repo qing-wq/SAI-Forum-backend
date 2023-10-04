@@ -24,3 +24,6 @@ security:
 
 msg:
   welcome: "欢迎来到SAI论坛！"
+
+article:
+  review: true

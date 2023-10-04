@@ -89,7 +89,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
      */
     @Override
     public ArticleDO queryBasicArticle(Long articleId) {
-        return articleDao.getById(articleId);
+        return articleDao.getArticleById(articleId);
     }
 
     /**
@@ -102,9 +102,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Override
     public PageListVo<ArticleDTO> queryRecommendArticle(Long articleId, PageParam pageParam) {
         ArticleDO article = queryBasicArticle(articleId);
-        if (article == null) {
-            throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "文章不存在");
-        }
+
         List<ArticleTagDO> tags = articleTagDao.listArticleTags(articleId);
         List<Long> tagIds = tags.stream().map(ArticleTagDO::getTagId).toList();
         List<ArticleDO> list = articleDao.listRelatedArticlesOrderByReadCount(article.getCategoryId(), tagIds, pageParam);

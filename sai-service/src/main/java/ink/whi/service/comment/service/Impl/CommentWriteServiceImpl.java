@@ -55,9 +55,7 @@ public class CommentWriteServiceImpl implements CommentWriteService {
 
     private CommentDO addComment(CommentSaveReq req) {
         ArticleDO article = articleReadService.queryBasicArticle(req.getArticleId());
-        if (article == null) {
-            throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, "文章不存在：" + req.getArticleId());
-        }
+
         CommentDO comment = CommentConverter.toDo(req);
         commentDao.save(comment);
 

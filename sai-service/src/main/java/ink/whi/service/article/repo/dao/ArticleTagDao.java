@@ -40,6 +40,7 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
         if (CollectionUtils.isEmpty(tagIds)) {
             return;
         }
+
         List<ArticleTagDO> list = new ArrayList<>(tagIds.size());
         tagIds.forEach(s -> {
             ArticleTagDO tag = new ArticleTagDO();
@@ -58,6 +59,10 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
      * @param newTags
      */
     public void updateTags(Long articleId, Set<Long> newTags) {
+        if (newTags == null) {
+            return;
+        }
+
         List<ArticleTagDO> oldTags = listArticleTags(articleId);
         List<ArticleTagDO> delete = new ArrayList<>();
         oldTags.forEach(s -> {
@@ -67,9 +72,8 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
                 delete.add(s);
             }
         });
-        if (CollectionUtils.isEmpty(newTags)) {
-            insertBatch(articleId, newTags);
-        }
+
+        insertBatch(articleId, newTags);
         if (!CollectionUtils.isEmpty(delete)) {
             List<Long> ids = delete.stream().map(BaseDO::getId).toList();
             baseMapper.deleteBatchIds(ids);
@@ -77,10 +81,9 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
     }
 
     public void deleteArticleTags(Long articleId) {
-        LambdaQueryChainWrapper<ArticleTagDO> query = lambdaQuery().eq(ArticleTagDO::getArticleId, articleId)
-                .eq(ArticleTagDO::getDeleted, YesOrNoEnum.NO.getCode());
-        ArticleTagDO update = new ArticleTagDO();
-        update.setDeleted(YesOrNoEnum.YES.getCode());
-        update(update, query);
+        lambdaUpdate().eq(ArticleTagDO::getArticleId, articleId)
+                .eq(ArticleTagDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .set(ArticleTagDO::getDeleted, YesOrNoEnum.YES.getCode())
+                .update();
     }
 }

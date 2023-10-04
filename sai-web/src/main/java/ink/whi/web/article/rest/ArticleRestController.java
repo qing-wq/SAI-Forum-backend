@@ -3,6 +3,7 @@ package ink.whi.web.article.rest;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
+import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ContentPostReq;
 import ink.whi.api.model.vo.page.PageListVo;
@@ -110,27 +111,26 @@ public class ArticleRestController extends BaseRestController {
     @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "favor")
     public ResVo<Boolean> favor(@RequestParam(name = "articleId") Long articleId,
-                                @RequestParam(name = "operate") Integer operateType){
+                                @RequestParam(name = "operate") Integer operateType) {
         OperateTypeEnum type = OperateTypeEnum.fromCode(operateType);
         if (type == null) {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "参数非法：" + operateType);
         }
 
         ArticleDO article = articleReadService.queryBasicArticle(articleId);
-        if (article == null) {
-            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "文章不存在: " + articleId);
-        }
+
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, articleId, article.getUserId(),
                 ReqInfoContext.getReqInfo().getUserId(), type);
 
         // 消息通知
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-        Optional.ofNullable(notifyType).ifPresent(s ->rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_PRAISE_KEY, foot));
+        Optional.ofNullable(notifyType).ifPresent(s -> rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_PRAISE_KEY, foot));
         return ResVo.ok(true);
     }
 
     /**
      * 查询所有分类
+     *
      * @return
      */
     @GetMapping(path = "category")
@@ -141,6 +141,7 @@ public class ArticleRestController extends BaseRestController {
 
     /**
      * 查询所有标签
+     *
      * @param pageNum
      * @param pageSize
      * @return
@@ -155,6 +156,7 @@ public class ArticleRestController extends BaseRestController {
 
     /**
      * 提取摘要
+     *
      * @param req
      * @return
      */
@@ -162,17 +164,4 @@ public class ArticleRestController extends BaseRestController {
     public ResVo<String> generateSummary(@RequestBody ContentPostReq req) {
         return ResVo.ok(articleReadService.generateSummary(req.getContent()));
     }
-
-    /**
-     * 已上线文章编辑
-     * @param articleId
-     * @return
-     */
-    @Permission(role = UserRole.LOGIN)
-    @GetMapping(path = "article/{articleId}")
-    public ResVo<ArticleDTO> edit(@PathVariable Long articleId) {
-        ArticleDTO dto = articleReadService.queryOnlineArticleDraft(articleId);
-        return ResVo.ok(dto);
-    }
-
 }

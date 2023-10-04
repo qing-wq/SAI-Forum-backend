@@ -40,6 +40,7 @@ public class MdImgLoader {
         Matcher matcher = IMG_PATTERN.matcher(content);
         List<MdImg> list = new ArrayList<>();
         while (matcher.find()) {
+            // 匹配到的字符串，图片名，图片地址
             list.add(new MdImg(matcher.group(0), matcher.group(1), matcher.group(2)));
         }
         return list;
