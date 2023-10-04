@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.google.common.collect.Maps;
 import ink.whi.api.model.base.BaseDO;
 import ink.whi.api.model.context.ReqInfoContext;
@@ -189,6 +191,10 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
      * @param unPublish
      */
     public void updateArticleContent(Long articleId, String content, boolean unPublish) {
+        if (content == null) {
+            return;
+        }
+
         if (unPublish) {
             articleDetailMapper.updateContent(articleId, content);
         } else {
@@ -244,11 +250,11 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
      */
     public ArticleDetailDO findLatestDetail(long articleId) {
         // 查询文章内容
-        LambdaQueryWrapper<ArticleDetailDO> contentQuery = Wrappers.lambdaQuery();
-        contentQuery.eq(ArticleDetailDO::getDeleted, YesOrNoEnum.NO.getCode())
+        return ChainWrappers.lambdaQueryChain(articleDetailMapper)
                 .eq(ArticleDetailDO::getArticleId, articleId)
-                .orderByDesc(ArticleDetailDO::getVersion);
-        return articleDetailMapper.selectList(contentQuery).get(0);
+                .eq(ArticleDetailDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .orderByDesc(ArticleDetailDO::getVersion)
+                .one();
     }
 
     public void updateDraft(DraftDO draft) {
@@ -257,6 +263,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
     public List<ArticleDO> listDrafts(Long userId, PageParam pageParam) {
         return lambdaQuery().eq(ArticleDO::getUserId, userId)
+                .eq(ArticleDO::getStatus, PushStatusEnum.OFFLINE.getCode())
                 .eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .last(PageParam.getLimitSql(pageParam))
                 .orderByDesc(BaseDO::getCreateTime)
@@ -269,10 +276,11 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
         Long articleId = article.getId();
 
         // 删除文章内容
-        LambdaQueryWrapper<ArticleDetailDO> detailWrapper = Wrappers.lambdaQuery();
-        detailWrapper.eq(ArticleDetailDO::getArticleId, articleId);
-        ArticleDetailDO update = ArticleDetailDO.builder().deleted(YesOrNoEnum.YES.getCode()).build();
-        articleDetailMapper.update(update, detailWrapper);
+        LambdaUpdateChainWrapper<ArticleDetailDO> chainWrapper = ChainWrappers.lambdaUpdateChain(articleDetailMapper);
+        chainWrapper.eq(ArticleDetailDO::getArticleId, articleId)
+                .eq(ArticleDetailDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .set(ArticleDetailDO::getDeleted, YesOrNoEnum.YES.getCode())
+                .update();
 
         // 删除文章标签
         articleTagDao.deleteArticleTags(articleId);
@@ -280,6 +288,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
 
     /**
      * 获取上线文章的草稿
+     *
      * @param articleId
      * @return
      */
@@ -300,10 +309,16 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     }
 
     public ArticleDO getArticleById(Long articleId) {
-        ArticleDO article = baseMapper.selectById(articleId);
+        ArticleDO article = getById(articleId);
         if (article == null || Objects.equals(article.getDeleted(), YesOrNoEnum.YES.getCode())) {
             throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
         }
         return article;
+    }
+
+    public void updateArticleCopy(Long articleId, String content) {
+        ArticleDetailDO detail = findLatestDetail(articleId);
+        detail.setCopy(content);
+        articleDetailMapper.insert(detail);
     }
 }

@@ -5,13 +5,14 @@ import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.repo.entity.ArticleDO;
+import ink.whi.service.article.service.ArticleReadService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * @author: qing
  * @Date: 2023/4/28
  */
-@Component
 public class ArticleHelper {
 
     /**
@@ -30,7 +31,7 @@ public class ArticleHelper {
             return false;
         }
 
-        // 作者本人和admin超管可以看到审核内容
+        // 作者本人和超管可以看到审核内容
         return user.getUserId().equals(article.getUserId()) || (user.getRole() != null && user.getRole().equalsIgnoreCase(UserRole.ADMIN.name()));
     }
 
