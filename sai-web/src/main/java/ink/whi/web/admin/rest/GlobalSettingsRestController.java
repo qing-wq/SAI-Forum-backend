@@ -1,7 +1,7 @@
 package ink.whi.web.admin.rest;
 
 import ink.whi.api.model.vo.ResVo;
-import ink.whi.web.admin.settings.ArticleSettings;
+import ink.whi.core.article.ArticleSettings;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import org.springframework.web.bind.annotation.*;

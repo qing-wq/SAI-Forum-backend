@@ -6,7 +6,7 @@ import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.api.model.vo.page.PageParam;
-import ink.whi.web.admin.settings.ArticleSettings;
+import ink.whi.core.article.ArticleSettings;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.service.ArticleSettingsService;

@@ -5,7 +5,7 @@ import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
-import ink.whi.core.config.ArticleSettings;
+import ink.whi.core.article.ArticleSettings;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;

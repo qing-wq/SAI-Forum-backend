@@ -1,4 +1,4 @@
-package ink.whi.web.admin.settings;
+package ink.whi.core.article;
 
 /**
  * @author: qing

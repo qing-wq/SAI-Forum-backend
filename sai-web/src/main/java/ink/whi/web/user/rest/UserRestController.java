@@ -27,10 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 用户接口
@@ -145,6 +142,7 @@ public class UserRestController extends BaseRestController {
                 // 获取选择标签
                 List<TagSelectDTO> followSelectTags = followSelectTags(vo.getFollowSelectType());
                 vo.setFollowSelectTags(followSelectTags);
+                vo.setHomeSelectList(PageListVo.emptyVo());
                 initFollowFansList(vo, userId, pageParam);
                 return;
             default:
