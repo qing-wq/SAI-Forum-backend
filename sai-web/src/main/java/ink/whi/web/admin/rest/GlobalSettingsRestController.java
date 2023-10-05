@@ -1,7 +1,7 @@
 package ink.whi.web.admin.rest;
 
 import ink.whi.api.model.vo.ResVo;
-import ink.whi.core.config.ArticleProperties;
+import ink.whi.web.admin.settings.ArticleSettings;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class GlobalSettingsRestController {
     @PostMapping(path = "review")
     @Permission(role = UserRole.ADMIN)
     public ResVo<String> save(@RequestParam(name = "enable", defaultValue = "true") boolean review) {
-        ArticleProperties.enable(review);
+        ArticleSettings.enable(review);
         return ResVo.ok("ok");
     }
 }

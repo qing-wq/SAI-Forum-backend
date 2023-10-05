@@ -5,7 +5,7 @@ import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
-import ink.whi.core.config.ArticleProperties;
+import ink.whi.core.config.ArticleSettings;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
@@ -107,7 +107,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         boolean unPublish = article.getStatus() != PushStatusEnum.ONLINE.getCode();
         Long articleId = article.getId();
         // 是否开启审核
-        article.setStatus(ArticleProperties.getReview() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
+        article.setStatus(ArticleSettings.getReview() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
 
         // 更新文章、内容、标签
         articleDao.updateById(article);

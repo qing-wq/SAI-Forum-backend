@@ -1,15 +1,10 @@
-package ink.whi.core.config;
-
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+package ink.whi.web.admin.settings;
 
 /**
  * @author: qing
  * @Date: 2023/10/4
  */
-public class ArticleProperties {
+public class ArticleSettings {
     /**
      * 默认开启审核
      */

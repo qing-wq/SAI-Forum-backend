@@ -4,14 +4,14 @@ import ink.whi.api.model.enums.OperateArticleEnum;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
-import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.api.model.vo.page.PageParam;
-import ink.whi.api.model.vo.page.PageVo;
+import ink.whi.web.admin.settings.ArticleSettings;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
-import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.service.ArticleSettingsService;
+import ink.whi.web.admin.vo.ArticleListVo;
+import ink.whi.web.base.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,19 +23,20 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Permission(role = UserRole.LOGIN)
-@RequestMapping(path ="admin/article")
-public class ArticleSettingRestController {
+@RequestMapping(path = "admin/article")
+public class ArticleSettingRestController extends BaseRestController {
 
     @Autowired
     private ArticleSettingsService articleSettingService;
 
     /**
      * 编辑文章标题、发布状态等信息
+     *
      * @param req
      * @return
      */
-    @Permission(role = UserRole.ADMIN)
     @PostMapping(path = "save")
+    @Permission(role = UserRole.ADMIN)
     public ResVo<String> save(@RequestBody ArticlePostReq req) {
         PushStatusEnum status = PushStatusEnum.formCode(req.getStatus());
         if (status == null) {
@@ -47,6 +48,7 @@ public class ArticleSettingRestController {
 
     /**
      * 修改文章置顶、官方、加精等状态
+     *
      * @param articleId
      * @param operateType 1-官方 2-非官方 3-置顶 4-取消置顶 5-推荐 6-不推荐
      * @return
@@ -64,11 +66,12 @@ public class ArticleSettingRestController {
 
     /**
      * 删除文章接口
+     *
      * @param articleId
      * @return
      */
-    @Permission(role = UserRole.ADMIN)
     @GetMapping(path = "delete")
+    @Permission(role = UserRole.ADMIN)
     public ResVo<String> delete(@RequestParam(name = "articleId") Long articleId) {
         articleSettingService.deleteArticle(articleId);
         return ResVo.ok("ok");
@@ -76,15 +79,17 @@ public class ArticleSettingRestController {
 
     /**
      * 文章列表接口
+     *
      * @param pageNumber
      * @param pageSize
      * @return
      */
     @GetMapping(path = "list")
-    public ResVo<PageVo<ArticleDTO>> list(@RequestParam(name = "pageNumber", required = false) Long pageNumber, @RequestParam(name = "pageSize", required = false) Long pageSize) {
-        pageNumber = NumUtil.nullOrZero(pageNumber) ? 1 : pageNumber;
-        pageSize = NumUtil.nullOrZero(pageSize) ? 10 : pageSize;
-        PageVo<ArticleDTO> articleDTOPageVo = articleSettingService.getArticleList(PageParam.newPageInstance(pageNumber, pageSize));
-        return ResVo.ok(articleDTOPageVo);
+    public ResVo<ArticleListVo> list(@RequestParam(name = "pageNumber", required = false) Long pageNumber, @RequestParam(name = "pageSize", required = false) Long pageSize) {
+        PageParam pageParam = buildPageParam(pageNumber, pageSize);
+        ArticleListVo vo = new ArticleListVo();
+        vo.setPage(articleSettingService.getArticleList(pageParam));
+        vo.setReview(ArticleSettings.getReview());
+        return ResVo.ok(vo);
     }
 }

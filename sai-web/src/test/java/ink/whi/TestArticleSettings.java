@@ -6,7 +6,7 @@ import org.junit.Test;
  * @author: qing
  * @Date: 2023/10/4
  */
-public class TestArticleProperties {
+public class TestArticleSettings {
     public Boolean REVIEW = true;
 
     public synchronized void enable(Boolean enable) {
@@ -19,7 +19,7 @@ public class TestArticleProperties {
 
     @Test
     public void Test() {
-        TestArticleProperties article = new TestArticleProperties();
+        TestArticleSettings article = new TestArticleSettings();
         for (int i = 0; i < 100; i++) {
             new Thread( () -> {
                 article.enable(true);
