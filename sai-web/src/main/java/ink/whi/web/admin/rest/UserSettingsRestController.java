@@ -39,7 +39,7 @@ public class UserSettingsRestController extends BaseRestController {
      * @return
      */
     @GetMapping(path = "/list")
-    public ResVo<PageVo<StatisticUserInfoDTO>> getUserList(@RequestParam(name = "pageNumber", required = false) Long pageNumber,
+    public ResVo<PageVo<StatisticUserInfoDTO>> getUserList(@RequestParam(name = "page", required = false) Long pageNumber,
                                                            @RequestParam(name = "pageSize", required = false) Long pageSize) {
         PageParam pageParam = buildPageParam(pageNumber, pageSize);
         PageVo<StatisticUserInfoDTO> userList = userSettingService.getUserList(pageParam);

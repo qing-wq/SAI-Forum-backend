@@ -4,7 +4,6 @@ import ink.whi.api.model.vo.ResVo;
 import ink.whi.core.config.ArticleProperties;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,20 +13,17 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Permission(role = UserRole.LOGIN)
-@RequestMapping(path = "admin/")
-public class GlobalController {
-
-    @Autowired
-    private ArticleProperties articleProperties;
+@RequestMapping(path = "admin/api")
+public class GlobalSettingsRestController {
 
     /**
      * 开启后台审核
      * @return
      */
+    @PostMapping(path = "review")
     @Permission(role = UserRole.ADMIN)
-    @PostMapping(path = "/enable/review/{review}")
-    public ResVo<String> save(@PathVariable boolean review) {
-        articleProperties.setReview(review);
+    public ResVo<String> save(@RequestParam(name = "enable", defaultValue = "true") boolean review) {
+        ArticleProperties.enable(review);
         return ResVo.ok("ok");
     }
 }

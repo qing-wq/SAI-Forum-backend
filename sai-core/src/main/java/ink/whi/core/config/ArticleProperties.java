@@ -9,13 +9,17 @@ import org.springframework.stereotype.Component;
  * @author: qing
  * @Date: 2023/10/4
  */
-@Setter
-@Getter
-@Component
-@ConfigurationProperties(prefix = "article")
 public class ArticleProperties {
     /**
-     * 是否开启审核
+     * 默认开启审核
      */
-    private Boolean review;
+    public static Boolean REVIEW = true;
+
+    public static synchronized void enable(Boolean enable) {
+        REVIEW = enable;
+    }
+
+    public static synchronized Boolean getReview() {
+        return REVIEW;
+    }
 }

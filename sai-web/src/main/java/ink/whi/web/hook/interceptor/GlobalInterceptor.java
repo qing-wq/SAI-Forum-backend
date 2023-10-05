@@ -48,7 +48,8 @@ public class GlobalInterceptor implements AsyncHandlerInterceptor {
             }
 
             // admin
-            if (permission.role() == UserRole.ADMIN && !Objects.equals(UserRole.ADMIN.name(), ReqInfoContext.getReqInfo().getUser().getRole())) {
+            if (permission.role() == UserRole.ADMIN && ReqInfoContext.getReqInfo().getUser() != null &&
+                    !Objects.equals(UserRole.ADMIN.name(), ReqInfoContext.getReqInfo().getUser().getRole())) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 return false;
             }

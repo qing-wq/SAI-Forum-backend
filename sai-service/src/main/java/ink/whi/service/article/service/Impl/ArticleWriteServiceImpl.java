@@ -11,7 +11,6 @@ import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
-import ink.whi.service.article.repo.entity.ArticleDetailDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.core.image.service.ImageService;
@@ -43,9 +42,6 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
 
     @Autowired
     private ImageService imageService;
-
-    @Autowired
-    private ArticleProperties articleProperties;
 
     @Autowired
     private UserFootService userFootService;
@@ -111,7 +107,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         boolean unPublish = article.getStatus() != PushStatusEnum.ONLINE.getCode();
         Long articleId = article.getId();
         // 是否开启审核
-        article.setStatus(articleProperties.getReview() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
+        article.setStatus(ArticleProperties.getReview() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
 
         // 更新文章、内容、标签
         articleDao.updateById(article);
