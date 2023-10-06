@@ -65,16 +65,19 @@ public class UserServiceImpl implements UserService {
 
         // 用户资料完整度
         int cnt = 0;
-        if (StringUtils.isNotBlank(userHomeDTO.getCompany())) {
+        if (StringUtils.isNotBlank(userHomeDTO.getStudentId())) {
             ++cnt;
         }
-        if (StringUtils.isNotBlank(userHomeDTO.getPosition())) {
+        if (StringUtils.isNotBlank(userHomeDTO.getCollege())) {
             ++cnt;
         }
-        if (StringUtils.isNotBlank(userHomeDTO.getProfile())) {
+        if (StringUtils.isNotBlank(userHomeDTO.getEmail())) {
             ++cnt;
         }
-        userHomeDTO.setInfoPercent(cnt * 100 / 3);
+        if (StringUtils.isNotBlank(userHomeDTO.getMajor())) {
+            ++cnt;
+        }
+        userHomeDTO.setInfoPercent(cnt * 100 / 4);
 
         // 加入天数
         Integer joinDayCount = (int) ((System.currentTimeMillis() - userHomeDTO.getCreateTime().getTime()) / (1000 * 3600 * 24));

@@ -20,19 +20,29 @@ public class UserInfoSaveReq {
     private String userName;
 
     /**
-     * 用户图像
+     * 用户头像
      */
     private String photo;
 
     /**
-     * 职位
+     * 学号
      */
-    private String position;
+    private String studentId;
 
     /**
-     * 公司
+     * 学院
      */
-    private String company;
+    private String college;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 专业
+     */
+    private String major;
 
     /**
      * 个人简介

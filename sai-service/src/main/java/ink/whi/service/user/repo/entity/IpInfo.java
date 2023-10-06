@@ -2,6 +2,7 @@ package ink.whi.service.user.repo.entity;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Data
 public class IpInfo implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4612222921661930429L;
 
     private String firstIp;

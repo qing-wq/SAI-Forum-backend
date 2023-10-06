@@ -72,7 +72,7 @@ public class UserRelationDao extends ServiceImpl<UserRelationMapper, UserRelatio
 
     public int queryUserFollowsCount(Long userId) {
         return lambdaQuery().eq(UserRelationDO::getFollowUserId, userId)
-                .eq(UserRelationDO::getFollowUserId, FollowStateEnum.FOLLOW.getCode())
+                .eq(UserRelationDO::getFollowState, FollowStateEnum.FOLLOW.getCode())
                 .count().intValue();
     }
 }

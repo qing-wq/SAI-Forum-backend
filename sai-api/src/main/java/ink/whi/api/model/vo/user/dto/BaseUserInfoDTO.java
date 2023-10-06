@@ -31,29 +31,31 @@ public class BaseUserInfoDTO extends BaseDTO {
      * 用户图像
      */
     private String photo;
+
     /**
      * 个人简介
      */
     private String profile;
-    /**
-     * 职位
-     */
-    private String position;
 
     /**
-     * 公司
+     * 学号
      */
-    private String company;
+    private String studentId;
 
     /**
-     * 扩展字段
+     * 学院
      */
-    private String extend;
+    private String college;
 
     /**
-     * 是否删除
+     * 邮箱
      */
-    private Integer deleted;
+    private String email;
+
+    /**
+     * 专业
+     */
+    private String major;
 
     /**
      * 用户最后登录区域
