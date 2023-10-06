@@ -22,7 +22,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         try {
             // fixme：只适用windows
             String imgPath = imageProperties.getAbsTmpPath() + imageProperties.getWebImgPath();
-            registry.addResourceHandler("/images/**").addResourceLocations("file:D:\\tmp\\sai-forum\\image");
+            // fixme: 这个路径后面的\\必须要。。。
+            registry.addResourceHandler("/images/**").addResourceLocations("file:D:\\tmp\\sai-forum\\images\\");
         } catch (Exception e) {
             e.printStackTrace();
         }

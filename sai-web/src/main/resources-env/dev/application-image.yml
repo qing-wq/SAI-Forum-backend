@@ -12,4 +12,5 @@ spring:
     resources:
       static-locations:
         - classpath:/static/
+        - file:///d:${image.abs-tmp-path}ni
         - file:${image.abs-tmp-path}
