@@ -41,7 +41,7 @@ public class CommonRestController {
         ArticleDO article = articleReadService.queryBasicArticle(articleId);
         ArticleDTO dto = null;
         if (ArticleHelper.isOnline(article)) {
-            dto = articleReadService.queryOnlineArticleDraft(articleId);
+            dto = articleReadService.queryOnlineArticleCopy(articleId);
         } else {
             dto = articleReadService.queryDraftById(articleId);
         }

@@ -276,12 +276,16 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     }
 
     @Override
-    public ArticleDTO queryOnlineArticleDraft(Long articleId) {
-        return articleDao.getArticleDraft(articleId);
+    public ArticleDTO queryOnlineArticleCopy(Long articleId) {
+        ArticleDTO dto = articleDao.getArticleDraft(articleId);
+        dto.setTags(articleTagDao.listArticleTagsDetail(articleId));
+        return dto;
     }
 
     @Override
     public ArticleDTO queryDraftById(Long draftId) {
-        return articleDao.queryArticleDetail(draftId);
+        ArticleDTO dto = articleDao.queryArticleDetail(draftId);
+        dto.setTags(articleTagDao.listArticleTagsDetail(draftId));
+        return dto;
     }
 }

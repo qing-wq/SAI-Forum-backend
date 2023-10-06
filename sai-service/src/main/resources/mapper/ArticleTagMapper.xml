@@ -7,6 +7,6 @@
         from article_tag as a
                  left join tag as t on a.tag_id = t.id
         where a.article_id = #{articleId}
-          and a.deleted = 0
+          and a.deleted = ${@ink.whi.api.model.enums.YesOrNoEnum@NO.code}
     </select>
 </mapper>
