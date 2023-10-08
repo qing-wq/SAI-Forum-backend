@@ -226,7 +226,9 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         Map<Long, ArticleDO> articleDOMap = MapUtils.toMap(records, ArticleDO::getId, r -> r);
         articleIds.forEach(articleId -> {
             ArticleDO article = articleDOMap.get(articleId);
-            Optional.ofNullable(article).ifPresent(articleDOS::add);
+            if (article != null && article.getDeleted() == YesOrNoEnum.NO.getCode()) {
+                articleDOS.add(article);
+            }
         });
         return articleDOS;
     }
