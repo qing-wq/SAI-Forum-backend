@@ -1,32 +1,50 @@
-package ink.whi.api.model.vo.article.dto;
+package ink.whi.api.model.vo.article.req;
 
-import ink.whi.api.model.base.BaseDTO;
 import lombok.Data;
 
-import java.util.Date;
-import java.util.List;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Set;
 
 /**
+ * 草稿保存入参
  * @author: qing
- * @Date: 2023/10/10
+ * @Date: 2023/7/6
  */
 @Data
-public class DraftsDTO extends BaseDTO {
+public class DraftsSaveReq implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -4091390798510714255L;
 
     /**
-     * 用户id
+     * 草稿id，必选
      */
-    private Integer userId;
+    private Long draftId;
 
     /**
-     * 关联的文章,0-没有
+     * 关联的文章, 0-没有（非必填）
      */
     private Long articleId;
+
+    /**
+     * 用户id（非必须）
+     */
+    private Long userId;
 
     /**
      * 文章标题
      */
     private String title;
+
+    /**
+     * 标签
+     */
+    private Set<Long> tagIds;
+
+    /**
+     * 文章内容
+     */
+    private String content;
 
     /**
      * 短标题
@@ -57,24 +75,4 @@ public class DraftsDTO extends BaseDTO {
      * 原文链接
      */
     private String sourceUrl;
-
-    /**
-     * 内容
-     */
-    private String content;
-
-    /**
-     * 标签
-     */
-    private List<TagDTO> tags;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 }

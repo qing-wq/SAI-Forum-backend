@@ -23,7 +23,6 @@ import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.help.ArticleHelper;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.repo.entity.ArticleDetailDO;
-import ink.whi.service.article.repo.entity.DraftDO;
 import ink.whi.service.article.repo.entity.ReadCountDO;
 import ink.whi.service.article.repo.mapper.ArticleDetailMapper;
 import ink.whi.service.article.repo.mapper.ArticleMapper;
@@ -97,7 +96,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     }
 
     /**
-     * 查询分类对应文章数
+     * 查询每个分类对应文章数
      * key-categoryId, value-count
      *
      * @return
@@ -258,10 +257,6 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
                 .one();
     }
 
-    public void updateDraft(DraftDO draft) {
-        articleDetailMapper.updateContent(draft.getId(), draft.getContent());
-    }
-
     public List<ArticleDO> listDrafts(Long userId, PageParam pageParam) {
         return lambdaQuery().eq(ArticleDO::getUserId, userId)
                 .eq(ArticleDO::getStatus, PushStatusEnum.OFFLINE.getCode())
@@ -287,39 +282,11 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
         articleTagDao.deleteArticleTags(articleId);
     }
 
-    /**
-     * 获取上线文章的草稿
-     *
-     * @param articleId
-     * @return
-     */
-    public ArticleDTO getArticleDraft(Long articleId) {
-        // 查询文章记录
-        ArticleDO article = getArticleById(articleId);
-
-        // 查询文章正文
-        ArticleDTO dto = ArticleConverter.toDto(article);
-        ArticleDetailDO detail = findLatestDetail(articleId);
-        if (ArticleHelper.isOnline(article) && detail.getCopy() != null) {
-            // 如果是上线文章且存在副本，就返回副本
-            dto.setContent(detail.getCopy());
-        } else {
-            dto.setContent(detail.getContent());
-        }
-        return dto;
-    }
-
     public ArticleDO getArticleById(Long articleId) {
         ArticleDO article = getById(articleId);
         if (article == null || Objects.equals(article.getDeleted(), YesOrNoEnum.YES.getCode())) {
             throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
         }
         return article;
-    }
-
-    public void updateArticleCopy(Long articleId, String content) {
-        ArticleDetailDO detail = findLatestDetail(articleId);
-        detail.setCopy(content);
-        articleDetailMapper.updateById(detail);
     }
 }

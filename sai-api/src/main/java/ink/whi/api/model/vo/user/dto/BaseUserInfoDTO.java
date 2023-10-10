@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+
 /**
  * @author: qing
  * @Date: 2023/4/26
@@ -12,6 +14,9 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class BaseUserInfoDTO extends BaseDTO {
+    @Serial
+    private static final long serialVersionUID = -2426438424647735636L;
+
     /**
      * 用户id
      */

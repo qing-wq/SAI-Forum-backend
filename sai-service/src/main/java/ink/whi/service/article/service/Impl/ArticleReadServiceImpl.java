@@ -273,17 +273,13 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         return ArticleUtil.pickSummary(content);
     }
 
-    @Override
-    public PageListVo<ArticleDTO> listDraft(Long userId, PageParam pageParam) {
-        List<ArticleDO> list = articleDao.listDrafts(userId, pageParam);
-        return PageListVo.newVo(ArticleConverter.toArticleDtoList(list), pageParam.getPageSize());
-    }
-
+    /**
+     * 获取已上线文章草稿
+     * @param articleId
+     * @return
+     */
     @Override
     public DraftsDTO getOnlineArticleDraft(Long articleId) {
-//        ArticleDTO dto = articleDao.getArticleDraft(articleId);
-//        dto.setTags(articleTagDao.listArticleTagsDetail(articleId));
-//        return dto;
         DraftsDO record = draftsDao.getArticleDraftById(articleId);
         if (record == null) {
             // 创建文章草稿

@@ -4,6 +4,7 @@ import ink.whi.api.model.vo.article.dto.YearArticleDTO;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -16,6 +17,8 @@ import java.util.List;
 @Data
 @ToString(callSuper = true)
 public class UserStatisticInfoDTO extends BaseUserInfoDTO {
+    @Serial
+    private static final long serialVersionUID = -7322294644978802578L;
 
     /**
      * 关注数

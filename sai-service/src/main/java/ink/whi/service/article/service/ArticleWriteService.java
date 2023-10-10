@@ -12,10 +12,4 @@ public interface ArticleWriteService {
     Long saveArticle(ArticlePostReq articlePostReq);
 
     void deleteArticle(Long article);
-
-    void updateDraft(ArticlePostReq articlePostReq);
-
-    Long initArticle(ArticlePostReq articlePostReq);
-
-    void updateArticle(ArticlePostReq articlePostReq);
 }

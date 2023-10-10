@@ -44,8 +44,6 @@ public interface ArticleReadService {
 
     String generateSummary(String content);
 
-    PageListVo<ArticleDTO> listDraft(Long userId, PageParam pageParam);
-
     DraftsDTO getOnlineArticleDraft(Long articleId);
 
     DraftsDTO queryDraftById(Long draftId);

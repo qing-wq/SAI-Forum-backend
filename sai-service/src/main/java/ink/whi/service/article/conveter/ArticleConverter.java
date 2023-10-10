@@ -1,19 +1,16 @@
 package ink.whi.service.article.conveter;
 
+import cn.hutool.core.bean.BeanUtil;
 import ink.whi.api.model.enums.ArticleTypeEnum;
 import ink.whi.api.model.enums.SourceTypeEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;
-import ink.whi.api.model.vo.article.dto.ArticleDTO;
-import ink.whi.api.model.vo.article.dto.CategoryDTO;
-import ink.whi.api.model.vo.article.dto.DraftDTO;
-import ink.whi.api.model.vo.article.dto.TagDTO;
+import ink.whi.api.model.vo.article.dto.*;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.api.model.vo.article.req.CategoryReq;
+import ink.whi.api.model.vo.article.req.DraftsSaveReq;
 import ink.whi.api.model.vo.article.req.TagReq;
-import ink.whi.service.article.repo.entity.ArticleDO;
-import ink.whi.service.article.repo.entity.CategoryDO;
-import ink.whi.service.article.repo.entity.DraftDO;
-import ink.whi.service.article.repo.entity.TagDO;
+import ink.whi.service.article.repo.entity.*;
+import ink.whi.service.article.repo.entity.DraftsDO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,15 +40,6 @@ public class ArticleConverter {
         article.setStatus(req.pushStatus().getCode());
         article.setDeleted(req.deleted() ? YesOrNoEnum.YES.getCode() : YesOrNoEnum.NO.getCode());
         return article;
-    }
-
-    public static DraftDO toDraftDo(ArticlePostReq req, Long author) {
-        DraftDO draft = new DraftDO();
-        draft.setAuthor(author);
-        draft.setArticleId(req.getArticleId());
-        draft.setContent(req.getContent());
-        draft.setTitle(req.getTitle());
-        return draft;
     }
 
     public static ArticleDTO toDto(ArticleDO articleDO) {
@@ -139,21 +127,28 @@ public class ArticleConverter {
         return categoryDO;
     }
 
-    public static DraftDTO toDto(DraftDO draft) {
-        if (draft == null) {
-            return null;
-        }
-        DraftDTO dto = new DraftDTO();
-        dto.setDraftId(draft.getId());
-        dto.setTitle(draft.getTitle());
-        dto.setContent(draft.getContent());
-        dto.setAuthor(draft.getAuthor());
-        dto.setCreateTime(draft.getCreateTime());
-        dto.setUpdateTime(draft.getUpdateTime());
+    public static List<DraftsDTO> toDraftList(List<DraftsDO> drafts) {
+        return drafts.stream().map(ArticleConverter::toDraftsDTO).toList();
+    }
+
+    public static DraftsDO toDrafts(ArticleDTO article) {
+        DraftsDO draft = new DraftsDO();
+        BeanUtil.copyProperties(article, draft);
+        draft.setPicture(article.getCover());
+        return draft;
+    }
+
+    public static DraftsDTO toDraftsDTO(DraftsDO draft) {
+        DraftsDTO dto = new DraftsDTO();
+        BeanUtil.copyProperties(draft, dto);
         return dto;
     }
 
-    public static List<DraftDTO> toDraftList(List<DraftDO> drafts) {
-        return drafts.stream().map(ArticleConverter::toDto).toList();
+    public static DraftsDO toDraftsDO(DraftsSaveReq req, Long authorId) {
+        DraftsDO draft = new DraftsDO();
+        BeanUtil.copyProperties(req, draft);
+        draft.setId(req.getDraftId());
+        draft.setUserId(authorId);
+        return draft;
     }
 }

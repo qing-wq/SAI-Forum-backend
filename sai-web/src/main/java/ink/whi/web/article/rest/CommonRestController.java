@@ -1,16 +1,19 @@
 package ink.whi.web.article.rest;
 
+import ink.whi.api.model.enums.ArticleTypeEnum;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.DraftsDTO;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
+import ink.whi.api.model.vo.article.req.DraftsSaveReq;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.repo.dao.help.ArticleHelper;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.ArticleWriteService;
+import ink.whi.service.article.service.DraftsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,25 +31,23 @@ public class CommonRestController {
     private ArticleReadService articleReadService;
 
     @Autowired
-    private ArticleWriteService articleWriteService;
+    private DraftsService draftsService;
 
     /**
      * 文章/草稿 编辑
      *
-     * @param articleId
+     * @param docId
+     * @param type 0-草稿，1-文章
      * @return
      */
-
-    @GetMapping(path = "edit/{articleId}")
-    public ResVo<DraftsDTO> edit(@PathVariable Long articleId) {
-        ArticleDO article = articleReadService.queryBasicArticle(articleId);
+    @GetMapping(path = "edit/{docId}/{type}")
+    public ResVo<DraftsDTO> edit(@PathVariable Long docId, @PathVariable Integer type) {
+        ArticleTypeEnum articleType = ArticleTypeEnum.formCode(type);
         DraftsDTO dto = null;
-
-        // 判断是文章还是草稿
-        if (ArticleHelper.isOnline(article)) {
-            dto = articleReadService.getOnlineArticleDraft(articleId);
+        if (articleType == ArticleTypeEnum.BLOG) {
+            dto = articleReadService.getOnlineArticleDraft(docId);
         } else {
-            dto = articleReadService.queryDraftById(articleId);
+            dto = articleReadService.queryDraftById(docId);
         }
         return ResVo.ok(dto);
     }
@@ -54,18 +55,12 @@ public class CommonRestController {
     /**
      * 自动保存
      *
-     * @param articlePostReq
+     * @param draftsSaveReq
      * @return
      */
     @PostMapping(path = "update")
-    public ResVo<String> autoSave(@RequestBody ArticlePostReq articlePostReq) {
-        Long articleId = articlePostReq.getArticleId();
-        ArticleDO article = articleReadService.queryBasicArticle(articleId);
-        if (article.getStatus() == PushStatusEnum.ONLINE.getCode()) {
-            articleWriteService.updateArticle(articlePostReq);
-        } else {
-            articleWriteService.updateDraft(articlePostReq);
-        }
+    public ResVo<String> autoSave(@RequestBody DraftsSaveReq draftsSaveReq) {
+        draftsService.updateDraft(draftsSaveReq);
         return ResVo.ok("ok");
     }
 }
