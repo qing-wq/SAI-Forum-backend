@@ -5,6 +5,8 @@ import ink.whi.api.model.base.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @author: qing
  * @Date: 2023/4/26
@@ -14,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @TableName("article_tag")
 public class ArticleTagDO extends BaseDO {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -25,6 +28,11 @@ public class ArticleTagDO extends BaseDO {
      * 标签id
      */
     private Long tagId;
+
+    /**
+     * 0-草稿, 1-文章
+     */
+    private Integer articleType;
 
     private Integer deleted;
 }

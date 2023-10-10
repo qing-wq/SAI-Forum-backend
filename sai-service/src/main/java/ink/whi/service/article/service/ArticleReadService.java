@@ -1,6 +1,7 @@
 package ink.whi.service.article.service;
 
 import ink.whi.api.model.enums.HomeSelectEnum;
+import ink.whi.api.model.vo.article.dto.DraftsDTO;
 import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
@@ -45,7 +46,7 @@ public interface ArticleReadService {
 
     PageListVo<ArticleDTO> listDraft(Long userId, PageParam pageParam);
 
-    ArticleDTO queryOnlineArticleCopy(Long articleId);
+    DraftsDTO getOnlineArticleDraft(Long articleId);
 
-    ArticleDTO queryDraftById(Long draftId);
+    DraftsDTO queryDraftById(Long draftId);
 }

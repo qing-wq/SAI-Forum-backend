@@ -3,6 +3,7 @@ package ink.whi.service.article.service.Impl;
 import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
+import ink.whi.api.model.vo.article.dto.DraftsDTO;
 import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
@@ -14,9 +15,10 @@ import ink.whi.core.utils.MapUtils;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
-import ink.whi.service.article.repo.dao.DraftDao;
+import ink.whi.service.article.repo.dao.DraftsDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
+import ink.whi.service.article.repo.entity.DraftsDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.user.repo.entity.UserFootDO;
@@ -57,7 +59,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     private UserFootService userFootService;
 
     @Autowired
-    private DraftDao draftDao;
+    private DraftsDao draftsDao;
 
     @Override
     public PageListVo<ArticleDTO> queryArticlesByCategory(Long categoryId, PageParam pageParam) {
@@ -278,15 +280,30 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     }
 
     @Override
-    public ArticleDTO queryOnlineArticleCopy(Long articleId) {
-        ArticleDTO dto = articleDao.getArticleDraft(articleId);
-        dto.setTags(articleTagDao.listArticleTagsDetail(articleId));
+    public DraftsDTO getOnlineArticleDraft(Long articleId) {
+//        ArticleDTO dto = articleDao.getArticleDraft(articleId);
+//        dto.setTags(articleTagDao.listArticleTagsDetail(articleId));
+//        return dto;
+        DraftsDO record = draftsDao.getArticleDraftById(articleId);
+        if (record == null) {
+            // 创建文章草稿
+            ArticleDTO detail = articleDao.queryArticleDetail(articleId);
+            record = ArticleConverter.toDrafts(detail);
+            draftsDao.save(record);
+            Set<Long> tagIds = articleTagDao.listArticleTags(articleId).stream().map(ArticleTagDO::getTagId)
+                    .collect(Collectors.toSet());
+            articleTagDao.insertBatch(record.getId(), tagIds, ArticleTypeEnum.DRAFT);
+        }
+        Long draftId = record.getId();
+        DraftsDTO dto = ArticleConverter.toDraftsDTO(record);
+        dto.setTags(articleTagDao.listArticleTagsDetail(draftId));
         return dto;
     }
 
     @Override
-    public ArticleDTO queryDraftById(Long draftId) {
-        ArticleDTO dto = articleDao.queryArticleDetail(draftId);
+    public DraftsDTO queryDraftById(Long draftId) {
+        DraftsDO draft = draftsDao.getById(draftId);
+        DraftsDTO dto = ArticleConverter.toDraftsDTO(draft);
         dto.setTags(articleTagDao.listArticleTagsDetail(draftId));
         return dto;
     }

@@ -3,6 +3,7 @@ package ink.whi.web.article.rest;
 import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.api.model.vo.article.dto.DraftsDTO;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
@@ -37,11 +38,13 @@ public class CommonRestController {
      */
 
     @GetMapping(path = "edit/{articleId}")
-    public ResVo<ArticleDTO> edit(@PathVariable Long articleId) {
+    public ResVo<DraftsDTO> edit(@PathVariable Long articleId) {
         ArticleDO article = articleReadService.queryBasicArticle(articleId);
-        ArticleDTO dto = null;
+        DraftsDTO dto = null;
+
+        // 判断是文章还是草稿
         if (ArticleHelper.isOnline(article)) {
-            dto = articleReadService.queryOnlineArticleCopy(articleId);
+            dto = articleReadService.getOnlineArticleDraft(articleId);
         } else {
             dto = articleReadService.queryDraftById(articleId);
         }

@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public enum ArticleTypeEnum {
 
-    EMPTY(0, ""),
+    DRAFT(0, "草稿"),
     BLOG(1, "博文"),
     ANSWER(2, "帖子");
 
@@ -26,6 +26,6 @@ public enum ArticleTypeEnum {
                 return value;
             }
         }
-        return ArticleTypeEnum.EMPTY;
+        return null;
     }
 }

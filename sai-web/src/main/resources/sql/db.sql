@@ -88,12 +88,13 @@ DROP TABLE IF EXISTS `article_tag`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `article_tag`
 (
-    `id`          int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `article_id`  int unsigned NOT NULL DEFAULT '0' COMMENT '文章ID',
-    `tag_id`      int          NOT NULL DEFAULT '0' COMMENT '标签',
-    `deleted`     tinyint      NOT NULL DEFAULT '0' COMMENT '是否删除',
-    `create_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+    `id`           int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `article_id`   int unsigned NOT NULL DEFAULT '0' COMMENT '文章ID',
+    `tag_id`       int          NOT NULL DEFAULT '0' COMMENT '标签',
+    `article_type` tinyint               default 0 not null comment '0-草稿，1-文章',
+    `deleted`      tinyint      NOT NULL DEFAULT '0' COMMENT '是否删除',
+    `create_time`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_tag_id` (`tag_id`)
 ) ENGINE = InnoDB
@@ -101,6 +102,9 @@ CREATE TABLE `article_tag`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='文章标签映射';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+create index idx_tag_id
+    on `sai-forum`.article_tag (tag_id);
 
 --
 -- Table structure for table `category`
@@ -484,5 +488,27 @@ CREATE TABLE `user_relation`
   AUTO_INCREMENT = 15
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='用户关系表';
+
+create table `sai-forum`.drafts
+(
+    id          int unsigned auto_increment comment '主键ID'
+        primary key,
+    user_id     int unsigned default 0                   not null comment '用户ID',
+    title       varchar(120) default ''                  not null comment '文章标题',
+    short_title varchar(120) default ''                  not null comment '短标题',
+    picture     varchar(128) default ''                  not null comment '文章头图',
+    summary     varchar(300) default ''                  not null comment '文章摘要',
+    category_id int unsigned default 0                   not null comment '分类ID',
+    source      tinyint      default 1                   not null comment '来源：1-转载，2-原创，3-翻译',
+    source_url  varchar(128) default '1'                 not null comment '原文链接',
+    article_id  int unsigned default 0                   not null comment '关联的文章，0-没有',
+    content     longtext                                 not null comment '内容',
+    deleted     tinyint      default 0                   not null comment '是否删除',
+    create_time timestamp    default current_timestamp() not null comment '创建时间',
+    update_time timestamp    default current_timestamp() not null on update current_timestamp() comment '最后更新时间',
+    constraint idx_article_id
+        unique (article_id)
+)
+    comment '草稿表' charset = utf8mb4;
 
 -- Dump completed on 2023-09-28 13:13:36

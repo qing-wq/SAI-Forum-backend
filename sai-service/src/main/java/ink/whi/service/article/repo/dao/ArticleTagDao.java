@@ -1,9 +1,9 @@
 package ink.whi.service.article.repo.dao;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.api.model.base.BaseDO;
+import ink.whi.api.model.enums.ArticleTypeEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
@@ -36,7 +36,7 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
                 .list();
     }
 
-    public void insertBatch(Long articleId, Set<Long> tagIds) {
+    public void insertBatch(Long articleId, Set<Long> tagIds, ArticleTypeEnum type) {
         if (CollectionUtils.isEmpty(tagIds)) {
             return;
         }
@@ -47,6 +47,7 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
             tag.setArticleId(articleId);
             tag.setTagId(s);
             tag.setDeleted(YesOrNoEnum.NO.getCode());
+            tag.setArticleType(type.getCode());
             list.add(tag);
         });
         saveBatch(list);
@@ -57,8 +58,9 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
      *
      * @param articleId
      * @param newTags
+     * @param type
      */
-    public void updateTags(Long articleId, Set<Long> newTags) {
+    public void updateTags(Long articleId, Set<Long> newTags, ArticleTypeEnum type) {
         if (newTags == null) {
             return;
         }
@@ -73,7 +75,7 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
             }
         });
 
-        insertBatch(articleId, newTags);
+        insertBatch(articleId, newTags, type);
         if (!CollectionUtils.isEmpty(delete)) {
             List<Long> ids = delete.stream().map(BaseDO::getId).toList();
             baseMapper.deleteBatchIds(ids);
