@@ -10,8 +10,6 @@ import ink.whi.service.user.repo.entity.UserDO;
 import ink.whi.service.user.repo.entity.UserInfoDO;
 import org.springframework.beans.BeanUtils;
 
-import java.util.UUID;
-
 /**
  * 实体转换
  * @author: qing
@@ -41,7 +39,7 @@ public class UserConverter {
 
     public static UserDO toUserDo(UserSaveReq req) {
         UserDO user = new UserDO();
-        user.setUserName(req.getUserName());
+        user.setUserName(req.getUsername());
         user.setPassword(req.getPassword());
         user.setLoginType(LoginTypeEnum.PASSWORD_LOGIN.getCode());
         return user;

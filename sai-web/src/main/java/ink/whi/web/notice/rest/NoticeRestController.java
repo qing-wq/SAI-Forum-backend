@@ -28,7 +28,7 @@ public class NoticeRestController {
 
     /**
      * 消息列表
-     * @param type 查看的消息类型，如：comment、reply、praise、collect、follow、system，默认comment
+     * @param type 消息类型，如：comment、reply、praise、collect、follow、system
      * @return
      */
     @GetMapping(path = {"/", "/{type}"})
@@ -36,14 +36,7 @@ public class NoticeRestController {
         Long loginUserId = ReqInfoContext.getReqInfo().getUserId();
         Map<String, Integer> map = notifyService.queryUnreadCounts(loginUserId);
 
-        NotifyTypeEnum typeEnum = type == null ? null : NotifyTypeEnum.typeOf(type);
-        if (typeEnum == null) {
-            // 若没有指定查询的消息类别，则找一个存在消息未读数的进行展示
-            typeEnum = map.entrySet().stream().filter(s -> s.getValue() > 0)
-                    .map(s -> NotifyTypeEnum.typeOf(s.getKey()))
-                    .findAny()
-                    .orElse(NotifyTypeEnum.COMMENT);
-        }
+        NotifyTypeEnum typeEnum = type == null ? NotifyTypeEnum.COMMENT : NotifyTypeEnum.typeOf(type);
 
         NoticeResVo vo = new NoticeResVo();
         vo.setList(notifyService.queryUserNotices(loginUserId, typeEnum, PageParam.newPageInstance()));

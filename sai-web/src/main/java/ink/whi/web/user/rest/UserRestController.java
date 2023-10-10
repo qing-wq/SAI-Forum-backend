@@ -18,7 +18,10 @@ import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
+import ink.whi.core.utils.JwtUtil;
+import ink.whi.core.utils.SessionUtil;
 import ink.whi.service.article.service.ArticleReadService;
+import ink.whi.service.user.service.SessionService;
 import ink.whi.service.user.service.UserRelationService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.base.BaseRestController;
@@ -27,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -173,11 +177,17 @@ public class UserRestController extends BaseRestController {
      * @return
      */
     @PostMapping(path = "register")
-    public ResVo<Long> register(@RequestBody UserSaveReq req) {
-        if (StringUtils.isBlank(req.getUserName()) || StringUtils.isBlank(req.getPassword())) {
+    public ResVo<Long> register(@RequestBody UserSaveReq req, HttpServletResponse response) {
+        if (StringUtils.isBlank(req.getUsername()) || StringUtils.isBlank(req.getPassword())) {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "账号密码不能为空");
         }
         Long userId = userService.saveUser(req);
+        // 签发token
+        String token = JwtUtil.createToken(userId);
+        if (StringUtils.isBlank(token)) {
+            return ResVo.fail(StatusEnum.TOKEN_NOT_EXISTS);
+        }
+        response.addCookie(SessionUtil.newCookie(SessionService.SESSION_KEY, token));
         return ResVo.ok(userId);
     }
 

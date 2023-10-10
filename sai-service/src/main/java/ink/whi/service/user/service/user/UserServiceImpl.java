@@ -19,6 +19,7 @@ import ink.whi.service.user.repo.entity.UserInfoDO;
 import ink.whi.service.user.repo.entity.UserRelationDO;
 import ink.whi.service.user.service.CountService;
 import ink.whi.service.user.service.UserService;
+import ink.whi.service.user.service.help.UserPwdEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -49,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ArticleDao articleDao;
+
+    @Autowired
+    private UserPwdEncoder userPwdEncoder;
 
     @Override
     public BaseUserInfoDTO queryBasicUserInfo(Long userId) {
@@ -143,6 +148,7 @@ public class UserServiceImpl implements UserService {
         if (record != null) {
             throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "用户已存在");
         }
+        user.setPassword(userPwdEncoder.encoder(user.getPassword()));
         userDao.saveUser(user);
         UserInfoDO userInfo = UserConverter.toUserInfoDo(req);
         userInfo.setUserId(user.getId());
