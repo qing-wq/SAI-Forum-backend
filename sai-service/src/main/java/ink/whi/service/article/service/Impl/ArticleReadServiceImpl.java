@@ -28,6 +28,7 @@ import ink.whi.service.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -279,17 +280,22 @@ public class ArticleReadServiceImpl implements ArticleReadService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DraftsDTO getOnlineArticleDraft(Long articleId) {
-        DraftsDO record = draftsDao.getArticleDraftById(articleId);
+        DraftsDO record = draftsDao.getArticleDraftByArticleId(articleId);
         if (record == null) {
             // 创建文章草稿
             ArticleDTO detail = articleDao.queryArticleDetail(articleId);
             record = ArticleConverter.toDrafts(detail);
+            record.setDraftType(DraftsTypeEnum.ARTICLE);
             draftsDao.save(record);
+
+            // 保存tags
             Set<Long> tagIds = articleTagDao.listArticleTags(articleId).stream().map(ArticleTagDO::getTagId)
                     .collect(Collectors.toSet());
             articleTagDao.insertBatch(record.getId(), tagIds, ArticleTypeEnum.DRAFT);
         }
+
         Long draftId = record.getId();
         DraftsDTO dto = ArticleConverter.toDraftsDTO(record);
         dto.setTags(articleTagDao.listArticleTagsDetail(draftId));

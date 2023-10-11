@@ -56,7 +56,7 @@ public class ArticlePostReq implements Serializable {
     /**
      * 封面
      */
-    private String cover;
+    private String picture;
 
     /**
      * 文章类型 0-帖子, 1-博客, 2-帖子

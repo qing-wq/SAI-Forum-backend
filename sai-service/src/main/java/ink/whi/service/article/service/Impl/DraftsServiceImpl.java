@@ -34,12 +34,14 @@ public class DraftsServiceImpl implements DraftsService {
 
     /**
      * 初始化草稿
-     * @param draftsSaveReq
+     * @param req
      * @return
      */
     @Override
-    public Long initDraft(DraftsSaveReq draftsSaveReq) {
-        DraftsDO draft = ArticleConverter.toDraftsDO(draftsSaveReq, ReqInfoContext.getReqInfo().getUserId());
+    public Long initDraft(DraftsSaveReq req) {
+        DraftsDO draft = ArticleConverter.toDraftsDO(req, ReqInfoContext.getReqInfo().getUserId());
+        // 设置content默认值
+        draft.setContent(req.getContent() == null ? "" : req.getContent());
         draftsDao.save(draft);
         return draft.getId();
     }

@@ -3,7 +3,7 @@ package ink.whi.api.model.vo.article.dto;
 import ink.whi.api.model.base.BaseDTO;
 import lombok.Data;
 
-import java.util.Date;
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -13,13 +13,15 @@ import java.util.List;
 @Data
 public class DraftsDTO extends BaseDTO {
 
+    @Serial
+    private static final long serialVersionUID = 9140432248863331673L;
     /**
      * 用户id
      */
     private Integer userId;
 
     /**
-     * 关联的文章,0-没有
+     * 关联的文章
      */
     private Long articleId;
 
@@ -67,14 +69,4 @@ public class DraftsDTO extends BaseDTO {
      * 标签
      */
     private List<TagDTO> tags;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 }

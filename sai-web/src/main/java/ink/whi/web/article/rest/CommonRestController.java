@@ -1,18 +1,13 @@
 package ink.whi.web.article.rest;
 
 import ink.whi.api.model.enums.ArticleTypeEnum;
-import ink.whi.api.model.enums.PushStatusEnum;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
-import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.DraftsDTO;
-import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.api.model.vo.article.req.DraftsSaveReq;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
-import ink.whi.service.article.repo.dao.help.ArticleHelper;
-import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
-import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.service.article.service.DraftsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("common")
 @Permission(role = UserRole.LOGIN)
 public class CommonRestController {
+
     @Autowired
     private ArticleReadService articleReadService;
 
@@ -60,6 +56,9 @@ public class CommonRestController {
      */
     @PostMapping(path = "update")
     public ResVo<String> autoSave(@RequestBody DraftsSaveReq draftsSaveReq) {
+        if (draftsSaveReq.getDraftId() == null) {
+            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "draftId=null");
+        }
         draftsService.updateDraft(draftsSaveReq);
         return ResVo.ok("ok");
     }

@@ -59,7 +59,7 @@ public class ArticleDTO implements Serializable {
     /**
      * 封面(可选)
      */
-    private String cover;
+    private String picture;
 
     /**
      * 正文

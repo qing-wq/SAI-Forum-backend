@@ -32,7 +32,7 @@ public class ArticleConverter {
         article.setShortTitle(req.getShortTitle());
         // todo: 默认为文章类型
         article.setArticleType(req.getArticleType() == null ? ArticleTypeEnum.BLOG.getCode() : ArticleTypeEnum.valueOf(req.getArticleType().toUpperCase()).getCode());
-        article.setPicture(req.getCover() == null ? "" : req.getCover());
+        article.setPicture(req.getPicture() == null ? "" : req.getPicture());
         article.setCategoryId(req.getCategoryId());
         article.setSource(req.getSource());
         article.setSourceUrl(req.getSourceUrl());
@@ -53,7 +53,7 @@ public class ArticleConverter {
         articleDTO.setTitle(articleDO.getTitle());
         articleDTO.setShortTitle(articleDO.getShortTitle());
         articleDTO.setSummary(articleDO.getSummary());
-        articleDTO.setCover(articleDO.getPicture());
+        articleDTO.setPicture(articleDO.getPicture());
         articleDTO.setSourceType(SourceTypeEnum.formCode(articleDO.getSource()).getDesc());
         articleDTO.setSourceUrl(articleDO.getSourceUrl());
         articleDTO.setStatus(articleDO.getStatus());
@@ -134,7 +134,7 @@ public class ArticleConverter {
     public static DraftsDO toDrafts(ArticleDTO article) {
         DraftsDO draft = new DraftsDO();
         BeanUtil.copyProperties(article, draft);
-        draft.setPicture(article.getCover());
+        draft.setUserId(article.getAuthor());
         return draft;
     }
 

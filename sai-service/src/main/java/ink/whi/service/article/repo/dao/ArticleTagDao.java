@@ -1,7 +1,10 @@
 package ink.whi.service.article.repo.dao;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.conditions.ChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import ink.whi.api.model.base.BaseDO;
 import ink.whi.api.model.enums.ArticleTypeEnum;
 import ink.whi.api.model.enums.YesOrNoEnum;

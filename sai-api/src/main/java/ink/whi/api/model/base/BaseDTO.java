@@ -16,6 +16,8 @@ public class BaseDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -1314162575898615006L;
 
+    private Long id;
+
     /**
      * 创建时间
      */

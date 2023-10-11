@@ -4,6 +4,7 @@ import java.io.Serial;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
+import ink.whi.api.model.enums.DraftsTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,7 +28,7 @@ public class DraftsDO extends BaseDO{
     private Long userId;
 
     /**
-     * 关联的文章,0-没有
+     * 关联的文章id
      */
     private Long articleId;
 
@@ -70,6 +71,13 @@ public class DraftsDO extends BaseDO{
      * 内容
      */
     private String content;
+
+    /**
+     * 草稿类型，0-普通草稿，1-文章草稿
+     * 普通草稿会在草稿箱进行展示，文章草稿不会
+     *
+     */
+    private DraftsTypeEnum draftType;
 
     /**
      * 是否删除
