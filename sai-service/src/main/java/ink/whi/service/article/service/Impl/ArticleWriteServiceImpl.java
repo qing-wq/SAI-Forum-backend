@@ -5,12 +5,15 @@ import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
+import ink.whi.api.model.vo.article.req.DraftsSaveReq;
 import ink.whi.core.article.ArticleSettings;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
+import ink.whi.service.article.repo.dao.DraftsDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
+import ink.whi.service.article.repo.entity.DraftsDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.core.image.service.ImageService;
@@ -92,7 +95,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         articleDao.saveArticleContent(articleId, content);
 
         // 保存标签
-        articleTagDao.insertBatch(articleId, tagIds);
+        articleTagDao.insertBatch(articleId, tagIds, ArticleTypeEnum.BLOG);
 
         // 发布文章，阅读计数+1
         articleDao.incrReadCount(articleId);
@@ -112,7 +115,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         // 更新文章、内容、标签
         articleDao.updateById(article);
         articleDao.updateArticleContent(articleId, content, unPublish);
-        articleTagDao.updateTags(articleId, tagIds);
+        articleTagDao.updateTags(articleId, tagIds, ArticleTypeEnum.BLOG);
     }
 
     @Override
@@ -126,59 +129,6 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 articleDao.deleteArticle(article);
-            }
-        });
-    }
-
-    /**
-     * 更新草稿
-     *
-     * @param req
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateDraft(ArticlePostReq req) {
-        Long authorId = ReqInfoContext.getReqInfo().getUserId();
-        Long articleId = req.getArticleId();
-        ArticleDO article = ArticleConverter.toArticleDo(req, authorId);
-
-        // 存草稿
-        article.setStatus(PushStatusEnum.OFFLINE.getCode());
-        articleDao.updateById(article);
-        articleDao.updateArticleContent(articleId, req.getContent(), true);
-        articleTagDao.updateTags(articleId, req.getTagIds());
-    }
-
-    @Override
-    public Long initArticle(ArticlePostReq articlePostReq) {
-        ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
-        // 存草稿
-        article.setStatus(PushStatusEnum.OFFLINE.getCode());
-        articleDao.save(article);
-        articleDao.saveArticleContent(article.getId(), "");
-        return article.getId();
-    }
-
-    /**
-     * 更新已发布文章副本
-     *
-     * @param articlePostReq
-     */
-    @Override
-    public void updateArticle(ArticlePostReq articlePostReq) {
-        ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
-        String content = imageService.mdImgReplace(articlePostReq.getContent());
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            //  article + article_detail + tag 三张表
-            @Override
-            public void doInTransactionWithoutResult(@NotNull TransactionStatus status) {
-                // 更新文章
-                ArticleDO record = articleDao.getById(article.getId());
-                if (!Objects.equals(record.getUserId(), article.getUserId())) {
-                    throw BusinessException.newInstance(StatusEnum.FORBID_ERROR);
-                }
-                Long articleId = article.getId();
-                articleDao.updateArticleCopy(articleId, content);
             }
         });
     }
