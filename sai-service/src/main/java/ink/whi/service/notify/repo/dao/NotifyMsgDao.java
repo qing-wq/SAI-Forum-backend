@@ -12,8 +12,11 @@ import ink.whi.core.utils.SpringUtil;
 import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.notify.repo.mapper.NotifyMsgMapper;
 import ink.whi.service.notify.repo.entity.NotifyMsgDO;
+import ink.whi.service.user.repo.dao.UserDao;
 import ink.whi.service.user.repo.entity.UserFootDO;
+import ink.whi.service.user.repo.entity.UserInfoDO;
 import ink.whi.service.user.repo.entity.UserRelationDO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -27,6 +30,9 @@ import java.util.Map;
 @Repository
 public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
     private static final Long ADMIN_ID = 0L;
+
+    @Autowired
+    private UserDao userDao;
 
     /**
      * 查询用户消息数
@@ -115,8 +121,10 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
     }
 
     public void saveCommentNotify(CommentDO comment, Long userId) {
+        UserInfoDO user = userDao.getByUserId(comment.getUserId());
+        String msg = String.format("%s 评论了：%s", user.getUserName(), comment.getContent());
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(comment.getArticleId())
-                .msg(comment.getContent())
+                .msg(msg)
                 .notifyUserId(userId)
                 .operateUserId(comment.getUserId())
                 .type(NotifyTypeEnum.COMMENT.getType())
@@ -125,8 +133,10 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
     }
 
     public void saveReplyNotify(CommentDO comment, Long parentCommentUserId) {
+        UserInfoDO user = userDao.getByUserId(comment.getUserId());
+        String msg = String.format("%s 回复了：%s", user.getUserName(), comment.getContent());
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(comment.getArticleId())
-                .msg(comment.getContent())
+                .msg(msg)
                 .notifyUserId(parentCommentUserId)
                 .operateUserId(comment.getUserId())
                 .type(NotifyTypeEnum.REPLY.getType())
@@ -136,7 +146,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
 
     public void saveArticlePraise(UserFootDO foot) {
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
-                .msg("")
+                .msg("用户点赞了文章")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
                 .type(NotifyTypeEnum.PRAISE.getType())
@@ -150,7 +160,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
 
     public void saveArticleCollect(UserFootDO foot) {
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
-                .msg("")
+                .msg("用户收藏文章")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
                 .type(NotifyTypeEnum.COLLECT.getType())
@@ -163,6 +173,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
 
     public void removeArticlePraise(UserFootDO foot) {
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
+                .msg("用户取消点赞")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
                 .type(NotifyTypeEnum.CANCEL_PRAISE.getType()).build();
@@ -174,6 +185,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
 
     public void removeArticleCollect(UserFootDO foot) {
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
+                .msg("用户取消收藏")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
                 .type(NotifyTypeEnum.CANCEL_COLLECT.getType()).build();
@@ -189,7 +201,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .setOperateUserId(relation.getFollowUserId())
                 .setType(NotifyTypeEnum.FOLLOW.getType())
                 .setState(NotifyStatEnum.UNREAD.getStat())
-                .setMsg("关注用户");
+                .setMsg("用户关注");
         NotifyMsgDO record = getByUserIdRelatedIdAndType(msg);
         if (record == null) {
             save(msg);
@@ -201,7 +213,8 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .setRelatedId(0L)
                 .setNotifyUserId(relation.getUserId())
                 .setOperateUserId(relation.getFollowUserId())
-                .setType(NotifyTypeEnum.CANCEL_FOLLOW.getType());
+                .setType(NotifyTypeEnum.CANCEL_FOLLOW.getType())
+                .setMsg("用户取消关注");
         NotifyMsgDO record = getByUserIdRelatedIdAndType(msg);
         if (record != null) {
             removeById(record.getId());

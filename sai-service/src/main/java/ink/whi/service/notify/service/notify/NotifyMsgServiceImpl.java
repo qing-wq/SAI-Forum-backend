@@ -60,14 +60,14 @@ public class NotifyMsgServiceImpl implements NotifyMsgService {
         }
         Map<Integer, Integer> map = notifyMsgDao.groupCountByUserIdAndStat(userId, NotifyStatEnum.UNREAD.getStat());
         // 指定先后顺序
-        Map<String, Integer> ans = new LinkedHashMap<>();
-        initCnt(NotifyTypeEnum.COMMENT, map, ans);
-        initCnt(NotifyTypeEnum.REPLY, map, ans);
-        initCnt(NotifyTypeEnum.PRAISE, map, ans);
-        initCnt(NotifyTypeEnum.COLLECT, map, ans);
-        initCnt(NotifyTypeEnum.FOLLOW, map, ans);
-        initCnt(NotifyTypeEnum.SYSTEM, map, ans);
-        return ans;
+        Map<String, Integer> res = new LinkedHashMap<>();
+        initCnt(NotifyTypeEnum.COMMENT, map, res);
+        initCnt(NotifyTypeEnum.REPLY, map, res);
+        initCnt(NotifyTypeEnum.PRAISE, map, res);
+        initCnt(NotifyTypeEnum.COLLECT, map, res);
+        initCnt(NotifyTypeEnum.FOLLOW, map, res);
+        initCnt(NotifyTypeEnum.SYSTEM, map, res);
+        return res;
     }
 
     private void initCnt(NotifyTypeEnum type, Map<Integer, Integer> map, Map<String, Integer> result) {

@@ -1,14 +1,17 @@
 package ink.whi.api.model.vo.page;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: qing
  * @Date: 2023/4/27
  */
 @Data
-@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PageParam {
 
     public static final Long DEFAULT_PAGE_NUM = 1L;
