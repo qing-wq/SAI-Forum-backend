@@ -55,7 +55,7 @@ public class DraftsDO extends BaseDO{
     /**
      * 分类id
      */
-    private Integer categoryId;
+    private Long categoryId;
 
     /**
      * 来源：1-转载,2-原创,3-翻译

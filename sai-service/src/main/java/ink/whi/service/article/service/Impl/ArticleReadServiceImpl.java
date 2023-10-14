@@ -137,7 +137,6 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             article.setCommented(Objects.equals(foot.getCommentStat(), CommentStatEnum.COMMENT.getCode()));
             article.setCollected(Objects.equals(foot.getCollectionStat(), CollectionStatEnum.COLLECTION.getCode()));
         } else {
-            // 未登录，全部设置为未处理
             article.setPraised(false);
             article.setCommented(false);
             article.setCollected(false);
@@ -283,6 +282,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Transactional(rollbackFor = Exception.class)
     public DraftsDTO getOnlineArticleDraft(Long articleId) {
         DraftsDO record = draftsDao.getArticleDraftByArticleId(articleId);
+
         if (record == null) {
             // 创建文章草稿
             ArticleDTO detail = articleDao.queryArticleDetail(articleId);
@@ -291,14 +291,13 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             draftsDao.save(record);
 
             // 保存tags
-            Set<Long> tagIds = articleTagDao.listArticleTags(articleId).stream().map(ArticleTagDO::getTagId)
-                    .collect(Collectors.toSet());
+            Set<Long> tagIds = articleTagDao.listArticleTagIds(articleId);
             articleTagDao.insertBatch(record.getId(), tagIds, ArticleTypeEnum.DRAFT);
         }
 
-        Long draftId = record.getId();
+        Set<Long> tagIds = articleTagDao.listArticleTagIds(record.getId());
         DraftsDTO dto = ArticleConverter.toDraftsDTO(record);
-        dto.setTags(articleTagDao.listArticleTagsDetail(draftId));
+        dto.setTagIds(tagIds);
         return dto;
     }
 
@@ -306,7 +305,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     public DraftsDTO queryDraftById(Long draftId) {
         DraftsDO draft = draftsDao.getById(draftId);
         DraftsDTO dto = ArticleConverter.toDraftsDTO(draft);
-        dto.setTags(articleTagDao.listArticleTagsDetail(draftId));
+        dto.setTagIds(articleTagDao.listArticleTagIds(draftId));
         return dto;
     }
 }

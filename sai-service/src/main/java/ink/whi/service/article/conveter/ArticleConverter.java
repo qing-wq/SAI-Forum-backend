@@ -134,6 +134,7 @@ public class ArticleConverter {
     public static DraftsDO toDrafts(ArticleDTO article) {
         DraftsDO draft = new DraftsDO();
         BeanUtil.copyProperties(article, draft);
+        draft.setCategoryId(article.getCategory().getCategoryId());
         draft.setUserId(article.getAuthor());
         return draft;
     }

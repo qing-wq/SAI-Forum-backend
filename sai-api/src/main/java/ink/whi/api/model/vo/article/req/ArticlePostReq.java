@@ -23,6 +23,12 @@ public class ArticlePostReq implements Serializable {
      * 文章ID， 当存在时，表示更新文章
      */
     private Long articleId;
+
+    /**
+     * 草稿id
+     */
+    private Long draftId;
+
     /**
      * 文章标题
      */

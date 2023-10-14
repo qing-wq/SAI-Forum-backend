@@ -17,6 +17,7 @@ import ink.whi.service.article.repo.entity.DraftsDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.core.image.service.ImageService;
+import ink.whi.service.article.service.DraftsService;
 import ink.whi.service.user.service.UserFootService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,9 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Autowired
     private TransactionTemplate transactionTemplate;
 
+    @Autowired
+    private DraftsService draftsService;
+
     /**
      * 文章发布
      *
@@ -69,8 +73,11 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
             //  article + article_detail + tag 三张表
             @Override
             public Long doInTransaction(TransactionStatus status) {
+                // 删除草稿
+                Long draftId = articlePostReq.getDraftId();
+                draftsService.deleteDraft(draftId);
+
                 if (!NumUtil.upZero(articlePostReq.getArticleId())) {
-                    // fixme: 新增文章草稿后，发布文章携带id，不会进到这
                     return insertArticle(article, content, articlePostReq.getTagIds());
                 } else {
                     // 更新文章

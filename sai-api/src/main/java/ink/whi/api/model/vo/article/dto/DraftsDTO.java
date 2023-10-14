@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author: qing
@@ -68,5 +69,5 @@ public class DraftsDTO extends BaseDTO {
     /**
      * 标签
      */
-    private List<TagDTO> tags;
+    private Set<Long> tagIds;
 }

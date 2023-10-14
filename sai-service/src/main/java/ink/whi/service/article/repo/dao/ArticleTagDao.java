@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author: qing
@@ -90,5 +91,10 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
                 .eq(ArticleTagDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .set(ArticleTagDO::getDeleted, YesOrNoEnum.YES.getCode())
                 .update();
+    }
+
+    public Set<Long> listArticleTagIds(Long articleId) {
+        return listArticleTags(articleId).stream().map(ArticleTagDO::getTagId)
+                .collect(Collectors.toSet());
     }
 }

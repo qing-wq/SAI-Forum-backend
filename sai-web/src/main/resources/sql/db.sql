@@ -494,6 +494,7 @@ create table `sai-forum`.drafts
     id          int unsigned auto_increment comment '主键ID'
         primary key,
     user_id     int unsigned default 0                   not null comment '用户ID',
+    article_id  int unsigned default 0                   not null comment '关联的文章',
     title       varchar(120) default ''                  not null comment '文章标题',
     short_title varchar(120) default ''                  not null comment '短标题',
     picture     varchar(128) default ''                  not null comment '文章头图',
@@ -501,13 +502,13 @@ create table `sai-forum`.drafts
     category_id int unsigned default 0                   not null comment '分类ID',
     source      tinyint      default 1                   not null comment '来源：1-转载，2-原创，3-翻译',
     source_url  varchar(128) default '1'                 not null comment '原文链接',
-    article_id  int unsigned default 0                   not null comment '关联的文章，0-没有',
+    draft_type  tinyint      default 0                 not null comment '草稿类型',
     content     longtext                                 not null comment '内容',
     deleted     tinyint      default 0                   not null comment '是否删除',
     create_time timestamp    default current_timestamp() not null comment '创建时间',
     update_time timestamp    default current_timestamp() not null on update current_timestamp() comment '最后更新时间',
     constraint idx_article_id
-        unique (article_id)
+        unique (article_id, deleted)
 )
     comment '草稿表' charset = utf8mb4;
 
