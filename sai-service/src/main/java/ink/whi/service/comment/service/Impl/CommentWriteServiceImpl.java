@@ -1,5 +1,6 @@
 package ink.whi.service.comment.service.Impl;
 
+import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.comment.CommentSaveReq;
@@ -55,6 +56,9 @@ public class CommentWriteServiceImpl implements CommentWriteService {
 
     private CommentDO addComment(CommentSaveReq req) {
         ArticleDO article = articleReadService.queryBasicArticle(req.getArticleId());
+        if (article.getStatus() == PushStatusEnum.REVIEW.getCode()) {
+            throw BusinessException.newInstance(StatusEnum.ILLEGAL_OPERATE, "审核中的文章不能评论");
+        }
 
         CommentDO comment = CommentConverter.toDo(req);
         commentDao.save(comment);

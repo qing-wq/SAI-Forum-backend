@@ -7,6 +7,8 @@ import ink.whi.api.model.base.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * 用户个人信息表
  *
@@ -17,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "user_info", autoResultMap = true)
 public class UserInfoDO extends BaseDO {
-
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

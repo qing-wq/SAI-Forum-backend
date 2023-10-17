@@ -20,7 +20,7 @@ public class GlobalSettingsRestController {
      * 开启后台审核
      * @return
      */
-    @PostMapping(path = "review")
+    @GetMapping(path = "review")
     @Permission(role = UserRole.ADMIN)
     public ResVo<String> save(@RequestParam(name = "enable", defaultValue = "true") boolean review) {
         ArticleSettings.enable(review);

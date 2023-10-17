@@ -85,7 +85,8 @@ public class ArticleSettingRestController extends BaseRestController {
      * @return
      */
     @GetMapping(path = "list")
-    public ResVo<ArticleListVo> list(@RequestParam(name = "pageNumber", required = false) Long pageNumber, @RequestParam(name = "pageSize", required = false) Long pageSize) {
+    public ResVo<ArticleListVo> list(@RequestParam(name = "page", required = false) Long pageNumber,
+                                     @RequestParam(name = "pageSize", required = false) Long pageSize) {
         PageParam pageParam = buildPageParam(pageNumber, pageSize);
         ArticleListVo vo = new ArticleListVo();
         vo.setPage(articleSettingService.getArticleList(pageParam));
