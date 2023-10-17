@@ -85,7 +85,7 @@ public class ArticleRestController extends BaseRestController {
 
         // 文章详情
         ArticleDTO article = articleReadService.queryTotalArticleInfo(articleId, ReqInfoContext.getReqInfo().getUserId());
-        article.setContent(MarkdownConverter.markdownToHtml(article.getContent()));
+        article.setContent(article.getContent());
         vo.setArticle(article);
 
         // 评论信息
