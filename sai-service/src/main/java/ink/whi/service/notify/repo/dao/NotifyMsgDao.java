@@ -173,24 +173,22 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
 
     public void removeArticlePraise(UserFootDO foot) {
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
-                .msg("用户取消点赞")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
-                .type(NotifyTypeEnum.CANCEL_PRAISE.getType()).build();
+                .type(NotifyTypeEnum.PRAISE.getType()).build();
         NotifyMsgDO record = getByUserIdRelatedIdAndType(notify);
-        if (record == null) {
+        if (record != null) {
             removeById(record.getId());
         }
     }
 
     public void removeArticleCollect(UserFootDO foot) {
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
-                .msg("用户取消收藏")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
-                .type(NotifyTypeEnum.CANCEL_COLLECT.getType()).build();
+                .type(NotifyTypeEnum.COLLECT.getType()).build();
         NotifyMsgDO record = getByUserIdRelatedIdAndType(notify);
-        if (record == null) {
+        if (record != null) {
             removeById(record.getId());
         }
     }
@@ -213,8 +211,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .setRelatedId(0L)
                 .setNotifyUserId(relation.getUserId())
                 .setOperateUserId(relation.getFollowUserId())
-                .setType(NotifyTypeEnum.CANCEL_FOLLOW.getType())
-                .setMsg("用户取消关注");
+                .setType(NotifyTypeEnum.FOLLOW.getType());
         NotifyMsgDO record = getByUserIdRelatedIdAndType(msg);
         if (record != null) {
             removeById(record.getId());

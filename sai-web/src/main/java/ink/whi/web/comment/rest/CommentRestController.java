@@ -124,7 +124,10 @@ public class CommentRestController extends BaseRestController {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "操作非法: " + operateType);
         }
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, commentId, comment.getUserId(), ReqInfoContext.getReqInfo().getUserId(), type);
+
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
+        // 将评论的relatedId设为文章id
+        foot.setDocumentId(comment.getArticleId());
         Optional.ofNullable(notifyType).ifPresent(s -> rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE,
                 s == NotifyTypeEnum.PRAISE ? BlogMqConstants.BLOG_PRAISE_KEY : BlogMqConstants.BLOG_CANCEL_PRAISE_KEY, foot));
         return ResVo.ok("ok");
