@@ -6,10 +6,10 @@ import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.api.model.vo.page.PageParam;
-import ink.whi.core.article.ArticleSettings;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.service.article.service.ArticleSettingsService;
+import ink.whi.service.statistics.repo.dao.DictCommonDao;
 import ink.whi.web.admin.vo.ArticleListVo;
 import ink.whi.web.base.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,9 @@ public class ArticleSettingRestController extends BaseRestController {
 
     @Autowired
     private ArticleSettingsService articleSettingService;
+
+    @Autowired
+    private DictCommonDao dictCommonDao;
 
     /**
      * 编辑文章标题、发布状态等信息
@@ -90,7 +93,7 @@ public class ArticleSettingRestController extends BaseRestController {
         PageParam pageParam = buildPageParam(pageNumber, pageSize);
         ArticleListVo vo = new ArticleListVo();
         vo.setPage(articleSettingService.getArticleList(pageParam));
-        vo.setReview(ArticleSettings.getReview());
+        vo.setReview(Boolean.valueOf(dictCommonDao.getValue(DictCommonDao.REVIEW)));
         return ResVo.ok(vo);
     }
 }

@@ -5,25 +5,21 @@ import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
-import ink.whi.api.model.vo.article.req.DraftsSaveReq;
-import ink.whi.core.article.ArticleSettings;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.repo.dao.ArticleTagDao;
-import ink.whi.service.article.repo.dao.DraftsDao;
 import ink.whi.service.article.repo.entity.ArticleDO;
-import ink.whi.service.article.repo.entity.DraftsDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.core.image.service.ImageService;
 import ink.whi.service.article.service.DraftsService;
+import ink.whi.service.statistics.repo.dao.DictCommonDao;
+import ink.whi.service.statistics.repo.entity.DictCommonDO;
 import ink.whi.service.user.service.UserFootService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -59,6 +55,9 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Autowired
     private DraftsService draftsService;
 
+    @Autowired
+    private DictCommonDao dictCommonDao;
+
     /**
      * 文章发布
      *
@@ -93,8 +92,8 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     }
 
     private Long insertArticle(ArticleDO article, String content, Set<Long> tagIds) {
-        // todo: 增加白名单
-        article.setStatus(PushStatusEnum.REVIEW.getCode());
+        // 是否开启审核
+        article.setStatus(dictCommonDao.review() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
         articleDao.save(article);
         Long articleId = article.getId();
 
@@ -117,7 +116,8 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         boolean unPublish = article.getStatus() != PushStatusEnum.ONLINE.getCode();
         Long articleId = article.getId();
         // 是否开启审核
-        article.setStatus(ArticleSettings.getReview() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
+        article.setStatus(dictCommonDao.review() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
+//        article.setStatus(ArticleSettings.getReview() ? PushStatusEnum.REVIEW.getCode() : PushStatusEnum.ONLINE.getCode());
 
         // 更新文章、内容、标签
         articleDao.updateById(article);

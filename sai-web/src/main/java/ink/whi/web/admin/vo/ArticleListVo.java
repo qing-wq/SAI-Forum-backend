@@ -14,8 +14,9 @@ public class ArticleListVo {
      * 文章信息
      */
     public PageVo<ArticleDTO> page;
+
     /**
-     * 是否开启审核
+     * 是否开启审核 0-开启审核 1-关闭
      */
     public Boolean review;
 }
