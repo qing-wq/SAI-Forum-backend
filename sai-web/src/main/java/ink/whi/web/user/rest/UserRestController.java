@@ -15,13 +15,9 @@ import ink.whi.api.model.vo.article.dto.TagSelectDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
-import ink.whi.api.model.vo.user.req.UserSaveReq;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
-import ink.whi.core.utils.JwtUtil;
-import ink.whi.core.utils.SessionUtil;
 import ink.whi.service.article.service.ArticleReadService;
-import ink.whi.service.user.service.SessionService;
 import ink.whi.service.user.service.UserRelationService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.base.BaseRestController;
@@ -30,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -227,6 +222,20 @@ public class UserRestController extends BaseRestController {
         req.setUserId(userId);
         userService.saveUserInfo(req);
         return ResVo.ok(true);
+    }
+
+    /**
+     * 更改密码
+     * @param olderPassword
+     * @param newPassword
+     * @return
+     */
+    @PostMapping(path = "update")
+    public ResVo<String> updatePassword(@RequestParam(name = "old") String olderPassword,
+                                        @RequestParam(name = "new") String newPassword) {
+        Long userId = ReqInfoContext.getReqInfo().getUserId();
+        userService.updateUserPwd(userId, olderPassword, newPassword);
+        return ResVo.ok("ok");
     }
 
     /**

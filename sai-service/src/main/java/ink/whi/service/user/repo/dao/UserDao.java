@@ -45,10 +45,18 @@ public class UserDao extends ServiceImpl<UserInfoMapper, UserInfoDO> {
     }
 
     public void saveUser(UserDO user) {
-        userMapper.insert(user);
+        if (user.getId() == null) {
+            userMapper.insert(user);
+        } else {
+            userMapper.updateById(user);
+        }
     }
 
     public List<StatisticUserInfoDTO> getUserList(PageParam pageParam) {
         return baseMapper.getUserList(pageParam);
+    }
+
+    public UserDO getUser(Long userId) {
+        return userMapper.selectById(userId);
     }
 }

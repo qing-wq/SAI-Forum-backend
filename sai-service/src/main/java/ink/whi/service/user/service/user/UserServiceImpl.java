@@ -163,4 +163,15 @@ public class UserServiceImpl implements UserService {
         info.setId(record.getId());
         userDao.updateById(info);
     }
+
+    @Override
+    public void updateUserPwd(Long userId, String olderPwd, String newPassword) {
+        UserDO user = userDao.getUser(userId);
+        if (Objects.equals(user.getPassword(), userPwdEncoder.encoder(olderPwd))) {
+            user.setPassword(userPwdEncoder.encoder(newPassword));
+            userDao.saveUser(user);
+            return;
+        }
+        throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS, "密码错误");
+    }
 }
