@@ -176,20 +176,21 @@ public class UserRestController extends BaseRestController {
      * @param req
      * @return
      */
-    @PostMapping(path = "register")
-    public ResVo<Long> register(@RequestBody UserSaveReq req, HttpServletResponse response) {
-        if (StringUtils.isBlank(req.getUsername()) || StringUtils.isBlank(req.getPassword())) {
-            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "账号密码不能为空");
-        }
-        Long userId = userService.saveUser(req);
-        // 签发token
-        String token = JwtUtil.createToken(userId);
-        if (StringUtils.isBlank(token)) {
-            return ResVo.fail(StatusEnum.TOKEN_NOT_EXISTS);
-        }
-        response.addCookie(SessionUtil.newCookie(SessionService.SESSION_KEY, token));
-        return ResVo.ok(userId);
-    }
+    // fixme: 暂停注册功能
+//    @PostMapping(path = "register")
+//    public ResVo<Long> register(@RequestBody UserSaveReq req, HttpServletResponse response) {
+//        if (StringUtils.isBlank(req.getUsername()) || StringUtils.isBlank(req.getPassword())) {
+//            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "账号密码不能为空");
+//        }
+//        Long userId = userService.saveUser(req);
+//        // 签发token
+//        String token = JwtUtil.createToken(userId);
+//        if (StringUtils.isBlank(token)) {
+//            return ResVo.fail(StatusEnum.TOKEN_NOT_EXISTS);
+//        }
+//        response.addCookie(SessionUtil.newCookie(SessionService.SESSION_KEY, token));
+//        return ResVo.ok(userId);
+//    }
 
     /**
      * 用户关注

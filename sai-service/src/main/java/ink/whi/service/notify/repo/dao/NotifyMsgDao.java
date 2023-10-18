@@ -146,13 +146,13 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
 
     public void saveArticlePraise(UserFootDO foot) {
         NotifyMsgDO notify = NotifyMsgDO.builder().relatedId(foot.getDocumentId())
-                .msg("用户点赞了文章")
+                .msg("用户点赞")
                 .notifyUserId(foot.getDocumentUserId())
                 .operateUserId(foot.getUserId())
                 .type(NotifyTypeEnum.PRAISE.getType())
                 .state(NotifyStatEnum.UNREAD.getStat()).build();
         NotifyMsgDO record = getByUserIdRelatedIdAndType(notify);
-        if (record != null) {
+        if (record == null) {
             // keypoint: 幂等过滤
             save(notify);
         }
@@ -166,7 +166,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .type(NotifyTypeEnum.COLLECT.getType())
                 .state(NotifyStatEnum.UNREAD.getStat()).build();
         NotifyMsgDO record = getByUserIdRelatedIdAndType(notify);
-        if (record != null) {
+        if (record == null) {
             save(notify);
         }
     }
@@ -178,7 +178,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .operateUserId(foot.getUserId())
                 .type(NotifyTypeEnum.CANCEL_PRAISE.getType()).build();
         NotifyMsgDO record = getByUserIdRelatedIdAndType(notify);
-        if (record != null) {
+        if (record == null) {
             removeById(record.getId());
         }
     }
@@ -190,7 +190,7 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .operateUserId(foot.getUserId())
                 .type(NotifyTypeEnum.CANCEL_COLLECT.getType()).build();
         NotifyMsgDO record = getByUserIdRelatedIdAndType(notify);
-        if (record != null) {
+        if (record == null) {
             removeById(record.getId());
         }
     }

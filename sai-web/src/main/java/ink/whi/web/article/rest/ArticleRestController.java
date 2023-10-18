@@ -124,7 +124,8 @@ public class ArticleRestController extends BaseRestController {
 
         // 消息通知
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-        Optional.ofNullable(notifyType).ifPresent(s -> rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_PRAISE_KEY, foot));
+        Optional.ofNullable(notifyType).ifPresent(s -> rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE,
+                s == NotifyTypeEnum.PRAISE ? BlogMqConstants.BLOG_PRAISE_KEY : BlogMqConstants.BLOG_CANCEL_PRAISE_KEY, foot));
         return ResVo.ok(true);
     }
 

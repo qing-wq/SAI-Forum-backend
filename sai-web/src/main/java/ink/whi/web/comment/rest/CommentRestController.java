@@ -60,6 +60,7 @@ public class CommentRestController extends BaseRestController {
 
     /**
      * 评论列表分页接口
+     *
      * @param articleId
      * @param pageNum
      * @param pageSize
@@ -77,6 +78,7 @@ public class CommentRestController extends BaseRestController {
 
     /**
      * 发布评论
+     *
      * @param req
      * @return
      */
@@ -102,6 +104,7 @@ public class CommentRestController extends BaseRestController {
 
     /**
      * 评论点赞、取消点赞等操作
+     *
      * @param commentId
      * @param operateType 2-点赞 4-取消点赞
      * @return
@@ -122,7 +125,8 @@ public class CommentRestController extends BaseRestController {
         }
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, commentId, comment.getUserId(), ReqInfoContext.getReqInfo().getUserId(), type);
         NotifyTypeEnum notifyType = OperateTypeEnum.getNotifyType(type);
-        Optional.ofNullable(notifyType).ifPresent(s -> rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_PRAISE_KEY, foot));
+        Optional.ofNullable(notifyType).ifPresent(s -> rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE,
+                s == NotifyTypeEnum.PRAISE ? BlogMqConstants.BLOG_PRAISE_KEY : BlogMqConstants.BLOG_CANCEL_PRAISE_KEY, foot));
         return ResVo.ok("ok");
     }
 }
