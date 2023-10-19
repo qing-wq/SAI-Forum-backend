@@ -58,7 +58,7 @@ public class TagSettingServiceImpl implements TagSettingService {
 
     @Override
     public PageVo<TagDTO> getTagList(PageParam pageParam) {
-        List<TagDTO> tagDTOS = tagDao.listTag(pageParam);
+        List<TagDTO> tagDTOS = tagDao.listTags(pageParam);
         Integer totalCount = tagDao.countTag();
         return PageVo.build(tagDTOS, pageParam.getPageSize(), pageParam.getPageNum(), totalCount);
     }
