@@ -1,7 +1,6 @@
 package ink.whi.web.user.rest;
 
 import ink.whi.api.model.context.ReqInfoContext;
-import ink.whi.api.model.enums.FollowSelectEnum;
 import ink.whi.api.model.enums.FollowTypeEnum;
 import ink.whi.api.model.enums.HomeSelectEnum;
 import ink.whi.api.model.exception.StatusEnum;
@@ -11,7 +10,6 @@ import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
-import ink.whi.api.model.vo.article.dto.TagSelectDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
@@ -30,6 +28,7 @@ import java.util.*;
 
 /**
  * 用户接口
+ *
  * @author: qing
  * @Date: 2023/5/1
  */
@@ -49,15 +48,43 @@ public class UserRestController extends BaseRestController {
 
     /**
      * 用户主页接口
-     * @param userId 如果不填默认为当前登录用户主页
-     * @param homeSelectType 主页选择标签
-     * @param followSelectType 关注列选择标签
+     *
+     * @param userId           如果不填默认为当前登录用户主页
+     * @param homeSelectType   主页选择标签，可选项{"article"(默认), "read", "follow", "collection"} 非必填
+     * @param followSelectType 关注列选择标签，可选项{"follow"(默认), "fans"}，非必填
      * @return
      */
     @GetMapping(path = "/{userId}")
     public ResVo<UserHomeVo> getUserHome(@PathVariable(name = "userId", required = false) Long userId,
-                             @RequestParam(name = "homeSelectType", required = false) String homeSelectType,
-                             @RequestParam(name = "followSelectType", required = false) String followSelectType) {
+                                         @RequestParam(name = "homeSelectType", required = false) String homeSelectType,
+                                         @RequestParam(name = "followSelectType", required = false) String followSelectType) {
+        UserHomeVo vo = initUserHomeVo(userId, homeSelectType, followSelectType, PageParam.newPageInstance());
+        // 用户信息
+        UserStatisticInfoDTO userInfo = userService.queryUserInfoWithStatistic(userId);
+        vo.setUserHome(userInfo);
+        return ResVo.ok(vo);
+    }
+
+    /**
+     * 用户主页分页接口
+     *
+     * @param userId           如果不填默认为当前登录用户主页
+     * @param homeSelectType   主页选择标签，可选项{"article"(默认), "read", "follow", "collection"} 非必填
+     * @param followSelectType 关注列选择标签，可选项{"follow"(默认), "fans"}，非必填
+     * @return
+     */
+    @GetMapping(path = "list")
+    public ResVo<UserHomeVo> page(@RequestParam(name = "userId", required = false) Long userId,
+                                  @RequestParam(name = "homeSelectType", required = false) String homeSelectType,
+                                  @RequestParam(name = "followSelectType", required = false) String followSelectType,
+                                  @RequestParam("page") Long page,
+                                  @RequestParam(name = "pageSize", required = false) Long pageSize) {
+        PageParam pageParam = buildPageParam(page, pageSize);
+        UserHomeVo vo = initUserHomeVo(userId, homeSelectType, followSelectType, pageParam);
+        return ResVo.ok(vo);
+    }
+
+    private UserHomeVo initUserHomeVo(Long userId, String homeSelectType, String followSelectType, PageParam pageParam) {
         UserHomeVo vo = new UserHomeVo();
         vo.setHomeSelectType(StringUtils.isBlank(homeSelectType) ? HomeSelectEnum.ARTICLE.getCode() : homeSelectType);
         vo.setFollowSelectType(StringUtils.isBlank(followSelectType) ? FollowTypeEnum.FOLLOW.getCode() : followSelectType);
@@ -65,55 +92,8 @@ public class UserRestController extends BaseRestController {
         if (userId == null) {
             userId = ReqInfoContext.getReqInfo().getUserId();
         }
-        UserStatisticInfoDTO userInfo = userService.queryUserInfoWithStatistic(userId);
-        vo.setUserHome(userInfo);
-
-        List<TagSelectDTO> homeSelectTags = homeSelectTags(vo.getHomeSelectType(), Objects.equals(userId, ReqInfoContext.getReqInfo().getUserId()));
-        vo.setHomeSelectTags(homeSelectTags);
-
-        userHomeSelectList(vo, userId);
-        return ResVo.ok(vo);
-    }
-
-    /**
-     * Home页选择列表标签
-     *
-     * @param selectType
-     * @param isAuthor true 表示当前为查看自己的个人主页
-     * @return
-     */
-    private List<TagSelectDTO> homeSelectTags(String selectType, boolean isAuthor) {
-        List<TagSelectDTO> tags = new ArrayList<>();
-        homeSelectTags.forEach(tag -> {
-            if (!isAuthor && "read".equals(tag)) {
-                // 只有本人才能看自己的阅读历史
-                return;
-            }
-            TagSelectDTO tagSelectDTO = new TagSelectDTO();
-            tagSelectDTO.setSelectType(tag);
-            tagSelectDTO.setSelectDesc(HomeSelectEnum.fromCode(tag).getDesc());
-            tagSelectDTO.setSelected(selectType.equals(tag));
-            tags.add(tagSelectDTO);
-        });
-        return tags;
-    }
-
-    /**
-     * 返回关注用户选择列表标签
-     *
-     * @param selectType
-     * @return
-     */
-    private List<TagSelectDTO> followSelectTags(String selectType) {
-        List<TagSelectDTO> tags = new ArrayList<>();
-        followSelectTags.forEach(tag -> {
-            TagSelectDTO tagSelectDTO = new TagSelectDTO();
-            tagSelectDTO.setSelectType(tag);
-            tagSelectDTO.setSelectDesc(FollowSelectEnum.fromCode(tag).getDesc());
-            tagSelectDTO.setSelected(selectType.equals(tag));
-            tags.add(tagSelectDTO);
-        });
-        return tags;
+        userHomeSelectList(vo, userId, pageParam);
+        return vo;
     }
 
     /**
@@ -122,8 +102,7 @@ public class UserRestController extends BaseRestController {
      * @param vo
      * @param userId
      */
-    private void userHomeSelectList(UserHomeVo vo, Long userId) {
-        PageParam pageParam = PageParam.newPageInstance();
+    private void userHomeSelectList(UserHomeVo vo, Long userId, PageParam pageParam) {
         HomeSelectEnum select = HomeSelectEnum.fromCode(vo.getHomeSelectType());
         if (select == null) {
             return;
@@ -137,10 +116,6 @@ public class UserRestController extends BaseRestController {
                 vo.setHomeSelectList(dto);
                 return;
             case FOLLOW:
-                // 关注用户与被关注用户
-                // 获取选择标签
-                List<TagSelectDTO> followSelectTags = followSelectTags(vo.getFollowSelectType());
-                vo.setFollowSelectTags(followSelectTags);
                 vo.setHomeSelectList(PageListVo.emptyVo());
                 initFollowFansList(vo, userId, pageParam);
                 return;
@@ -226,6 +201,7 @@ public class UserRestController extends BaseRestController {
 
     /**
      * 更改密码
+     *
      * @param olderPassword
      * @param newPassword
      * @return
@@ -236,27 +212,5 @@ public class UserRestController extends BaseRestController {
         Long userId = ReqInfoContext.getReqInfo().getUserId();
         userService.updateUserPwd(userId, olderPassword, newPassword);
         return ResVo.ok("ok");
-    }
-
-    /**
-     * 用户的文章列表分页接口
-     *
-     * @param userId
-     * @param homeSelectType 类型为article
-     * @return
-     */
-    @GetMapping(path = "articleList")
-    public ResVo<PageListVo<ArticleDTO>> articleList(@RequestParam(name = "userId") Long userId,
-                                             @RequestParam(name = "homeSelectType") String homeSelectType,
-                                             @RequestParam("page") Long page,
-                                             @RequestParam(name = "pageSize", required = false) Long pageSize) {
-        HomeSelectEnum select = HomeSelectEnum.fromCode(homeSelectType);
-        if (select == HomeSelectEnum.ARTICLE) {
-            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS);
-        }
-
-        PageParam pageParam = buildPageParam(page, pageSize);
-        PageListVo<ArticleDTO> dto = articleReadService.queryArticlesByUserAndType(userId, pageParam, select);
-        return ResVo.ok(dto);
     }
 }

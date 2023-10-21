@@ -67,6 +67,8 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Override
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
+        // 图片转链
+        // todo: 耗时测试
         String content = imageService.mdImgReplace(articlePostReq.getContent());
         return transactionTemplate.execute(new TransactionCallback<Long>() {
             //  article + article_detail + tag 三张表

@@ -20,31 +20,26 @@ public class UserHomeVo {
      * 用户主页选择标签
      */
     private String homeSelectType;
+
     /**
-     * 用户主页全部标签，如文章、浏览记录等
-     */
-    private List<TagSelectDTO> homeSelectTags;
-    /**
-     * 关注列表/粉丝列表
-     */
-    private PageListVo<FollowUserInfoDTO> followList;
-    /**
-     * 关注列表选项 follow-关注列表, fans-粉丝列表
+     * 用户关注列表选择标签 follow-关注列表, fans-粉丝列表
      *
      * @see FollowSelectEnum#getCode()
      */
     private String followSelectType;
-    /**
-     * 关注者列表
-     */
-    private List<TagSelectDTO> followSelectTags;
-    /**
-     * 用户个人信息
-     */
-    private UserStatisticInfoDTO userHome;
 
     /**
      * 文章列表
      */
     private PageListVo<ArticleDTO> homeSelectList;
+
+    /**
+     * 关注列表/粉丝列表
+     */
+    private PageListVo<FollowUserInfoDTO> followList;
+
+    /**
+     * 用户个人信息
+     */
+    private UserStatisticInfoDTO userHome;
 }
