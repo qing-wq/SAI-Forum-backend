@@ -12,7 +12,7 @@ public class ReqInfoContext {
     /**
      * 本地线程变量
      */
-    private static ThreadLocal<ReqInfo> contexts = new ThreadLocal<>();
+    private static ThreadLocal<ReqInfo> contexts = new InheritableThreadLocal<>();
 
     public static void addReqInfo(ReqInfo reqInfo) {
         contexts.set(reqInfo);
@@ -23,8 +23,7 @@ public class ReqInfoContext {
     }
 
     public static ReqInfo getReqInfo() {
-        ReqInfo reqInfo = contexts.get();
-            return reqInfo;
+        return contexts.get();
     }
 
     @Data
