@@ -27,6 +27,8 @@ import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -63,6 +65,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     private DraftsDao draftsDao;
 
     @Override
+    @CachePut(key = "'articleList_' + #categoryId", cacheManager = "redisCacheManager", cacheNames = "article")
     public PageListVo<ArticleDTO> queryArticlesByCategory(Long categoryId, PageParam pageParam) {
         List<ArticleDO> list = articleDao.listArticleByCategoryId(categoryId, pageParam);
         return buildArticleListVo(list, pageParam.getPageSize());

@@ -18,6 +18,9 @@ import ink.whi.service.statistics.repo.dao.DictCommonDao;
 import ink.whi.service.statistics.repo.entity.DictCommonDO;
 import ink.whi.service.user.service.UserFootService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -65,6 +68,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
      * @return
      */
     @Override
+    @CacheEvict(cacheManager = "redisCacheManager", cacheNames = "article", allEntries = true)
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
         // 图片转链
@@ -128,6 +132,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     }
 
     @Override
+    @CacheEvict(cacheManager = "redisCacheManager", cacheNames = "article", allEntries = true)
     public void deleteArticle(Long articleId) {
         ArticleDO article = articleReadService.queryBasicArticle(articleId);
 

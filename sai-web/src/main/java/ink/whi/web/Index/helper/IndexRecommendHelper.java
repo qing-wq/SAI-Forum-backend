@@ -6,12 +6,15 @@ import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.core.async.AsyncUtil;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.Index.vo.IndexVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,16 +42,23 @@ public class IndexRecommendHelper {
         CategoryDTO category = categories(activeTab, vo);
         vo.setCurrentCategory(category.getCategory());
         vo.setCategoryId(category.getCategoryId());
-        // fixme: 使用并行调度优化
-        vo.setArticles(articleList(category.getCategoryId()));
-        vo.setUser(userInfo());
+        System.out.println("categoryId: " +category.getCategoryId());
+        AsyncUtil.concurrentExecutor("首页加载")
+                .runAsyncWithTimeRecord(() -> vo.setArticles(articleList(category.getCategoryId())), "文章列表")
+                // fixme: 子线程通过InheritableThreadLocal读取父线程信息
+                .runAsyncWithTimeRecord(() -> vo.setUser(userInfo()), "用户信息")
+                .allExecuted()
+                .prettyPrint();
+//        vo.setArticles(articleList(category.getCategoryId()));
+//        vo.setUser(userInfo());
         return vo;
     }
 
     /**
      * 文章列表
      */
-    private PageListVo<ArticleDTO> articleList(Long categoryId) {
+    @Cacheable(key = "'articleList_' + #categoryId", cacheManager = "redisCacheManager", cacheNames = "article")
+    public PageListVo<ArticleDTO> articleList(Long categoryId) {
         return articleReadService.queryArticlesByCategory(categoryId, PageParam.newPageInstance());
     }
 
@@ -91,7 +101,7 @@ public class IndexRecommendHelper {
      * @return
      */
     private BaseUserInfoDTO userInfo() {
-        if (ReqInfoContext.getReqInfo().getUserId() != null) {
+        if (ReqInfoContext.getReqInfo() != null && ReqInfoContext.getReqInfo().getUserId() != null) {
             return userService.queryBasicUserInfo(ReqInfoContext.getReqInfo().getUserId());
         }
         return null;

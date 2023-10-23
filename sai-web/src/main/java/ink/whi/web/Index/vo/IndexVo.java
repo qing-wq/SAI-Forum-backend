@@ -35,9 +35,5 @@ public class IndexVo {
      */
     private PageListVo<ArticleDTO> articles;
 
-    /**
-     * 登录用户信息
-     */
-//    private UserStatisticInfoDTO user;
     private BaseUserInfoDTO user;
 }

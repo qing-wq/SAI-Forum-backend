@@ -3,15 +3,18 @@ package ink.whi.api.model.vo.user.dto;
 import ink.whi.api.model.base.BaseDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
+import java.util.Objects;
 
 /**
  * @author: qing
  * @Date: 2023/4/26
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class BaseUserInfoDTO extends BaseDTO {
     @Serial

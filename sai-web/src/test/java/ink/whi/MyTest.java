@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 /**
  * @author: qing
@@ -13,19 +14,24 @@ import java.nio.charset.StandardCharsets;
 public class MyTest {
     @Test
     public void test() {
-        String plainPwd = "123456";
+        String plainPwd = "2101620209";
         System.out.println(DigestUtils.md5DigestAsHex(plainPwd.getBytes(StandardCharsets.UTF_8)));
     }
 
     @Test
-    public void test2() {
-        ArticlePostReq req = new ArticlePostReq();
-        req.setArticleId(123L);
-        modify(req);
-        System.out.println(req.getContent());
+    public void test3() {
+        Integer i1 = 40;
+        Integer i2 = new Integer(40);
+        System.out.println(i1==i2);
     }
 
-    private static void modify(ArticlePostReq name1) {
-        name1.setContent("aaaaaaa");
+
+    @Test
+    public void test2() {
+    }
+
+    @Test
+    public void modify() {
+        System.out.println(LocalDate.now());
     }
 }
