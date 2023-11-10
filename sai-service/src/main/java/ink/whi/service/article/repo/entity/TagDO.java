@@ -31,6 +31,11 @@ public class TagDO extends BaseDO {
     private Integer status;
 
     /**
+     * 分类id
+     */
+    private Long categoryId;
+
+    /**
      * 是否删除
      */
     private Integer deleted;

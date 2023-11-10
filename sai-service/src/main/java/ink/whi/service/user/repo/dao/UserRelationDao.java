@@ -64,12 +64,6 @@ public class UserRelationDao extends ServiceImpl<UserRelationMapper, UserRelatio
                 .in(UserRelationDO::getUserId, targetUserId).list();
     }
 
-    public UserRelationDO getUserRelationRecord(Long userId, Long followUserId) {
-        return lambdaQuery().eq(UserRelationDO::getUserId, userId)
-                .eq(UserRelationDO::getFollowUserId, followUserId)
-                .one();
-    }
-
     public int queryUserFollowsCount(Long userId) {
         return lambdaQuery().eq(UserRelationDO::getFollowUserId, userId)
                 .eq(UserRelationDO::getFollowState, FollowStateEnum.FOLLOW.getCode())

@@ -82,7 +82,7 @@ public class UserRelationServiceImpl implements UserRelationService {
 
     @Override
     public void saveUserRelation(UserRelationReq req) {
-        UserRelationDO record = userRelationDao.getUserRelationRecord(req.getUserId(), req.getFollowUserId());
+        UserRelationDO record = userRelationDao.getUserRelationByUserId(req.getUserId(), req.getFollowUserId());
         FollowStateEnum state = req.getFollowed() ? FollowStateEnum.FOLLOW : FollowStateEnum.CANCEL_FOLLOW;
         if (record == null) {
             record = new UserRelationDO().setUserId(req.getUserId()).setFollowUserId(req.getFollowUserId()).setFollowState(state.getCode());

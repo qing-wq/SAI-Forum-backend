@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class MyTest {
     @Test
     public void test() {
-        String plainPwd = "2101620209";
+        String plainPwd = "123salt-key456";
         System.out.println(DigestUtils.md5DigestAsHex(plainPwd.getBytes(StandardCharsets.UTF_8)));
     }
 

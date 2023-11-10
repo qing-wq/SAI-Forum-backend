@@ -4,13 +4,13 @@ spring:
     username: root
     password: root
   redis:
-    host: 127.0.0.1
+    host: 10.60.98.242
     port: 6379
+    password: sai208
 
-#logging:
-#  level:
-#    org:
-#      mybatis: off
+logging:
+  level:
+    root: info
 
 mybatis-plus:
   configuration:

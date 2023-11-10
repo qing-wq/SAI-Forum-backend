@@ -49,15 +49,13 @@ public class IndexRecommendHelper {
                 .runAsyncWithTimeRecord(() -> vo.setUser(userInfo()), "用户信息")
                 .allExecuted()
                 .prettyPrint();
-//        vo.setArticles(articleList(category.getCategoryId()));
-//        vo.setUser(userInfo());
         return vo;
     }
 
     /**
      * 文章列表
      */
-    @Cacheable(key = "'articleList_' + #categoryId", cacheManager = "redisCacheManager", cacheNames = "article")
+//    @Cacheable(key = "'articleList_' + #categoryId", cacheManager = "redisCacheManager", cacheNames = "article")
     public PageListVo<ArticleDTO> articleList(Long categoryId) {
         return articleReadService.queryArticlesByCategory(categoryId, PageParam.newPageInstance());
     }
