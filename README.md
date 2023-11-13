@@ -5,6 +5,8 @@ SAI-Forum是一个前后端分离的论坛博客系统，拥有完整的系统�
 
 后台管理系统包括文章管理、分类管理、统计图表、设置等模块
 
+前端项目地址：[https://github.com/LunaSekiii/SAI-Forum](https://github.com/LunaSekiii/SAI-Forum)
+
 ## 技术选型
 
 |技术选型|说明|
