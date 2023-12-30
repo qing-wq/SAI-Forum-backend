@@ -30,9 +30,6 @@ public enum StatusEnum {
     // 全局，数据不存在
     RECORDS_NOT_EXISTS(100_404_001, "记录不存在:%s"),
 
-    // 系统异常
-    UNEXPECT_ERROR(100_500_001, "非预期异常:%s"),
-
     // 图片相关异常类型
     UPLOAD_PIC_FAILED(100_500_002, "图片上传失败！"),
 
@@ -40,6 +37,9 @@ public enum StatusEnum {
 
     // 评论相关异常类型
     COMMENT_NOT_EXISTS(300_404_001, "评论不存在:%s"),
+
+    // 系统异常
+    UNEXPECT_ERROR(100_500_001, "服务器冒烟啦，要不稍后再试吧！ %s"),
 
     // 用户相关异常
     LOGIN_FAILED_MIXED(400_403_001, "登录失败:%s"),
@@ -49,7 +49,10 @@ public enum StatusEnum {
     // token异常
     JWT_VERIFY_EXISTS(500_400_001, "token校验异常"),
     TOKEN_NOT_EXISTS(500_403_002, "token不存在"),
-    TOKEN_CREATE_EXISTS(500_500_003, "token创建异常")
+    TOKEN_CREATE_EXISTS(500_500_003, "token创建异常"),
+
+    // 限流
+    ACCESS_FREQUENT(600_429_001, "访问过于频繁")
     ;
 
     private int code;

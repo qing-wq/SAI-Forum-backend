@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
         "ink.whi.service.article.repo.mapper",
         "ink.whi.service.user.repo.mapper",
         "ink.whi.service.comment.repo.mapper",
-        "ink.whi.service.config.repo.mapper",
         "ink.whi.service.statistics.repo.mapper",
         "ink.whi.service.notify.repo.mapper",})
 public class ServiceAutoConfig {
