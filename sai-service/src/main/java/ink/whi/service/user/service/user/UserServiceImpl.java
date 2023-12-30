@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
         userDao.saveUser(user);
         UserInfoDO userInfo = UserConverter.toUserInfoDo(req);
         userInfo.setUserId(user.getId());
-        userInfo.setUserName("默认用户" + UUID.randomUUID());
+        userInfo.setUserName("SAI_" +  UUID.randomUUID().toString().replace("-", "").substring(0, 8));
         userDao.save(userInfo);
         return user.getId();
     }

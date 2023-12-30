@@ -1,25 +1,31 @@
 package ink.whi.web.admin.login;
 
+import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.api.model.vo.user.req.UserSaveReq;
+import ink.whi.core.limit.Limit;
+import ink.whi.core.limit.LimitType;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.JwtUtil;
 import ink.whi.core.utils.SessionUtil;
 import ink.whi.service.user.service.SessionService;
+import ink.whi.service.user.service.UserService;
 import ink.whi.service.user.service.UserSettingService;
+import ink.whi.web.admin.login.helper.LoginHelper;
 import ink.whi.web.global.GlobalInitHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static ink.whi.service.user.service.SessionService.SESSION_KEY;
 
 /**
  * 前后台登录接口
@@ -32,6 +38,12 @@ import javax.servlet.http.HttpServletResponse;
 public class AdminLoginController{
     @Autowired
     private UserSettingService userSettingService;
+
+    @Autowired
+    private LoginHelper loginHelper;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 账号密码登录
@@ -51,7 +63,7 @@ public class AdminLoginController{
         // 签发token
         String token = JwtUtil.createToken(info.getUserId());
         if (StringUtils.isNotBlank(token)) {
-            response.addCookie(SessionUtil.newCookie(SessionService.SESSION_KEY, token));
+            response.addCookie(SessionUtil.newCookie(SESSION_KEY, token));
             return ResVo.ok(info);
         } else {
             return ResVo.fail(StatusEnum.LOGIN_FAILED_MIXED, "登录失败，请重试");
@@ -66,7 +78,53 @@ public class AdminLoginController{
     @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "logout")
     public ResVo<String> logout(HttpServletResponse response) {
-        response.addCookie(SessionUtil.delCookie(SessionService.SESSION_KEY));
+        response.addCookie(SessionUtil.delCookie(SESSION_KEY));
         return ResVo.ok("ok");
+    }
+
+    /**
+     * 用户注册
+     *
+     * @param req
+     * @return
+     */
+    @PostMapping(path = "register")
+    public ResVo<Long> register(@Validated @RequestBody UserSaveReq req, HttpServletResponse response) {
+        // 邮箱校验
+        loginHelper.verifyEmail(req.getEmail(), req.getCode());
+
+        Long userId = userService.saveUser(req);
+        // 签发token
+        String token = JwtUtil.createToken(userId);
+        if (StringUtils.isBlank(token)) {
+            return ResVo.fail(StatusEnum.TOKEN_NOT_EXISTS);
+        }
+        response.addCookie(SessionUtil.newCookie(SESSION_KEY, token));
+        return ResVo.ok(userId);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param email
+     * @return
+     */
+    @Limit(key = "email", name = "email", limitType = LimitType.IP, count = 1, period = 60)
+    @PostMapping(path = "code")
+    public ResVo<String> code(@RequestParam("email") String email) {
+        loginHelper.subscribe(email);
+        return ResVo.ok("ok");
+    }
+
+    /**
+     * 获取用户登录状态
+     *
+     * @return
+     */
+    @Permission(role = UserRole.LOGIN)
+    @GetMapping(path = "info")
+    public ResVo<BaseUserInfoDTO> info() {
+        BaseUserInfoDTO user = ReqInfoContext.getReqInfo().getUser();
+        return ResVo.ok(user);
     }
 }

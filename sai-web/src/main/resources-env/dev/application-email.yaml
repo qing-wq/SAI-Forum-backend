@@ -1,0 +1,21 @@
+spring:
+  mail:
+    host: smtp.qq.com
+    from: 2702461713@qq.com
+    username: 2702461713@qq.com
+    password: usvhqtygvjqadehj
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  freemarker:
+    template-loader-path: classpath:/templates/

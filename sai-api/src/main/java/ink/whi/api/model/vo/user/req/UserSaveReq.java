@@ -2,6 +2,7 @@ package ink.whi.api.model.vo.user.req;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -19,7 +20,14 @@ public class UserSaveReq implements Serializable {
     /**
      * 用户名
      */
+    @NotNull
     private String username;
+
+    /**
+     * 验证码
+     */
+    @NotNull
+    private String code;
 
     /**
      * 密码

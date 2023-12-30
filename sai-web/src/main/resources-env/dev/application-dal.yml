@@ -6,7 +6,7 @@ spring:
   redis:
     host: 10.60.98.242
     port: 6379
-    password: sai208
+    password: root
 
 logging:
   level:

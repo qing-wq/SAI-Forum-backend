@@ -2,6 +2,7 @@ package ink.whi.web.hook.filter;
 
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.utils.CrossUtil;
+import ink.whi.core.utils.IpUtil;
 import ink.whi.service.statistics.service.StatisticsSettingService;
 import ink.whi.web.global.GlobalInitHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.net.URLDecoder;
 
 /**
  * 认证Filter
+ *
  * @author: qing
  * @Date: 2023/4/27
  */
@@ -41,7 +43,7 @@ public class AuthFilter implements Filter {
             req = initReqInfo((HttpServletRequest) request);
             CrossUtil.buildCors(req, (HttpServletResponse) response);
             chain.doFilter(req, response);
-        }finally {
+        } finally {
             buildRequestLog(ReqInfoContext.getReqInfo(), req, System.currentTimeMillis() - start);
             ReqInfoContext.clear();
         }
@@ -59,6 +61,7 @@ public class AuthFilter implements Filter {
             reqInfo.setPath(request.getPathInfo());
             reqInfo.setReferer(request.getHeader("referer"));
             reqInfo.setUserAgent(request.getHeader("User-Agent"));
+            reqInfo.setClientIp(IpUtil.getClientIp(request));
             request = this.wrapperRequest(request, reqInfo);
             // 校验token
             globalInitService.initUserInfo(reqInfo);
@@ -77,6 +80,7 @@ public class AuthFilter implements Filter {
 
     /**
      * 日志输出
+     *
      * @param req
      * @param request
      * @param costTime
@@ -92,6 +96,7 @@ public class AuthFilter implements Filter {
             msg.append("referer=").append(URLDecoder.decode(req.getReferer())).append("; ");
         }
         msg.append("; agent=").append(req.getUserAgent());
+        msg.append("; ip=").append(req.getClientIp());
 
         if (req.getUserId() != null) {
             // 打印用户信息
@@ -106,9 +111,6 @@ public class AuthFilter implements Filter {
         msg.append("; payload=").append(req.getPayload());
         msg.append("; cost=").append(costTime);
         REQ_LOG.info("{}", msg);
-
-        // todo: 保存请求计数
-        statisticSettingService.saveRequestCount(req.getHost());
     }
 
     private boolean staticURI(HttpServletRequest request) {
@@ -117,6 +119,8 @@ public class AuthFilter implements Filter {
                 || request.getRequestURI().endsWith("js")
                 || request.getRequestURI().endsWith("png")
                 || request.getRequestURI().endsWith("ico")
-                || request.getRequestURI().endsWith("svg");
+                || request.getRequestURI().endsWith("svg")
+                // 忽略actuator端点
+                || request.getRequestURI().equalsIgnoreCase("/actuator/prometheus");
     }
 }
