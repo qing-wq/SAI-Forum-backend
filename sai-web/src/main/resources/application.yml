@@ -9,7 +9,12 @@ spring:
   main:
     allow-circular-references: true
   config:
-    import: application-rabbitmq.yml, application-dal.yml, application-image.yml
+    import:
+      - application-dal.yaml
+      - application-mail.yaml
+      - application-monitor.yaml
+      -  application-rabbitmq.yml
+      - application-image.yml
 
 
 database:
