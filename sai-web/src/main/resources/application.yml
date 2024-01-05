@@ -6,14 +6,16 @@ server:
   address: 0.0.0.0
 
 spring:
+  application:
+    name: sai-forum
   main:
     allow-circular-references: true
   config:
     import:
-      - application-dal.yaml
-      - application-mail.yaml
-      - application-monitor.yaml
-      -  application-rabbitmq.yml
+      - application-dal.yml
+      - application-email.yml
+      - application-monitor.yml
+      - application-rabbitmq.yml
       - application-image.yml
 
 
@@ -29,3 +31,6 @@ security:
 
 msg:
   welcome: "欢迎来到SAI论坛！"
+
+sensitive:
+  enable: true
