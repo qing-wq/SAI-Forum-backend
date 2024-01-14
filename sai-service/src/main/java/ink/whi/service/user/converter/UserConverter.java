@@ -23,7 +23,6 @@ public class UserConverter {
         }
         BaseUserInfoDTO user = new BaseUserInfoDTO();
         BeanUtils.copyProperties(info, user);
-        user.setRegion(info.getIp().getLatestRegion());
         user.setRole(RoleEnum.role(info.getUserRole()));
         return user;
     }

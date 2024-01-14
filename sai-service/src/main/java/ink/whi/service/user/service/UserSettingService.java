@@ -17,4 +17,6 @@ public interface UserSettingService {
     Integer getUserCount();
 
     PageVo<StatisticUserInfoDTO> getUserList(PageParam pageParam);
+
+    void updateIpInfo(Long userId, String clientIp);
 }

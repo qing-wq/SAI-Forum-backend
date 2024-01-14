@@ -2,8 +2,8 @@ package ink.whi.service.mail;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import ink.whi.project.common.exception.BusinessException;
-import ink.whi.project.common.exception.StatusEnum;
+import ink.whi.api.model.exception.BusinessException;
+import ink.whi.api.model.exception.StatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

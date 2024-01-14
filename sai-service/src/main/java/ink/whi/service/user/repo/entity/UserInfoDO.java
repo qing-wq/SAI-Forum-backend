@@ -80,13 +80,5 @@ public class UserInfoDO extends BaseDO {
     /**
      * ip信息
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private IpInfo ip;
-
-    public IpInfo getIp() {
-        if (ip == null) {
-            ip = new IpInfo();
-        }
-        return ip;
-    }
+    private String ip;
 }

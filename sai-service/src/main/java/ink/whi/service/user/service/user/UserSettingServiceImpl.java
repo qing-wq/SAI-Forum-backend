@@ -63,4 +63,10 @@ public class UserSettingServiceImpl implements UserSettingService {
         List<StatisticUserInfoDTO> list = userDao.getUserList(pageParam);
         return PageVo.build(list, pageParam.getPageSize(), pageParam.getPageNum(), getUserCount());
     }
+
+    @Override
+    public void updateIpInfo(Long userId, String clientIp) {
+        userDao.lambdaUpdate().eq(UserInfoDO::getUserId, userId)
+                .set(UserInfoDO::getIp, clientIp).update();
+    }
 }

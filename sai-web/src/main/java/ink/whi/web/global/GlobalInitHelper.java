@@ -53,6 +53,7 @@ public class GlobalInitHelper {
                     reqInfo.setUser(user);
                     // 未读消息数
                     reqInfo.setMsgNum(notifyService.queryUserNotifyMsgCount(user.getUserId()));
+                    userSettingService.updateIpInfo(user.getUserId(), reqInfo.getClientIp());
                 }
             }
         }

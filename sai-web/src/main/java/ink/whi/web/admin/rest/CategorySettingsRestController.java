@@ -27,6 +27,11 @@ public class CategorySettingsRestController {
     @Autowired
     private CategorySettingService categorySettingService;
 
+    /**
+     * 添加分类
+     * @param req
+     * @return
+     */
     @Permission(role = UserRole.ADMIN)
     @PostMapping(path = "save")
     public ResVo<String> save(@RequestBody CategoryReq req) {
@@ -34,6 +39,11 @@ public class CategorySettingsRestController {
         return ResVo.ok("ok");
     }
 
+    /**
+     * 删除分类
+     * @param categoryId
+     * @return
+     */
     @ResponseBody
     @Permission(role = UserRole.ADMIN)
     @GetMapping(path = "delete")
@@ -42,6 +52,12 @@ public class CategorySettingsRestController {
         return ResVo.ok("ok");
     }
 
+    /**
+     * 修改分类
+     * @param categoryId
+     * @param pushStatus
+     * @return
+     */
     @ResponseBody
     @Permission(role = UserRole.ADMIN)
     @GetMapping(path = "operate")
@@ -54,6 +70,12 @@ public class CategorySettingsRestController {
         return ResVo.ok("ok");
     }
 
+    /**
+     * 获取分类列表
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     @ResponseBody
     @GetMapping(path = "list")
     public ResVo<PageVo<CategoryDTO>> list(@RequestParam(name = "pageNumber", required = false) Long pageNumber,

@@ -64,9 +64,4 @@ public class BaseUserInfoDTO extends BaseDTO {
      * 专业
      */
     private String major;
-
-    /**
-     * 用户最后登录区域
-     */
-    private String region;
 }

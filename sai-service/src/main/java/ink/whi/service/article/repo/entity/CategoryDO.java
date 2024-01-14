@@ -6,6 +6,8 @@ import ink.whi.api.model.base.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @author: qing
  * @Date: 2023/4/26
@@ -15,6 +17,7 @@ import lombok.EqualsAndHashCode;
 @TableName("category")
 public class CategoryDO extends BaseDO {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

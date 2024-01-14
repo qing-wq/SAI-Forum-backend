@@ -37,7 +37,7 @@ public class LimitAspect {
         this.redisTemplate = redisTemplate;
     }
 
-    @Pointcut("@annotation(ink.whi.project.common.annotition.limit.Limit)")
+    @Pointcut("@annotation(ink.whi.core.limit.Limit)")
     public void pointcut() {
     }
 
