@@ -102,6 +102,9 @@ public class IndexRecommendHelper {
         if (ReqInfoContext.getReqInfo() != null && ReqInfoContext.getReqInfo().getUserId() != null) {
             return userService.queryBasicUserInfo(ReqInfoContext.getReqInfo().getUserId());
         }
+        if (ReqInfoContext.getReqInfo() != null && ReqInfoContext.getReqInfo().getUser() != null) {
+            return ReqInfoContext.getReqInfo().getUser();
+        }
         return null;
     }
 }

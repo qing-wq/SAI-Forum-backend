@@ -2,6 +2,7 @@ package ink.whi.service.comment.repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
+import ink.whi.core.sensitive.SensitiveField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,6 +31,7 @@ public class CommentDO extends BaseDO {
     /**
      * 评论内容
      */
+    @SensitiveField(bind = "content")
     private String content;
 
     /**
