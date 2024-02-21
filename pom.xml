@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.11</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ink.whi</groupId>
@@ -19,6 +19,7 @@
         <module>sai-web</module>
         <module>sai-api</module>
         <module>sai-core</module>
+        <module>sai-ai</module>
     </modules>
 
     <properties>
@@ -34,7 +35,8 @@
         <java.jwt.version>4.2.1</java.jwt.version>
         <ip2region.version>2.6.6</ip2region.version>
         <hutool-all.version>5.8.15</hutool-all.version>
-        <rabbitmq.version>5.9.0</rabbitmq.version>
+        <mysql.version>8.0.29</mysql.version>
+        <sensitive.version>0.18.0</sensitive.version>
     </properties>
 
     <profiles>
@@ -79,6 +81,12 @@
             <dependency>
                 <groupId>ink.whi</groupId>
                 <artifactId>sai-web</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ink.whi</groupId>
+                <artifactId>sai-ai</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
@@ -133,22 +141,53 @@
                 <artifactId>ip2region</artifactId>
                 <version>${ip2region.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.rabbitmq</groupId>
-                <artifactId>amqp-client</artifactId>
-                <version>${rabbitmq.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool-all.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
             <!--监控sql日志-->
             <dependency>
                 <groupId>org.bgee.log4jdbc-log4j2</groupId>
                 <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-                <version>${log4jdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.houbb</groupId>
+                <artifactId>sensitive-word</artifactId>
+                <version>${sensitive.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.langchain4j</groupId>
+                <artifactId>langchain4j</artifactId>
+                <version>0.33.0</version>
+            </dependency>
+
+<!--            <dependency>-->
+<!--                <groupId>com.github.qing-wq</groupId>-->
+<!--                <artifactId>langchain4j-spring</artifactId>-->
+<!--                <version>main-SNAPSHOT</version>-->
+<!--            </dependency>-->
+
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-spring-boot-starter</artifactId>
+                <version>0.33.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
+                <version>0.33.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -173,13 +212,32 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--SpingBoot 3.2 迁移器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-properties-migrator</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <build>
         <resources>

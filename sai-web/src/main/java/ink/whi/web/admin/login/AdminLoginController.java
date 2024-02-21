@@ -11,19 +11,15 @@ import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.JwtUtil;
 import ink.whi.core.utils.SessionUtil;
-import ink.whi.service.user.service.SessionService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.service.user.service.UserSettingService;
 import ink.whi.web.admin.login.helper.LoginHelper;
-import ink.whi.web.global.GlobalInitHelper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import static ink.whi.service.user.service.SessionService.SESSION_KEY;
 

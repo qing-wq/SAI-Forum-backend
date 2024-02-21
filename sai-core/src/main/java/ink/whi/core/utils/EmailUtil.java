@@ -1,11 +1,11 @@
 package ink.whi.core.utils;
 
 import ink.whi.api.model.vo.mail.EmailVo;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import javax.mail.internet.MimeMessage;
 
 @Slf4j
 public class EmailUtil {

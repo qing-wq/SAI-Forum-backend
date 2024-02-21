@@ -1,9 +1,12 @@
 package ink.whi.web.article.rest;
 
+import dev.langchain4j.data.image.Image;
+import dev.langchain4j.model.image.ImageModel;
+import dev.langchain4j.model.output.Response;
+import ink.whi.ai.agent.AISummaryHelper;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
-import ink.whi.api.model.enums.PushStatusEnum;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ContentPostReq;
 import ink.whi.api.model.vo.page.PageListVo;
@@ -14,18 +17,15 @@ import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
-import ink.whi.core.article.MarkdownConverter;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.rabbitmq.BlogMqConstants;
-import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.article.service.TagService;
 import ink.whi.service.comment.service.CommentReadService;
-import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,12 @@ public class ArticleRestController extends BaseRestController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private AISummaryHelper summaryHelper;
+
+    @Autowired
+    private ImageModel imageModel;
 
     /**
      * 文章详情接口
@@ -164,5 +171,28 @@ public class ArticleRestController extends BaseRestController {
     @PostMapping(path = "generateSummary")
     public ResVo<String> generateSummary(@RequestBody ContentPostReq req) {
         return ResVo.ok(articleReadService.generateSummary(req.getContent()));
+    }
+
+    /**
+     * AI生成摘要
+     * @param req
+     * @return
+     */
+    @PostMapping(path = "ai/summary")
+    public ResVo<String> AISummary(@RequestBody ContentPostReq req) {
+        String summary = summaryHelper.chat(req.getContent());
+        return ResVo.ok(summary);
+    }
+
+    /**
+     * AI图片生成
+     * @param message
+     * @return
+     */
+    @GetMapping(path = "ai/image")
+    public ResVo<String> getPic(String message) {
+        Response<Image> image = imageModel.generate("Donald Duck in New York, cartoon style");
+        URI url = image.content().url();
+        return ResVo.ok(url.toString());
     }
 }

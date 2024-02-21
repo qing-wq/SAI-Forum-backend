@@ -1,14 +1,14 @@
 package ink.whi.service;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author qing
  * @date 2023/4/27
  */
-@Configuration
+@AutoConfiguration
 @ComponentScan("ink.whi.service")
 @MapperScan(basePackages = {
         "ink.whi.service.article.repo.mapper",

@@ -1,6 +1,6 @@
 package ink.whi.core.utils;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 /**
  * cookie 工具类

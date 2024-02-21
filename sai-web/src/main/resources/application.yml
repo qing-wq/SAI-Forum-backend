@@ -17,6 +17,7 @@ spring:
       - application-monitor.yml
       - application-rabbitmq.yml
       - application-image.yml
+      - application-ai.yml
 
 
 database:

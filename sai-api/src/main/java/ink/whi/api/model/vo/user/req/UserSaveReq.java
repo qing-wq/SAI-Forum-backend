@@ -1,8 +1,8 @@
 package ink.whi.api.model.vo.user.req;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 

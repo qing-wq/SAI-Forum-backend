@@ -10,11 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Resource;
-import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.URLDecoder;
 
@@ -29,10 +32,10 @@ import java.net.URLDecoder;
 public class AuthFilter implements Filter {
     private static final Logger REQ_LOG = LoggerFactory.getLogger("req");
 
-    @Resource
+    @Autowired
     private StatisticsSettingService statisticSettingService;
 
-    @Resource
+    @Autowired
     private GlobalInitHelper globalInitService;
 
     @Override

@@ -2,7 +2,6 @@ package ink.whi.service.article.repo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
-import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -2,6 +2,7 @@ package ink.whi.core;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import ink.whi.core.cache.RedisClient;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author qing
  * @date 2023/4/26
  */
-@Configuration
+@AutoConfiguration
 @ComponentScan(basePackages = "ink.whi.core")
 public class CoreAutoConfig {
 

@@ -4,9 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ink.whi.service.article.repo.entity.ReadCountDO;
 import ink.whi.service.article.repo.mapper.ReadCountMapper;
 import org.springframework.stereotype.Repository;
-import springfox.documentation.service.Server;
-
-import java.io.Serial;
 
 /**
  * @author: qing
