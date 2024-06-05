@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * post 流数据封装，避免因为打印日志导致请求参数被提前消费
  *
- * @author YiHui
+ * @author qing
  */
 public class BodyReaderHttpServletRequestWrapper extends HttpServletRequestWrapper {
     private static final List<String> POST_METHOD = Arrays.asList("POST", "PUT");

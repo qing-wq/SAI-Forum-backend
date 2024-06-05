@@ -32,6 +32,10 @@ public class ResVo<T> implements Serializable {
         this.result = result;
     }
 
+    public static ResVo<String> ok() {
+        return ok("ok");
+    }
+
     public static <T> ResVo<T> ok(T result) {
         return new ResVo<T>(result);
     }

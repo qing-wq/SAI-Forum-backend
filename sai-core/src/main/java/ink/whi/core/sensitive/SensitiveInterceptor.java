@@ -59,10 +59,10 @@ public class SensitiveInterceptor implements Interceptor {
      * @param sensitiveObjectMeta
      */
     private void replaceSensitiveResults(Collection<Object> results, MappedStatement mappedStatement, SensitiveObjectMeta sensitiveObjectMeta) {
+        if (sensitiveObjectMeta.getSensitiveFieldMetaList() == null) {
+            return;
+        }
         for (Object obj : results) {
-            if (sensitiveObjectMeta.getSensitiveFieldMetaList() == null) {
-                continue;
-            }
 
             final MetaObject objMetaObject = mappedStatement.getConfiguration().newMetaObject(obj);
             sensitiveObjectMeta.getSensitiveFieldMetaList().forEach(i -> {

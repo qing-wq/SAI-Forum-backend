@@ -1,25 +1,20 @@
 package ink.whi.web.ai;
 
 import dev.langchain4j.service.spring.AiService;
-import org.jsoup.helper.StringUtil;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author: qing
@@ -57,10 +52,14 @@ public class AiServiceScannerProcessor implements BeanDefinitionRegistryPostProc
             }
         }
 
-//        String[] applicationBean = beanFactory.getBeanNamesForAnnotation(SpringBootApplication.class);
-//        BeanDefinition applicationBeanDefinition = beanFactory.getBeanDefinition(applicationBean[0]);
-//        String basePackage = applicationBeanDefinition.getResolvableType().resolve().getPackage().getName();
-
+        String[] applicationBean = beanFactory.getBeanNamesForAnnotation(SpringBootApplication.class);
+        SpringBootApplication springbootApplication = AnnotationUtils.findAnnotation(beanFactory.getType(applicationBean[0]), SpringBootApplication.class);
+        if (springbootApplication != null) {
+            Collections.addAll(basePackages, springbootApplication.scanBasePackages());
+            for (Class<?> aClass : springbootApplication.scanBasePackageClasses()) {
+                basePackages.add(ClassUtils.getPackageName(aClass));
+            }
+        }
         return basePackages;
     }
 }

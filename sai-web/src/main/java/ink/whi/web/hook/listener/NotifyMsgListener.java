@@ -1,6 +1,6 @@
 package ink.whi.web.hook.listener;
 
-import ink.whi.api.model.vo.notify.NotifyMsgEvent;
+import ink.whi.api.model.event.NotifyMsgEvent;
 import ink.whi.api.model.vo.notify.enums.NotifyStatEnum;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.utils.SpringUtil;

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * @author YiHui
+ * @author qing
  * @date 2022/9/4
  */
 @Data

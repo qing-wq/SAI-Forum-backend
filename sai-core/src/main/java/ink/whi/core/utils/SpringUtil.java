@@ -1,7 +1,9 @@
 package ink.whi.core.utils;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
@@ -19,9 +21,19 @@ public class SpringUtil implements ApplicationContextAware, EnvironmentAware {
     private volatile static ApplicationContext context;
     private volatile static Environment environment;
 
+    /**
+     * -- GETTER --
+     *  配置绑定类
+     *
+     * @return
+     */
+    @Getter
+    private static Binder binder;
+
     @Override
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         SpringUtil.context = applicationContext;
+        binder = Binder.get(environment);
     }
 
     @Override
@@ -41,6 +53,14 @@ public class SpringUtil implements ApplicationContextAware, EnvironmentAware {
 
     public static Object getBean(String beanName) {
         return context.getBean(beanName);
+    }
+
+    public static Object getBeanOrNull(String beanName) {
+        try {
+            return context.getBean(beanName);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**

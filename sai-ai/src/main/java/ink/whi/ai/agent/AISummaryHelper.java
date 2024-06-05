@@ -7,7 +7,7 @@ import dev.langchain4j.service.spring.AiService;
  * @author: qing
  * @Date: 2024/8/9
  */
-@AiService(chatModel = "OpenAiChatModel")
+@AiService
 public interface AISummaryHelper {
 
     @SystemMessage("""

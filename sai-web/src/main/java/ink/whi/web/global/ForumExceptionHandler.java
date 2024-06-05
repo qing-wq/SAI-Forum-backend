@@ -1,19 +1,19 @@
 package ink.whi.web.global;
 
-import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.Status;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author: qing
@@ -39,6 +39,16 @@ public class ForumExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResVo<String> httpMediaTypeNotAcceptableExceptionHandler(HttpServletResponse resp, Exception e) {
         Status errStatus = Status.newStatus(StatusEnum.RECORDS_NOT_EXISTS, ExceptionUtils.getStackTrace(e));
+        resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        resp.setHeader("Cache-Control", "no-cache, must-revalidate");
+        setErrorCode(errStatus, resp);
+        log.error("capture NestedRuntimeException: {}", ExceptionUtils.getStackTrace(e));
+        return ResVo.fail(errStatus);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResVo<String> missingServletRequestParameterExceptionExceptionHandler(HttpServletResponse resp, Exception e) {
+        Status errStatus = Status.newStatus(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, ExceptionUtils.getStackTrace(e));
         resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         resp.setHeader("Cache-Control", "no-cache, must-revalidate");
         setErrorCode(errStatus, resp);
