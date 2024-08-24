@@ -23,7 +23,6 @@ import java.util.Set;
  */
 @Slf4j
 @Component
-@Deprecated
 public class SpringValueProcessor implements BeanPostProcessor {
     private final PlaceholderHelper placeholderHelper;
 
@@ -77,7 +76,7 @@ public class SpringValueProcessor implements BeanPostProcessor {
         for (String key : keys) {
             SpringValueRegistry.SpringValue springValue = new SpringValueRegistry.SpringValue(key, value.value(), bean, beanName, field);
             SpringValueRegistry.register(key, springValue);
-            log.debug("Monitoring {}", springValue);
+            log.info("Monitoring {}", springValue);
         }
     }
 

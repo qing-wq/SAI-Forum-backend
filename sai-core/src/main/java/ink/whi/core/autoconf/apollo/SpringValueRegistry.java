@@ -20,7 +20,6 @@ import java.util.function.BiFunction;
  * @author qing
  * @date 2024/8/17
  */
-@Deprecated
 @Slf4j
 public class SpringValueRegistry {
 

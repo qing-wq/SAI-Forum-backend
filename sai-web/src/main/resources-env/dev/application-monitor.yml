@@ -12,5 +12,4 @@ management:
       show-details: ALWAYS
   metrics:
     export:
-      prometheus:
-        enabled: true
+      enabled: true
