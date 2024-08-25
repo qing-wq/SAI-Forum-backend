@@ -10,6 +10,7 @@ management:
       enabled: true
     health:
       show-details: ALWAYS
-  metrics:
-    export:
-      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
