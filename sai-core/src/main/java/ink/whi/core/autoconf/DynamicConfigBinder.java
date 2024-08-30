@@ -28,13 +28,13 @@ import java.util.function.Consumer;
  */
 public class DynamicConfigBinder {
     private final ApplicationContext applicationContext;
-    private PropertySources propertySource;
+    private final PropertySources propertySources;
 
     private volatile Binder binder;
 
-    public DynamicConfigBinder(ApplicationContext applicationContext, PropertySources propertySource) {
+    public DynamicConfigBinder(ApplicationContext applicationContext, PropertySources propertySources) {
         this.applicationContext = applicationContext;
-        this.propertySource = propertySource;
+        this.propertySources = propertySources;
     }
 
     public <T> void bind(Bindable<T> bindable) {
@@ -75,7 +75,7 @@ public class DynamicConfigBinder {
     }
 
     private Iterable<ConfigurationPropertySource> getConfigurationPropertySources() {
-        return ConfigurationPropertySources.from(this.propertySource);
+        return ConfigurationPropertySources.from(this.propertySources);
     }
 
     /**
@@ -84,7 +84,7 @@ public class DynamicConfigBinder {
      * @return
      */
     private PropertySourcesPlaceholdersResolver getPropertySourcesPlaceholdersResolver() {
-        return new PropertySourcesPlaceholdersResolver(this.propertySource);
+        return new PropertySourcesPlaceholdersResolver(this.propertySources);
     }
 
     /**

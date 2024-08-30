@@ -118,7 +118,7 @@ public class SpringValueRegistry {
         }
     }
 
-
+    // key - beanRefs
     public static Map<String, Set<SpringValue>> registry = new ConcurrentHashMap<>();
 
     /**
@@ -154,5 +154,12 @@ public class SpringValueRegistry {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    /**
+     * 更新所有key
+     */
+    public static void updateAll() {
+        registry.keySet().forEach(SpringValueRegistry::updateValue);
     }
 }

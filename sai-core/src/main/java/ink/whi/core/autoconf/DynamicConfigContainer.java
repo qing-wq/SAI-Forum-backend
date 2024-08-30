@@ -1,12 +1,13 @@
 package ink.whi.core.autoconf;
 
 import com.google.common.collect.Maps;
+import ink.whi.core.autoconf.apollo.SpringValueRegistry;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.SpringUtil;
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
@@ -32,7 +33,9 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class DynamicConfigContainer implements EnvironmentAware, ApplicationContextAware, CommandLineRunner {
+public class DynamicConfigContainer
+        implements ApplicationContextAware, InitializingBean, EnvironmentAware, CommandLineRunner {
+
     private ConfigurableEnvironment environment;
     private ApplicationContext applicationContext;
     /**
@@ -59,9 +62,10 @@ public class DynamicConfigContainer implements EnvironmentAware, ApplicationCont
         this.applicationContext = applicationContext;
     }
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public void afterPropertiesSet() throws Exception {
         cache = Maps.newHashMap();
+        this.binder = new DynamicConfigBinder(this.applicationContext, environment.getPropertySources());
         bindBeansFromLocalCache("dbConfig", cache);
     }
 
@@ -71,7 +75,8 @@ public class DynamicConfigContainer implements EnvironmentAware, ApplicationCont
      * @return true 表示有信息变更; false 表示无信息变更
      */
     private boolean loadAllConfigFromDb() {
-        List<Map<String, Object>> list = SpringUtil.getBean(JdbcTemplate.class).queryForList("select `key`, `value` from global_conf where deleted = 0");
+        String sql = "select `key`, `value` from global_conf where deleted = 0";
+        List<Map<String, Object>> list = SpringUtil.getBean(JdbcTemplate.class).queryForList(sql);
         Map<String, Object> val = Maps.newHashMapWithExpectedSize(list.size());
         for (Map<String, Object> conf : list) {
             val.put(conf.get("key").toString(), conf.get("value").toString());
@@ -88,7 +93,6 @@ public class DynamicConfigContainer implements EnvironmentAware, ApplicationCont
         // 将内存的配置信息设置为最高优先级
         MapPropertySource propertySource = new MapPropertySource(namespace, cache);
         environment.getPropertySources().addFirst(propertySource);
-        this.binder = new DynamicConfigBinder(this.applicationContext, environment.getPropertySources());
     }
 
     /**
@@ -99,7 +103,6 @@ public class DynamicConfigContainer implements EnvironmentAware, ApplicationCont
     public void bind(Bindable bindable) {
         binder.bind(bindable);
     }
-
 
     /**
      * 监听配置的变更
@@ -158,7 +161,6 @@ public class DynamicConfigContainer implements EnvironmentAware, ApplicationCont
         refreshCallback.put(bean.getClass(), run);
     }
 
-
     /**
      * 应用启动之后，执行的动态配置初始化
      *
@@ -167,7 +169,7 @@ public class DynamicConfigContainer implements EnvironmentAware, ApplicationCont
      */
     @Override
     public void run(String... args) throws Exception {
-        reloadConfig();
         registerConfRefreshTask();
+        SpringValueRegistry.updateAll();
     }
 }
