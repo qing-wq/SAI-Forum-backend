@@ -42,7 +42,7 @@ public class ForumExceptionHandler {
         resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         resp.setHeader("Cache-Control", "no-cache, must-revalidate");
         setErrorCode(errStatus, resp);
-        log.error("capture NestedRuntimeException: {}", ExceptionUtils.getStackTrace(e));
+        log.error("capture HttpMediaTypeNotAcceptableException: {}", ExceptionUtils.getStackTrace(e));
         return ResVo.fail(errStatus);
     }
 
@@ -52,7 +52,7 @@ public class ForumExceptionHandler {
         resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         resp.setHeader("Cache-Control", "no-cache, must-revalidate");
         setErrorCode(errStatus, resp);
-        log.error("capture NestedRuntimeException: {}", ExceptionUtils.getStackTrace(e));
+        log.error("capture MissingServletRequestParameterException: {}", ExceptionUtils.getStackTrace(e));
         return ResVo.fail(errStatus);
     }
 
