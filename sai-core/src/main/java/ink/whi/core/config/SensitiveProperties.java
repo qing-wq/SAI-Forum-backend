@@ -1,4 +1,4 @@
-package ink.whi.core.sensitive;
+package ink.whi.core.config;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -3,6 +3,7 @@ package ink.whi.core.sensitive;
 import cn.hutool.core.util.BooleanUtil;
 import com.github.houbb.sensitive.word.bs.SensitiveWordBs;
 import com.github.houbb.sensitive.word.core.SensitiveWordHelper;
+import ink.whi.core.config.SensitiveProperties;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

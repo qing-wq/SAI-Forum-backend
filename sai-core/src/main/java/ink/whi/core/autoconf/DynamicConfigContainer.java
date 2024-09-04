@@ -112,7 +112,7 @@ public class DynamicConfigContainer
         boolean toRefresh = loadAllConfigFromDb();
         if (toRefresh) {
             refreshConfig();
-            log.info("配置刷新! 旧:{}, 新:{}", before, JsonUtil.toStr(cache));
+            log.info("配置刷新成功! 旧:{}, 新:{}", before, JsonUtil.toStr(cache));
         }
     }
 
@@ -122,7 +122,7 @@ public class DynamicConfigContainer
     public void forceRefresh() {
         loadAllConfigFromDb();
         refreshConfig();
-        log.info("db配置强制刷新! {}", JsonUtil.toStr(cache));
+        log.info("配置强制刷新! {}", JsonUtil.toStr(cache));
     }
 
     /**
@@ -144,15 +144,15 @@ public class DynamicConfigContainer
     @Scheduled(fixedRate = 300000) // 5 minutes expressed in milliseconds
     private void registerConfRefreshTask() {
         try {
-            log.debug("5分钟，自动更新db配置信息!");
+            log.debug("refresh dbConfig!");
             reloadConfig();
         } catch (Exception e) {
-            log.warn("自动更新db配置信息异常!", e);
+            log.warn("refresh dbConfig Error!", e);
         }
     }
 
     /**
-     * 注册配置变更的回调任务
+     * 注册refresh后的回调任务
      *
      * @param bean
      * @param run

@@ -19,7 +19,6 @@ spring:
       - application-image.yml
       - application-ai.yml
 
-
 database:
   name: sai-forum
 
@@ -35,3 +34,7 @@ msg:
 
 sensitive:
   enable: true
+
+github:
+  client-id: xxx
+  client-secret: xxx
