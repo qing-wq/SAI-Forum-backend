@@ -9,6 +9,7 @@ import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -23,6 +24,8 @@ import static com.google.common.collect.Lists.newArrayList;
         @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {java.sql.Statement.class})
 })
 @Component
+// 只要不是false都生效
+@ConditionalOnProperty(prefix = "sensitive", name = "enabled")
 public class SensitiveInterceptor implements Interceptor {
 
     @Autowired
@@ -59,7 +62,7 @@ public class SensitiveInterceptor implements Interceptor {
      * @param sensitiveObjectMeta
      */
     private void replaceSensitiveResults(Collection<Object> results, MappedStatement mappedStatement, SensitiveObjectMeta sensitiveObjectMeta) {
-        if (sensitiveObjectMeta.getSensitiveFieldMetaList() == null) {
+        if (!sensitiveObjectMeta.getNeedSensitiveReplace() || sensitiveObjectMeta.getSensitiveFieldMetaList() == null) {
             return;
         }
         for (Object obj : results) {
@@ -81,7 +84,8 @@ public class SensitiveInterceptor implements Interceptor {
                         Optional<Object> firstValOpt = listValue.stream().filter(Objects::nonNull).findFirst();
                         if (firstValOpt.isPresent()) {
                             SensitiveObjectMeta valSensitiveObjectMeta = findSensitiveObjectMeta(firstValOpt.get());
-                            if (Boolean.TRUE.equals(valSensitiveObjectMeta.getEnabledSensitiveReplace()) && CollectionUtils.isNotEmpty(valSensitiveObjectMeta.getSensitiveFieldMetaList())) {
+                            if (Boolean.TRUE.equals(valSensitiveObjectMeta.getNeedSensitiveReplace()) && CollectionUtils.isNotEmpty(valSensitiveObjectMeta.getSensitiveFieldMetaList())) {
+                                // 巧妙递归
                                 replaceSensitiveResults(listValue, mappedStatement, valSensitiveObjectMeta);
                             }
                         }
@@ -89,7 +93,7 @@ public class SensitiveInterceptor implements Interceptor {
                 } else if (!ClassUtils.isPrimitiveOrWrapper(value.getClass())) {
                     // Object 类型
                     SensitiveObjectMeta valSensitiveObjectMeta = findSensitiveObjectMeta(value);
-                    if (Boolean.TRUE.equals(valSensitiveObjectMeta.getEnabledSensitiveReplace()) && CollectionUtils.isNotEmpty(valSensitiveObjectMeta.getSensitiveFieldMetaList())) {
+                    if (Boolean.TRUE.equals(valSensitiveObjectMeta.getNeedSensitiveReplace()) && CollectionUtils.isNotEmpty(valSensitiveObjectMeta.getSensitiveFieldMetaList())) {
                         replaceSensitiveResults(newArrayList(value), mappedStatement, valSensitiveObjectMeta);
                     }
                 }

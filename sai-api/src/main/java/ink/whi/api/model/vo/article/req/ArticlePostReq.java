@@ -13,7 +13,7 @@ import java.util.Set;
  * 发布文章入参
  *
  * @author qing
- * @date 2023/4/30
+ * @date 2024/8/30
  */
 @Data
 public class ArticlePostReq implements Serializable {

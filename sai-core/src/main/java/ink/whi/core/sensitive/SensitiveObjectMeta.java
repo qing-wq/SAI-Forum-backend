@@ -11,7 +11,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
- * 敏感词相关配置，db配置表中的配置优先级更高，支持动态刷新
+ * 敏感词类元数据
  *
  * @author qing
  * @date 2023/8/9
@@ -20,13 +20,10 @@ import static java.util.Objects.nonNull;
 public class SensitiveObjectMeta {
     private static final String JAVA_LANG_OBJECT = "java.lang.object";
     /**
-     * 是否启用脱敏
+     * 是否需要脱敏
      */
-    private Boolean enabledSensitiveReplace;
+    private Boolean needSensitiveReplace;
 
-    /**
-     * 类名
-     */
     private String className;
 
     /**
@@ -46,7 +43,8 @@ public class SensitiveObjectMeta {
         List<SensitiveFieldMeta> sensitiveFieldMetaList = newArrayList();
         sensitiveObjectMeta.setSensitiveFieldMetaList(sensitiveFieldMetaList);
         boolean sensitiveField = parseAllSensitiveFields(clazz, sensitiveFieldMetaList);
-        sensitiveObjectMeta.setEnabledSensitiveReplace(sensitiveField);
+        // 有敏感字段时才需要过滤
+        sensitiveObjectMeta.setNeedSensitiveReplace(sensitiveField);
         return Optional.of(sensitiveObjectMeta);
     }
 
@@ -70,7 +68,9 @@ public class SensitiveObjectMeta {
         return hasSensitiveField;
     }
 
-
+    /**
+     * 敏感词字段
+     */
     @Data
     public static class SensitiveFieldMeta {
         /**

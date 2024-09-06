@@ -8,6 +8,7 @@ import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.support.AopUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -28,6 +29,9 @@ import java.lang.reflect.Field;
 @RestController
 @RequestMapping(path = "test")
 public class TestController {
+
+    @Value("${msg.welcome}")
+    private String welcome;
 
     /**
      * 打印配置信息
@@ -54,6 +58,17 @@ public class TestController {
         return JsonUtil.toStr(bean);
     }
 
+    /**
+     * 测试@Value和Env中的配置是否一致
+     * @return
+     */
+    @GetMapping("test/value")
+    public String printTestConfigValue(){
+        System.out.println(welcome);
+        System.out.println(SpringUtil.getConfig("msg.welcome"));
+        return welcome;
+    }
+
     private String printProxyFields(Object proxy) {
         Class clz = ProxyUtils.getUserClass(proxy);
         Field[] fields = clz.getDeclaredFields();
@@ -64,7 +79,6 @@ public class TestController {
         }
         return obj.toString();
     }
-
 
     /**
      * 刷新global_config动态配置

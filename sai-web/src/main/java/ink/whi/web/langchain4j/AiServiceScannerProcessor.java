@@ -1,4 +1,4 @@
-package ink.whi.web.ai;
+package ink.whi.web.langchain4j;
 
 import dev.langchain4j.service.spring.AiService;
 import org.springframework.beans.BeansException;
