@@ -1,13 +1,18 @@
 package ink.whi.web.test;
 
 import cn.hutool.json.JSONObject;
+import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.autoconf.DynamicConfigContainer;
+import ink.whi.core.dal.DsAno;
+import ink.whi.core.dal.MasterSlaveDsEnum;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.SpringUtil;
+import ink.whi.service.statistics.service.StatisticsSettingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.support.AopUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.ClassUtils;
@@ -32,6 +37,25 @@ public class TestController {
 
     @Value("${msg.welcome}")
     private String welcome;
+
+    @Autowired
+    private StatisticsSettingService statisticsSettingService;
+
+    @GetMapping(path = "ds/read")
+    public String readOnly() {
+        // 保存请求计数
+        statisticsSettingService.saveRequestCount(ReqInfoContext.getReqInfo().getClientIp());
+        return "使用从库：更新成功!";
+    }
+
+    @DsAno(value = MasterSlaveDsEnum.MASTER)
+    @GetMapping(path = "ds/write")
+    public String TestDynamicDS() {
+        long old = statisticsSettingService.getStatisticsCount().getPvCount();
+        statisticsSettingService.saveRequestCount(ReqInfoContext.getReqInfo().getClientIp());
+        long n = statisticsSettingService.getStatisticsCount().getPvCount();
+        return "使用主库：更新成功! old=" + old + " new=" + n;
+    }
 
     /**
      * 打印配置信息

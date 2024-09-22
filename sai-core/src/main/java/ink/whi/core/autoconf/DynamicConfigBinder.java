@@ -28,6 +28,7 @@ import java.util.function.Consumer;
  */
 public class DynamicConfigBinder {
     private final ApplicationContext applicationContext;
+    // Binder 使用的属性源
     private final PropertySources propertySources;
 
     private volatile Binder binder;
