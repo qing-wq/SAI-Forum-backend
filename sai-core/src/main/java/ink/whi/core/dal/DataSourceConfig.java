@@ -1,15 +1,9 @@
 package ink.whi.core.dal;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.support.jakarta.StatViewServlet;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.context.properties.bind.Binder;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -28,7 +22,6 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = "spring.dynamic", name = "primary")
-@EnableConfigurationProperties(DsProperties.class)
 public class DataSourceConfig {
 
     private final Environment environment;
@@ -53,7 +46,7 @@ public class DataSourceConfig {
     @Primary
     public DataSource dataSource(DsProperties dsProperties) {
         Map<Object, Object> targetDataSources = Maps.newHashMapWithExpectedSize(dsProperties.getDatasource().size());
-        dsProperties.getDatasource().forEach((k, v) -> targetDataSources.put(k.toUpperCase(), initDataSource(k, v)));
+        dsProperties.getDatasource().forEach((k, v) -> targetDataSources.put(k.toUpperCase(), initDataSource(v)));
 
         if (CollectionUtils.isEmpty(targetDataSources)) {
             throw new IllegalStateException("多数据源配置非法！");
@@ -72,38 +65,7 @@ public class DataSourceConfig {
     }
 
 
-    public DataSource initDataSource(String prefix, DataSourceProperties properties) {
-        if (!DruidCheckUtil.hasDruidPkg()) {
-            log.info("实例化HikarDataSource: {}", prefix);
-            return properties.initializeDataSourceBuilder().build();
-        }
-
-        if (properties.getType() == null || !properties.getType().isAssignableFrom(DruidDataSource.class)) {
-            log.info("实例化HikarDataSource: {}", prefix);
-            return properties.initializeDataSourceBuilder().build();
-        }
-
-        log.info("实例化DruidDataSource: {}", prefix);
-        return Binder.get(environment).bindOrCreate(DsProperties.DS_PREFIX + ".datasource." + prefix, DruidDataSource.class);
-    }
-
-    /**
-     * 在数据源实例化之后进行创建
-     *
-     * @return
-     */
-    @Bean
-    @ConditionalOnExpression(value = "T(ink.whi.core.dal.DruidCheckUtil).hasDruidPkg()")
-    public ServletRegistrationBean<?> druidStatViewServlet() {
-        //先配置管理后台的servLet，访问的入口为/druid/
-        ServletRegistrationBean<?> servletRegistrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
-        // IP白名单 (没有配置或者为空，则允许所有访问)
-        servletRegistrationBean.addInitParameter("allow", "127.0.0.1");
-        // IP黑名单 (存在共同时，deny优先于allow)
-        servletRegistrationBean.addInitParameter("deny", "");
-        servletRegistrationBean.addInitParameter("loginUsername", "admin");
-        servletRegistrationBean.addInitParameter("loginPassword", "admin");
-        servletRegistrationBean.addInitParameter("resetEnable", "false");
-        return servletRegistrationBean;
+    public DataSource initDataSource(DataSourceProperties properties) {
+        return properties.initializeDataSourceBuilder().build();
     }
 }

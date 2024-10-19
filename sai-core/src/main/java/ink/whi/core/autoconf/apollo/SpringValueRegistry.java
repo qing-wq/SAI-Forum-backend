@@ -24,7 +24,7 @@ import java.util.function.BiFunction;
 public class SpringValueRegistry {
 
     /**
-     * apollo-client/src/main/java/com/ctrip/framework/apollo/spring/property/SpringValue.java
+     * 参考 apollo-client/src/main/java/com/ctrip/framework/apollo/spring/property/SpringValue.java
      */
     @Data
     public static class SpringValue {
@@ -37,7 +37,7 @@ public class SpringValueRegistry {
          */
         private Field field;
         /**
-         * bean示例的弱引用
+         * bean示例的弱引用，不影响bean的生命周期
          */
         private WeakReference<Object> beanRef;
         /**

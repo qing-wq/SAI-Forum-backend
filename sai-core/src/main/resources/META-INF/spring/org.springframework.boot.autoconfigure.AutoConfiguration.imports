@@ -1,3 +1,2 @@
 # Auto Configure
 ink.whi.core.CoreAutoConfig
-com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure

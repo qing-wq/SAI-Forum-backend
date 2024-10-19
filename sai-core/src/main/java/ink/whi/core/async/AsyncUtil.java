@@ -48,7 +48,14 @@ public class AsyncUtil {
     }
 
     public static void initExecutorService(int core, int max) {
-        executorService = new ExecutorBuilder().setCorePoolSize(core).setMaxPoolSize(max).setKeepAliveTime(0).setKeepAliveTime(0, TimeUnit.SECONDS).setWorkQueue(new SynchronousQueue<Runnable>()).setHandler(new ThreadPoolExecutor.CallerRunsPolicy()).setThreadFactory(THREAD_FACTORY).buildFinalizable();
+        executorService = new ExecutorBuilder()
+                .setCorePoolSize(core)
+                .setMaxPoolSize(max)
+                .setKeepAliveTime(0)
+                .setKeepAliveTime(0, TimeUnit.SECONDS)
+                .setWorkQueue(new SynchronousQueue<Runnable>())
+                .setHandler(new ThreadPoolExecutor.CallerRunsPolicy())
+                .setThreadFactory(THREAD_FACTORY).buildFinalizable();
         simpleTimeLimiter = SimpleTimeLimiter.create(executorService);
     }
 

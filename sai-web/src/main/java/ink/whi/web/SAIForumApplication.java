@@ -2,7 +2,6 @@ package ink.whi.web;
 
 import ink.whi.web.hook.interceptor.GlobalInterceptor;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -20,12 +19,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class SAIForumApplication implements WebMvcConfigurer{
 
-    @Autowired
-    private GlobalInterceptor globalInterceptor;
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(globalInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(new GlobalInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/error");
     }
 

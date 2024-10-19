@@ -163,7 +163,7 @@ public class ArticleRestController extends BaseRestController {
     }
 
     /**
-     * 提取摘要
+     * 提取摘要(抽取前200个字)
      *
      * @param req
      * @return

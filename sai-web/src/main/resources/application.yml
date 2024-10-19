@@ -10,6 +10,7 @@ spring:
     name: sai-forum
   main:
     allow-circular-references: true
+    allow-bean-definition-overriding: true
   config:
     import:
       - application-dal.yml

@@ -8,6 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
  * @date 2023/4/26
  */
 @AutoConfiguration
-@ComponentScan(basePackages = "ink.whi.ai")
+@ComponentScan(basePackages = {"ink.whi.ai"})
 public class AIAutoConfig {
 }
