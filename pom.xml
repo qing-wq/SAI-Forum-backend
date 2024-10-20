@@ -39,6 +39,7 @@
         <sensitive.version>0.18.0</sensitive.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <lombok.mapstruct.binding>0.2.0</lombok.mapstruct.binding>
+        <langchain4j.version>0.35.0</langchain4j.version>
     </properties>
 
     <profiles>
@@ -171,19 +172,19 @@
             <dependency>
                 <groupId>com.github.langchain4j</groupId>
                 <artifactId>langchain4j</artifactId>
-                <version>0.35.0</version>
+                <version>${langchain4j.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>dev.langchain4j</groupId>
                 <artifactId>langchain4j-spring-boot-starter</artifactId>
-                <version>0.35.0</version>
+                <version>${langchain4j.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>dev.langchain4j</groupId>
                 <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
-                <version>0.35.0</version>
+                <version>${langchain4j.version}</version>
             </dependency>
 
             <dependency>

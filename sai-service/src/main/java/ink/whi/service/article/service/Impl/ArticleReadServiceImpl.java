@@ -1,15 +1,19 @@
 package ink.whi.service.article.service.Impl;
 
+import cn.hutool.core.convert.ConvertException;
+import cn.hutool.json.JSONUtil;
+import ink.whi.api.model.constants.RedisConstants;
 import ink.whi.api.model.enums.*;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
+import ink.whi.api.model.vo.article.dto.ArticleDTO;
+import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.article.dto.DraftsDTO;
 import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
-import ink.whi.api.model.vo.article.dto.ArticleDTO;
-import ink.whi.api.model.vo.article.dto.CategoryDTO;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.core.cache.RedisClient;
 import ink.whi.core.utils.ArticleUtil;
 import ink.whi.core.utils.MapUtils;
 import ink.whi.service.article.conveter.ArticleConverter;
@@ -25,15 +29,18 @@ import ink.whi.service.user.repo.entity.UserFootDO;
 import ink.whi.service.user.service.CountService;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RedissonClient;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +67,9 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     @Autowired
     private UserFootService userFootService;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Autowired
     private DraftsDao draftsDao;
@@ -161,16 +171,64 @@ public class ArticleReadServiceImpl implements ArticleReadService {
      */
     @Override
     public ArticleDTO queryDetailArticleInfo(Long articleId) {
-        ArticleDTO article = articleDao.queryArticleDetail(articleId);
-        if (article == null) {
-            throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
+        // 引入分布式锁
+        String redisCacheKey = RedisConstants.REDIS_PRE_ARTICLE + RedisConstants.REDIS_CACHE + articleId;
+        String cache = RedisClient.getStr(redisCacheKey);
+        ArticleDTO article = null;
+        if (!ObjectUtils.isEmpty(cache)) {
+            try {
+                article = JSONUtil.toBean(cache, ArticleDTO.class);
+            } catch (ConvertException e) {
+                throw BusinessException.newInstance(StatusEnum.UNEXPECT_ERROR, "Json序列化失败！");
+            }
+        } else {
+            // 缓存失效，抢分布式锁
+            article = checkArticleByDBFour(articleId);
+            if (article == null) {
+                throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
+            }
+            // TODO 如果article=null应该缓存空值?
+            RedisClient.setStrWithExpire(redisCacheKey, JSONUtil.toJsonStr(article), 60L);
         }
+//        ArticleDTO article = articleDao.queryArticleDetail(articleId);
+
         // 分类信息
         CategoryDTO category = article.getCategory();
         category.setCategory(categoryService.queryCategoryName(category.getCategoryId()));
 
         // 标签信息
         article.setTags(articleTagDao.listArticleTagsDetail(articleId));
+        return article;
+    }
+
+    /**
+     * Redis分布式锁第四种方法
+     *
+     * @param articleId
+     * @return ArticleDTO
+     */
+    private ArticleDTO checkArticleByDBFour(Long articleId) {
+        String redisLockKey = RedisConstants.REDIS_LOCK + articleId;
+        RLock lock = redissonClient.getLock(redisLockKey);
+        ArticleDTO article = null;
+        try {
+            //尝试加锁,最大等待时间3秒，上锁30秒自动解锁
+            if (lock.tryLock(3, 30, TimeUnit.SECONDS)) {
+                article = articleDao.queryArticleDetail(articleId);
+            } else {
+                // 未获得分布式锁线程睡眠一下；然后再去获取数据
+                Thread.sleep(50);
+                // 自旋
+                this.queryDetailArticleInfo(articleId);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            // 防止锁的误释放
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
         return article;
     }
 
@@ -278,6 +336,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     /**
      * 获取已上线文章草稿
+     *
      * @param articleId
      * @return
      */
