@@ -8,15 +8,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DATABASE_HOST=mysql
-      - DATABASE_PORT=3306
-      - DATABASE_NAME=your_db_name
-      - DATABASE_USER=your_db_user
-      - DATABASE_PASSWORD=your_db_password
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
+      - OPENAI_BASE_URL = ${OPENAI_BASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL_NAME = ${OPENAI_MODEL_NAME}
+      - EMAIL_USERNAME = ${EMAIL_USERNAME}
+      - EMAIL_PASSWORD = ${EMAIL_PASSWORD}
+      - JWT_KEY = ${JWT_KEY}
+      - SECURITY_SALT = ${SECURITY_SALT}
+      - GIT_CLIENT_ID = ${GIT_CLIENT_ID}
+      - GIT_CLIENT_SECRET = ${GIT_CLIENT_SECRET}
     depends_on:
       - mysql
       - redis
@@ -26,12 +26,10 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: sai-mysql
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD: "password"
-      - MYSQL_DATABASE: sai-forum
-      - TZ: Asia/Shanghai
     ports:
       - "3306:3306"
     volumes:
@@ -42,7 +40,7 @@ services:
 
   redis:
     image: redis:6.2
-    container_name: redis
+    container_name: sai-redis
     ports:
       - "6379:6379"
     volumes:
@@ -52,7 +50,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
+    container_name: sai-rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -63,6 +61,30 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
     networks:
       - app-network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: sai-prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - app-network
+
+    grafana:
+      image: grafana/grafana
+      container_name: sai-grafana
+      restart: always
+      ports:
+        - "3000:3000"
+      environment:
+        - GF_SECURITY_ADMIN_PASSWORD=admin
+      depends_on:
+        - prometheus
+      networks:
+        - app-network
 
 volumes:
   mysql-data:
