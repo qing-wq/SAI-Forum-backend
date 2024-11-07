@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>sai-web</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -22,7 +23,6 @@
         <dependency>
             <groupId>ink.whi</groupId>
             <artifactId>sai-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!--基础依赖-->
         <dependency>
@@ -72,7 +72,6 @@
         </dependency>
     </dependencies>
 
-
     <build>
         <plugins>
             <plugin>
@@ -82,18 +81,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.30</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
             </plugin>
         </plugins>
     </build>

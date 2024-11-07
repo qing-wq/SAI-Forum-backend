@@ -24,11 +24,11 @@ database:
   name: sai-forum
 
 jwt:
-  key: ${JWT_KEY}
+  key: sai-key
 
 security:
-  salt: ${SECURITY_SALT}
-  salt-index: ${SECURITY_SALT_INDEX:2}
+  salt: sai-salt
+  salt-index: 2
 
 msg:
   welcome: "欢迎来到SAI学院技术论坛！"
@@ -38,5 +38,5 @@ sensitive:
 
 # OAuth2
 github:
-  client-id: ${GIT_CLIENT_ID}
-  client-secret: ${GIT_CLIENT_SECRET}
+  client-id: Ov23li7702mxqEymDcoC
+  client-secret: e9a2aedc35e449366dbce4346993eb9011637fa4

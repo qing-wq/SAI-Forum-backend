@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>sai-api</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
