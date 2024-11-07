@@ -1,0 +1,8 @@
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: ${OPENAI_BASE_URL}
+      api-key: ${OPENAI_API_KEY}
+      model-name: ${OPENAI_MODEL_NAME}
+      log-requests: true
+      log-responses: false
