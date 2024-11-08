@@ -29,11 +29,12 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     ports:
       - "3307:3306"
     volumes:
-      - ./mysql-data:/var/lib/mysql
-      - ./schema:/docker-entrypoint-initdb.d # 启动脚本
+      - db_data:/var/lib/mysql
+      - ./mysql-schema:/docker-entrypoint-initdb.d # 启动脚本
     networks:
       - app-network
 
@@ -79,8 +80,12 @@ services:
       - app-network
 
 volumes:
-  mysql-data:
+  db_data:
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./mysql-data
   redis-data:
     driver: local
   rabbitmq-data:

@@ -15,7 +15,7 @@
 /*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
 
-create database `sai-forum`;
+create database if not exists `sai-forum`;
 use `sai-forum`;
 
 --
@@ -102,9 +102,6 @@ CREATE TABLE `article_tag`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='文章标签映射';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-create index idx_tag_id
-    on `sai-forum`.article_tag (tag_id);
 
 --
 -- Table structure for table `category`
