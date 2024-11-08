@@ -1,5 +1,3 @@
-version: '1.0'
-
 services:
   app:
     image: qingpwq/sai-forum:latest
@@ -8,15 +6,16 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - OPENAI_BASE_URL = ${OPENAI_BASE_URL}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - OPENAI_MODEL_NAME = ${OPENAI_MODEL_NAME}
-      - EMAIL_USERNAME = ${EMAIL_USERNAME}
-      - EMAIL_PASSWORD = ${EMAIL_PASSWORD}
-      - JWT_KEY = ${JWT_KEY}
-      - SECURITY_SALT = ${SECURITY_SALT}
-      - GIT_CLIENT_ID = ${GIT_CLIENT_ID}
-      - GIT_CLIENT_SECRET = ${GIT_CLIENT_SECRET}
+      - OPENAI_MODEL_NAME=${OPENAI_MODEL_NAME}
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - JWT_KEY=${JWT_KEY}
+      - SECURITY_SALT=${SECURITY_SALT}
+      - GIT_CLIENT_ID=${GIT_CLIENT_ID}
+      - GIT_CLIENT_SECRET=${GIT_CLIENT_SECRET}
     depends_on:
       - mysql
       - redis
@@ -29,20 +28,18 @@ services:
     container_name: sai-mysql
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD: "password"
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
-      - schema:/docker-entrypoint-initdb.d # 启动脚本
+      - ./mysql-data:/var/lib/mysql
+      - ./schema:/docker-entrypoint-initdb.d # 启动脚本
     networks:
       - app-network
 
   redis:
     image: redis:6.2
     container_name: sai-redis
-    ports:
-      - "6379:6379"
     volumes:
       - redis-data:/data
     networks:
@@ -51,9 +48,6 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: sai-rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -66,25 +60,23 @@ services:
     image: prom/prometheus
     container_name: sai-prometheus
     restart: always
-    ports:
-      - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - app-network
 
-    grafana:
-      image: grafana/grafana
-      container_name: sai-grafana
-      restart: always
-      ports:
-        - "3000:3000"
-      environment:
-        - GF_SECURITY_ADMIN_PASSWORD=admin
-      depends_on:
-        - prometheus
-      networks:
-        - app-network
+  grafana:
+    image: grafana/grafana
+    container_name: sai-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
 
 volumes:
   mysql-data:
