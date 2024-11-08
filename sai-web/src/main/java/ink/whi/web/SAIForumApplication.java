@@ -21,8 +21,9 @@ public class SAIForumApplication implements WebMvcConfigurer{
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new GlobalInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/error");
+        registry.addInterceptor(new GlobalInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/error","/actuator/**");
     }
 
     public static void main(String[] args) {
