@@ -74,6 +74,7 @@ public class IndexRecommendHelper {
             return allList.get(0);
         }
 
+        // 按照分类下文章数量过滤
 //        Map<Long, Long> articleCnt = articleReadService.queryArticleCountsByCategory();
 //        allList.removeIf(c -> articleCnt.getOrDefault(c.getCategoryId(), 0L) <= 0L);
 
@@ -87,6 +88,10 @@ public class IndexRecommendHelper {
             }
         });
         vo.setCategories(allList);
+
+        if (selectedArticle.get() == null) {
+            selectedArticle.set(CategoryDTO.DEFAULT_CATEGORY);
+        }
         return selectedArticle.get();
     }
 
