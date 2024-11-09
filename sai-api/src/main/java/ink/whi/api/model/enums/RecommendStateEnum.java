@@ -9,12 +9,12 @@ import lombok.Getter;
  * @date 2022/7/19
  */
 @Getter
-public enum RecommendEnum {
+public enum RecommendStateEnum {
 
     NOT_RECOMMEND(0, "不加精"),
     RECOMMEND(1, "加精");
 
-    RecommendEnum(Integer code, String desc) {
+    RecommendStateEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -22,12 +22,12 @@ public enum RecommendEnum {
     private final Integer code;
     private final String desc;
 
-    public static RecommendEnum formCode(Integer code) {
-        for (RecommendEnum value : RecommendEnum.values()) {
+    public static RecommendStateEnum formCode(Integer code) {
+        for (RecommendStateEnum value : RecommendStateEnum.values()) {
             if (value.getCode().equals(code)) {
                 return value;
             }
         }
-        return RecommendEnum.NOT_RECOMMEND;
+        return RecommendStateEnum.NOT_RECOMMEND;
     }
 }

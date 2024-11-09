@@ -44,13 +44,13 @@ public enum OperateArticleEnum {
     RECOMMEND(5, "加精"){
         @Override
         public int getDbStatCode() {
-            return RecommendEnum.RECOMMEND.getCode();
+            return RecommendStateEnum.RECOMMEND.getCode();
         }
     },
     CANCEL_RECOMMEND(6, "不加精"){
         @Override
         public int getDbStatCode() {
-            return RecommendEnum.NOT_RECOMMEND.getCode();
+            return RecommendStateEnum.NOT_RECOMMEND.getCode();
         }
     };
 
