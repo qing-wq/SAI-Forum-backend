@@ -60,7 +60,8 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: sai-prometheus
-    restart: always
+    ports:
+      - "9091:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:

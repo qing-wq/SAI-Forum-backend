@@ -28,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan(basePackages = "ink.whi.core")
 public class CoreAutoConfig {
 
-    public CoreAutoConfig() {}
-
     public CoreAutoConfig(RedisTemplate<String, String> redisTemplate) {
         RedisClient.register(redisTemplate);
     }

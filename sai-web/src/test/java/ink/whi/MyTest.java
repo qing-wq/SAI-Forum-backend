@@ -1,6 +1,5 @@
 package ink.whi;
 
-import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import org.junit.Test;
 import org.springframework.util.DigestUtils;
 
@@ -12,9 +11,11 @@ import java.time.LocalDate;
  * @Date: 2023/4/27
  */
 public class MyTest {
+
+
     @Test
     public void test() {
-        String plainPwd = "123salt-key456";
+        String plainPwd = "123456";
         System.out.println(DigestUtils.md5DigestAsHex(plainPwd.getBytes(StandardCharsets.UTF_8)));
     }
 

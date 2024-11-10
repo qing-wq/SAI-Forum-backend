@@ -1,12 +1,12 @@
 package ink.whi.service.article.repo.entity;
 
-import java.io.Serial;
-
 import com.baomidou.mybatisplus.annotation.TableName;
 import ink.whi.api.model.base.BaseDO;
 import ink.whi.api.model.enums.DraftsTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serial;
 
 
 /**
