@@ -16,6 +16,8 @@ services:
       - SECURITY_SALT=${SECURITY_SALT}
       - GIT_CLIENT_ID=${GIT_CLIENT_ID}
       - GIT_CLIENT_SECRET=${GIT_CLIENT_SECRET}
+    volumes:
+      - ./images:/tmp/sai-forum/   # 图床
     depends_on:
       - mysql
       - redis
@@ -33,7 +35,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql   # Mysql数据
       - ./mysql-schema:/docker-entrypoint-initdb.d # 启动脚本
     networks:
       - app-network

@@ -3,6 +3,8 @@ package ink.whi.web.image.rest;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.core.image.service.ImageService;
+import ink.whi.core.permission.Permission;
+import ink.whi.core.permission.UserRole;
 import ink.whi.web.image.vo.ImageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping(path = "image")
+@Permission(role = UserRole.LOGIN)
 public class ImageRestController {
 
     @Autowired
