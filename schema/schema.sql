@@ -49,7 +49,7 @@ CREATE TABLE `article`
     KEY `idx_title` (`title`),
     KEY `idx_short_title` (`short_title`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 150
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='文章表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -74,7 +74,7 @@ CREATE TABLE `article_detail`
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_article_version` (`article_id`, `version`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 54
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='文章详情表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -98,7 +98,7 @@ CREATE TABLE `article_tag`
     PRIMARY KEY (`id`),
     KEY `idx_tag_id` (`tag_id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 4
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='文章标签映射';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -121,7 +121,7 @@ CREATE TABLE `category`
     `update_time`   timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 10
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='类目管理表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -170,7 +170,7 @@ CREATE TABLE `comment`
     KEY `idx_article_id` (`article_id`),
     KEY `idx_user_id` (`user_id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 61
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='评论表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -199,7 +199,7 @@ CREATE TABLE `config`
     `update_time` timestamp                                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 7
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='配置表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -224,13 +224,13 @@ CREATE TABLE `dict_common`
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_type_code_dict_code` (`type_code`, `dict_code`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 28
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='通用数据字典';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `draft`
+-- Table structure for table `drafts`
 --
 
 DROP TABLE IF EXISTS `drafts`;
@@ -247,7 +247,7 @@ CREATE TABLE `drafts`
     `category_id` int unsigned                            NOT NULL DEFAULT '0' COMMENT '分类ID',
     `source`      tinyint                                 NOT NULL DEFAULT '1' COMMENT '来源：1-转载，2-原创，3-翻译',
     `source_url`  varchar(128) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1' COMMENT '原文链接',
-    `article_id`  int unsigned                            NOT NULL DEFAULT '0' COMMENT '关联的文章，0-没有',
+    `article_id`  int unsigned                                NULL             COMMENT '关联的文章，0-没有',
     `content`     longtext COLLATE utf8mb4_general_ci COMMENT '内容',
     `deleted`     tinyint                                 NOT NULL DEFAULT '0' COMMENT '是否删除',
     `create_time` timestamp                               NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -278,7 +278,7 @@ CREATE TABLE `global_conf`
     PRIMARY KEY (`id`),
     KEY `idx_key` (`key`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 4
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='全局配置表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -304,7 +304,7 @@ CREATE TABLE `notify_msg`
     PRIMARY KEY (`id`),
     KEY `key_notify_user_id_type_state` (`notify_user_id`, `type`, `state`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 85
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='消息通知列表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -327,7 +327,7 @@ CREATE TABLE `read_count`
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_document_id_type` (`document_id`, `document_type`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 47
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='计数表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -350,7 +350,7 @@ CREATE TABLE `request_count`
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_unique_id_date` (`date`, `host`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 24
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='请求计数表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -375,7 +375,7 @@ CREATE TABLE `tag`
     PRIMARY KEY (`id`),
     KEY `idx_category_id` (`category_id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 137
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='标签管理表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -400,7 +400,7 @@ CREATE TABLE `user`
     PRIMARY KEY (`id`),
     KEY `key_third_account_id` (`third_account_id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 14
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='用户登录表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -429,7 +429,7 @@ CREATE TABLE `user_foot`
     UNIQUE KEY `idx_user_doucument` (`user_id`, `document_id`, `document_type`),
     KEY `idx_doucument_id` (`document_id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 92
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='用户足迹表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -461,7 +461,7 @@ CREATE TABLE `user_info`
     PRIMARY KEY (`id`),
     KEY `key_user_id` (`user_id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 14
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='用户个人信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -485,7 +485,7 @@ CREATE TABLE `user_relation`
     UNIQUE KEY `uk_user_follow` (`user_id`, `follow_user_id`),
     KEY `key_follow_user_id` (`follow_user_id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 15
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='用户关系表';
 
