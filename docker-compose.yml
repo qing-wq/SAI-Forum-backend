@@ -17,7 +17,7 @@ services:
       - GIT_CLIENT_ID=${GIT_CLIENT_ID}
       - GIT_CLIENT_SECRET=${GIT_CLIENT_SECRET}
     volumes:
-      - ./images:/tmp/sai-forum/   # 图床
+      - ./images:/tmp/sai-forum/images   # 图床
     depends_on:
       - mysql
       - redis

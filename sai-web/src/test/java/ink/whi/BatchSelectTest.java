@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
+ * 多线程事务实现
  * @author: qing
  * @Date: 2024/11/1
  */
@@ -59,11 +60,10 @@ public class BatchSelectTest {
             //主线程获取结果成功，让子线程开始根据主线程的结果执行（提交或回滚）
             mainMonitor.countDown();
             // 为了让主线程阻塞，让子线程执行。
-            Thread.yield();
+            while (Thread.activeCount() > 1) {
+                Thread.yield();
+            }
 
-//            Thread.currentThread().join();
-//            finish.await();
-//            Thread.sleep(100);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
