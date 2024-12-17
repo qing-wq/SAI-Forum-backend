@@ -31,6 +31,11 @@ SAI-Forum
 └── sai-web  # 项目启动入口，Web模块
 ```
 
+### 架构图
+
+![论坛系统架构 drawio](https://github.com/user-attachments/assets/b544ef7a-65ee-404f-9ac6-69eaf1fcd9e9)
+
+
 ## 项目展示图
 
 ![image](https://github.com/qing-wq/SAI-Forum-backend/assets/93132738/7da18f8e-54ad-453b-b774-2ccd0d4800e5)
