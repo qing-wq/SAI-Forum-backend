@@ -3,7 +3,7 @@ package ink.whi.api.model.exception;
 import lombok.Getter;
 
 /**
- * 异常码规范：业务 - 状态 - code
+ * 异常码规范：业务 - 状态码 - idx
  *
  * - 100 通用
  * - 200 文章相关
@@ -64,15 +64,7 @@ public enum StatusEnum {
         this.msg = msg;
     }
 
-    public static boolean is5xx(int code) {
-        return code % 1000_000 / 1000 >= 500;
-    }
-
-    public static boolean is403(int code) {
-        return code % 1000_000 / 1000 == 403;
-    }
-
-    public static boolean is4xx(int code) {
-        return code % 1000_000 / 1000 < 500;
+    public static int getHttpCode(int code) {
+        return code % 1000_000 / 1000;
     }
 }

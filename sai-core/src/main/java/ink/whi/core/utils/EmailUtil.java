@@ -48,4 +48,8 @@ public class EmailUtil {
             return false;
         }
     }
+
+    public static boolean checkEmail(String email) {
+        return email.matches("^\\w+(-+.\\w+)*@\\w+(-.\\w+)*.\\w+(-.\\w+)*$");
+    }
 }

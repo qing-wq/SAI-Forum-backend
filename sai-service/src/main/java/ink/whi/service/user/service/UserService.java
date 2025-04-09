@@ -4,6 +4,7 @@ import ink.whi.api.model.vo.article.req.UserInfoSaveReq;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
+import ink.whi.service.user.repo.entity.UserInfoDO;
 
 /**
  * @author: qing
@@ -21,4 +22,6 @@ public interface UserService {
     void saveUserInfo(UserInfoSaveReq req);
 
     void updateUserPwd(Long userId, String olderPassword, String newPassword);
+
+    UserInfoDO queryUserInfoByEmail(String email);
 }

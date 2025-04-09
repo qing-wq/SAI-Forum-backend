@@ -3,20 +3,16 @@ package ink.whi.web.hook.filter;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.core.utils.CrossUtil;
 import ink.whi.core.utils.IpUtil;
-import ink.whi.service.statistics.service.StatisticsSettingService;
 import ink.whi.web.global.GlobalInitHelper;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.annotation.Resource;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -32,10 +28,7 @@ import java.net.URLDecoder;
 public class AuthFilter implements Filter {
     private static final Logger REQ_LOG = LoggerFactory.getLogger("req");
 
-    @Autowired
-    private StatisticsSettingService statisticSettingService;
-
-    @Autowired
+    @Resource
     private GlobalInitHelper globalInitService;
 
     @Override

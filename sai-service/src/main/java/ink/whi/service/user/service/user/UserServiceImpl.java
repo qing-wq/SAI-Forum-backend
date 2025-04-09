@@ -2,6 +2,7 @@ package ink.whi.service.user.service.user;
 
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.FollowStateEnum;
+import ink.whi.api.model.enums.PhotoUtil;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.vo.article.dto.YearArticleDTO;
@@ -152,6 +153,7 @@ public class UserServiceImpl implements UserService {
         UserInfoDO userInfo = UserConverter.toUserInfoDo(req);
         userInfo.setUserId(user.getId());
         userInfo.setUserName("SAI_" +  UUID.randomUUID().toString().replace("-", "").substring(0, 8));
+        userInfo.setPhoto(PhotoUtil.genPhoto());    // 随机头像
         userDao.save(userInfo);
         return user.getId();
     }
@@ -173,5 +175,10 @@ public class UserServiceImpl implements UserService {
             return;
         }
         throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS, "密码错误");
+    }
+
+    @Override
+    public UserInfoDO queryUserInfoByEmail(String email) {
+        return userDao.getByEmail(email);
     }
 }

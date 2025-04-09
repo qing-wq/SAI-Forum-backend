@@ -3,8 +3,8 @@ package ink.whi.core.limit;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -41,8 +41,8 @@ public class LimitAspect {
     public void pointcut() {
     }
 
-    @Around("pointcut()")
-    public Object around(ProceedingJoinPoint point) throws Throwable {
+    @AfterReturning("pointcut()")
+    public void afterReturning(JoinPoint point) {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method signatureMethod = signature.getMethod();
         Limit limit = signatureMethod.getAnnotation(Limit.class);
@@ -56,7 +56,6 @@ public class LimitAspect {
         Long count = redisTemplate.execute(redisScript, keys, String.valueOf(limit.count()), String.valueOf(limit.period()));
         if (null != count && count.intValue() <= limit.count()) {
             logger.info("第{}次访问key为 {}，描述为 [{}] 的接口", count, keys, limit.name());
-            return point.proceed();
         } else {
             throw BusinessException.newInstance(StatusEnum.ACCESS_FREQUENT);
         }

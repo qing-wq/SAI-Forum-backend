@@ -1,8 +1,13 @@
 langchain4j:
   open-ai:
     chat-model:
-      base-url: xxx
-      api-key: xxx
-      model-name: "gpt-4o-2024-08-06"
+      base-url: ${openai.base-url}
+      api-key: ${openai.api-key}
+      model-name: ${openai.model-name}
       log-requests: true
       log-responses: false
+
+openai:
+  api-key:
+  model-name:
+  base-url:

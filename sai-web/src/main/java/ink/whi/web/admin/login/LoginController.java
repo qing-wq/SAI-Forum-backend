@@ -1,6 +1,7 @@
 package ink.whi.web.admin.login;
 
 import ink.whi.api.model.context.ReqInfoContext;
+import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
@@ -9,12 +10,13 @@ import ink.whi.core.limit.Limit;
 import ink.whi.core.limit.LimitType;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
+import ink.whi.core.utils.EmailUtil;
 import ink.whi.core.utils.JwtUtil;
 import ink.whi.core.utils.SessionUtil;
+import ink.whi.service.user.repo.entity.UserInfoDO;
 import ink.whi.service.user.service.UserService;
 import ink.whi.service.user.service.UserSettingService;
 import ink.whi.web.admin.login.helper.LoginHelper;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ import static ink.whi.service.user.service.SessionService.SESSION_KEY;
  */
 @RestController
 @RequestMapping(path = {"/admin/login"})
-public class AdminLoginController{
+public class LoginController {
     @Autowired
     private UserSettingService userSettingService;
 
@@ -43,15 +45,16 @@ public class AdminLoginController{
 
     /**
      * 账号密码登录
-     * @param request
+     * application/x-www-form-urlencoded
+     * @param username
+     * @param password
      * @param response
      * @return
      */
     @PostMapping(path = {"/", ""})
-    public ResVo<BaseUserInfoDTO> login(HttpServletRequest request,
+    public ResVo<BaseUserInfoDTO> login(@RequestParam("username") String username,
+                                        @RequestParam("password") String password,
                                         HttpServletResponse response) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "用户名或密码不能为空");
         }
@@ -80,13 +83,13 @@ public class AdminLoginController{
 
     /**
      * 用户注册
-     *
+     * application/json
      * @param req
      * @return
      */
     @PostMapping(path = "register")
     public ResVo<Long> register(@Validated @RequestBody UserSaveReq req, HttpServletResponse response) {
-        // 邮箱校验
+        // 邮箱验证码校验
         loginHelper.verifyEmail(req.getEmail(), req.getCode());
 
         Long userId = userService.saveUser(req);
@@ -101,13 +104,22 @@ public class AdminLoginController{
 
     /**
      * 发送验证码
+     * application/x-www-form-urlencoded
      *
-     * @param email
      * @return
      */
     @Limit(key = "email", name = "email", limitType = LimitType.IP, count = 1, period = 60)
     @PostMapping(path = "code")
     public ResVo<String> code(@RequestParam("email") String email) {
+        // 检验邮箱是否合法
+        if (StringUtils.isBlank(email) && !EmailUtil.checkEmail(email)) {
+            return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "邮箱格式不正确");
+        }
+
+        UserInfoDO info = userService.queryUserInfoByEmail(email);
+        if (info != null) {
+            throw BusinessException.newInstance(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "邮箱已被注册");
+        }
         loginHelper.subscribe(email);
         return ResVo.ok("ok");
     }

@@ -59,4 +59,10 @@ public class UserDao extends ServiceImpl<UserInfoMapper, UserInfoDO> {
     public UserDO getUser(Long userId) {
         return userMapper.selectById(userId);
     }
+
+    public UserInfoDO getByEmail(String email) {
+        return lambdaQuery().eq(UserInfoDO::getEmail, email)
+                .eq(UserInfoDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .one();
+    }
 }

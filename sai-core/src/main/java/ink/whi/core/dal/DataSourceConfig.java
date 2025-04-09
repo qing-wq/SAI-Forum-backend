@@ -24,10 +24,7 @@ import java.util.Map;
 @ConditionalOnProperty(prefix = "spring.dynamic", name = "primary")
 public class DataSourceConfig {
 
-    private final Environment environment;
-
     public DataSourceConfig(Environment environment) {
-        this.environment = environment;
         log.info("动态数据源初始化!");
     }
 

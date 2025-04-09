@@ -77,12 +77,6 @@ public class ForumExceptionHandler {
     }
 
     private void setErrorCode(Status status, HttpServletResponse response) {
-        if (StatusEnum.is5xx(status.getCode())) {
-            response.setStatus(500);
-        } else if (StatusEnum.is403(status.getCode())) {
-            response.setStatus(403);
-        } else {
-            response.setStatus(404);
-        }
+        response.setStatus(StatusEnum.getHttpCode(status.getCode()));
     }
 }
