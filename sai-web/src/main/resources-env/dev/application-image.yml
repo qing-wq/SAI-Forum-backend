@@ -1,0 +1,16 @@
+image:
+  abs-tmp-path: /tmp/sai-forum/
+  web-img-path: /images/
+  tmp-upload-path: /tmp/sai-forum/
+  cdn-host:
+  oss:
+    type: local
+    prefix:
+
+spring:
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+        - file:///d:${image.abs-tmp-path}
+        - file:${image.abs-tmp-path}
