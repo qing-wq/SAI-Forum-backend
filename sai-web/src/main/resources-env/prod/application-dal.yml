@@ -4,7 +4,7 @@ spring:
     username: root
     password: ${MYSQL_ROOT_PASSWORD}
   dynamic:
-    primary: master
+#    primary: master
     datasource:
       master:
         # 数据库名，从配置 database.name 中获取
