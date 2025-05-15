@@ -375,16 +375,15 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     @Override
     public List<SimpleArticleDTO> queryArticleCluster(Map<String, String> params) {
-        System.out.println(params);
-        List<SimpleArticleDTO> result = new ArrayList<>();
+        System.out.println("result from LLM: " + params);
+        List<ArticleDO> result = new ArrayList<>();
         if (!StringUtils.isBlank(params.get("keyword"))) {
             String keyword = params.get("keyword");
             List<ArticleDO> searchByTitle = articleDao.listSimpleArticlesByBySearchKey(keyword);
-            List<SimpleArticleDTO> searchByTitleDto = searchByTitle.stream().map(ArticleConverter::toSimpleDto).toList();
-            result.addAll(searchByTitleDto);
+            result.addAll(searchByTitle);
 
             List<Long> searchByTags = articleTagDao.searchArticleByTags(keyword);
-            List<SimpleArticleDTO> searchByTagsDto = searchByTags.stream().map(articleDao::getArticleById).map(ArticleConverter::toSimpleDto).toList();
+            List<ArticleDO> searchByTagsDto = searchByTags.stream().map(articleDao::getArticleById).toList();
             result.addAll(searchByTagsDto);
         }
 
@@ -392,9 +391,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             String author = params.get("author");
             UserInfoDO user = userService.queryUserInfoByUserName(author);
             if (user != null) {
-                List<ArticleDO> searchByAuthor = articleDao.listArticlesByUserId(user.getUserId(), null);
-                List<SimpleArticleDTO> searchByAuthorDto = searchByAuthor.stream().map(ArticleConverter::toSimpleDto).toList();
-                result.addAll(searchByAuthorDto);
+                result = result.stream().filter(s -> s.getUserId().equals(user.getId())).toList();
             }
         }
 
@@ -410,6 +407,6 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             result = result.stream().filter(s -> s.getCreateTime().before(endTime)).toList();
         }
 
-        return result;
+        return result.stream().map(ArticleConverter::toSimpleDto).toList();
     }
 }
