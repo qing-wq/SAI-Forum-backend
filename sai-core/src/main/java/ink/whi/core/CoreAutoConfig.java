@@ -1,7 +1,6 @@
 package ink.whi.core;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import ink.whi.core.cache.RedisClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -28,9 +26,6 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan(basePackages = "ink.whi.core")
 public class CoreAutoConfig {
 
-    public CoreAutoConfig(RedisTemplate<String, String> redisTemplate) {
-        RedisClient.register(redisTemplate);
-    }
 
     /**
      * 定义caffeine缓存管理器

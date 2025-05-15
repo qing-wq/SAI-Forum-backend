@@ -1,10 +1,12 @@
 package ink.whi;
 
+import ink.whi.api.model.enums.PhotoUtil;
 import org.junit.Test;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: qing
@@ -23,7 +25,7 @@ public class MyTest {
     public void test3() {
         Integer i1 = 40;
         Integer i2 = new Integer(40);
-        System.out.println(i1==i2);
+        System.out.println(i1 == i2);
     }
 
 
@@ -33,6 +35,44 @@ public class MyTest {
 
     @Test
     public void modify() {
-        System.out.println(LocalDate.now());
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(4);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == 4) list.remove(i);
+        }
+        System.out.println(list);
+
+    }
+
+    @Test
+    public void testGenPhoto() {
+        String url = PhotoUtil.genPhoto();
+        System.out.println(url);
+    }
+
+    @Test
+    public void testList() {
+        class Item {
+            int a;
+            int b;
+            Item(int a, int b) {
+                this.a = a;
+                this.b = b;
+            }
+
+            public String toString() {
+                return a + " " + b;
+            }
+        }
+        ArrayList<Item> list = new ArrayList<>();
+        Item item = new Item(1, 2);
+        list.add(item);
+        System.out.println(list);
+        item.a = 3;
+        System.out.println(list);
     }
 }

@@ -1,11 +1,11 @@
 package ink.whi.service.article.service;
 
 import ink.whi.api.model.enums.HomeSelectEnum;
+import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.DraftsDTO;
 import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
-import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.service.article.repo.entity.ArticleDO;
 
 import java.util.List;
@@ -47,4 +47,6 @@ public interface ArticleReadService {
     DraftsDTO getOnlineArticleDraft(Long articleId);
 
     DraftsDTO queryDraftById(Long draftId);
+
+    List<SimpleArticleDTO> queryArticleCluster(Map<String, String> params);
 }

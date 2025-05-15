@@ -1,8 +1,7 @@
 package ink.whi.service.article.repo.dao;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.extension.conditions.ChainWrapper;
-import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import ink.whi.api.model.base.BaseDO;
@@ -11,9 +10,11 @@ import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
 import ink.whi.service.article.repo.mapper.ArticleTagMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +25,10 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
+
+    @Autowired
+    private TagDao tagDao;
+
     /**
      * 查询文章标签详情
      *
@@ -55,6 +60,25 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
             list.add(tag);
         });
         saveBatch(list);
+    }
+
+    /**
+     * 通过标签搜索文章
+     * @param keyword
+     * @return
+     */
+    public List<Long> searchArticleByTags(String keyword) {
+        // 查询相关tag
+        List<Long> tagIds = tagDao.listTagsByKey(keyword);
+        if (CollectionUtils.isEmpty(tagIds)) {
+            return Collections.emptyList();
+        }
+        LambdaQueryChainWrapper<ArticleTagDO> chainWrapper = ChainWrappers.lambdaQueryChain(baseMapper);
+        List<ArticleTagDO> articleTags = chainWrapper.in(ArticleTagDO::getTagId, tagIds).list();
+        if (CollectionUtils.isEmpty(articleTags)) {
+            return Collections.emptyList();
+        }
+        return articleTags.stream().map(ArticleTagDO::getArticleId).collect(Collectors.toList());
     }
 
     /**

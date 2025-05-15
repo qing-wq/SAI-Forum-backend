@@ -1,12 +1,15 @@
 package ink.whi.ai.configuration.openai;
 
 import dev.langchain4j.model.image.ImageModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiImageModel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static dev.langchain4j.model.chat.Capability.RESPONSE_FORMAT_JSON_SCHEMA;
 
 /**
  * @author: qing
@@ -27,6 +30,19 @@ public class OpenAIChatModelConfiguration {
                 .baseUrl(properties.getBaseUrl())
                 .modelName("dall-e-2")
                 .size("256x256")
+                .build();
+    }
+
+    @Bean
+    OpenAiChatModel chatModel() {
+        return OpenAiChatModel.builder()
+                .apiKey(properties.getApiKey())
+                .baseUrl(properties.getBaseUrl())
+                .supportedCapabilities(RESPONSE_FORMAT_JSON_SCHEMA)
+                .strictJsonSchema(true)
+                .modelName("gpt-4o-2024-08-06")
+                .logRequests(true)
+                .logResponses(true)
                 .build();
     }
 }

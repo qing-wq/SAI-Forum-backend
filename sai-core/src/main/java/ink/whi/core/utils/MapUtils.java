@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author: qing
  * @Date: 2023/5/1
  */
-public class MapUtils {
+public class    MapUtils {
 
     public static <K, V> Map<K, V> create(K k, V v, Object... kvs) {
         Map<K, V> map = Maps.newHashMapWithExpectedSize(kvs.length + 1);

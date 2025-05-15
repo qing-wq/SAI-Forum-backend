@@ -15,6 +15,7 @@ import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.cache.RedisClient;
 import ink.whi.core.utils.ArticleUtil;
+import ink.whi.core.utils.DateUtil;
 import ink.whi.core.utils.MapUtils;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
@@ -26,13 +27,14 @@ import ink.whi.service.article.repo.entity.DraftsDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.user.repo.entity.UserFootDO;
+import ink.whi.service.user.repo.entity.UserInfoDO;
 import ink.whi.service.user.service.CountService;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.redisson.api.RedissonClient;
 import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
@@ -273,7 +275,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         }
         key = key.trim();
         List<ArticleDO> records = articleDao.listSimpleArticlesByBySearchKey(key);
-        return records.stream().map(s -> new SimpleArticleDTO().setId(s.getId()).setTitle(s.getTitle()))
+        return records.stream().map(ArticleConverter::toSimpleDto)
                 .collect(Collectors.toList());
     }
 
@@ -369,5 +371,45 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         DraftsDTO dto = ArticleConverter.toDraftsDTO(draft);
         dto.setTagIds(articleTagDao.listArticleTagIds(draftId));
         return dto;
+    }
+
+    @Override
+    public List<SimpleArticleDTO> queryArticleCluster(Map<String, String> params) {
+        System.out.println(params);
+        List<SimpleArticleDTO> result = new ArrayList<>();
+        if (!StringUtils.isBlank(params.get("keyword"))) {
+            String keyword = params.get("keyword");
+            List<ArticleDO> searchByTitle = articleDao.listSimpleArticlesByBySearchKey(keyword);
+            List<SimpleArticleDTO> searchByTitleDto = searchByTitle.stream().map(ArticleConverter::toSimpleDto).toList();
+            result.addAll(searchByTitleDto);
+
+            List<Long> searchByTags = articleTagDao.searchArticleByTags(keyword);
+            List<SimpleArticleDTO> searchByTagsDto = searchByTags.stream().map(articleDao::getArticleById).map(ArticleConverter::toSimpleDto).toList();
+            result.addAll(searchByTagsDto);
+        }
+
+        if (!StringUtils.isBlank(params.get("author"))) {
+            String author = params.get("author");
+            UserInfoDO user = userService.queryUserInfoByUserName(author);
+            if (user != null) {
+                List<ArticleDO> searchByAuthor = articleDao.listArticlesByUserId(user.getUserId(), null);
+                List<SimpleArticleDTO> searchByAuthorDto = searchByAuthor.stream().map(ArticleConverter::toSimpleDto).toList();
+                result.addAll(searchByAuthorDto);
+            }
+        }
+
+        if (!StringUtils.isBlank(params.get("startTime"))) {
+            String startTimeStr = params.get("startTime");
+            Date startTime = DateUtil.format(startTimeStr);
+            result = result.stream().filter(s -> s.getCreateTime().after(startTime)).toList();
+        }
+
+        if (!StringUtils.isBlank(params.get("endTime"))) {
+            String endTimeStr = params.get("endTime");
+            Date endTime = DateUtil.format(endTimeStr);
+            result = result.stream().filter(s -> s.getCreateTime().before(endTime)).toList();
+        }
+
+        return result;
     }
 }

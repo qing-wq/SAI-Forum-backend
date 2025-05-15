@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author: qing
@@ -35,5 +35,5 @@ public class SimpleArticleDTO implements Serializable {
     /**
      * 创建时间
      */
-    private Timestamp createTime;
+    private Date createTime;
 }

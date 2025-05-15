@@ -1,26 +1,26 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/${database.name}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
+    url: jdbc:mysql://localhost:3306/${database.name}?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username:
     password:
-  dynamic:
-    primary: master
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  dynamic:     # 动态数据源
+#    primary: master
     datasource:
       master:
         # 数据库名，从配置 database.name 中获取
-        url: jdbc:mysql://localhost:3306/${database.name}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
+        url: jdbc:mysql://localhost:3306/${database.name}?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username:
         password:
       slave:
         # 数据库名，从配置 database.name 中获取
-        url: jdbc:mysql://localhost:3306/${database.name}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
+        url: jdbc:mysql://localhost:3306/${database.name}?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username:
         password:
   data:
     redis:
-      host:
+      host: localhost
       port: 6379
-      password:
 
 logging:
   level:
@@ -28,4 +28,4 @@ logging:
 
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

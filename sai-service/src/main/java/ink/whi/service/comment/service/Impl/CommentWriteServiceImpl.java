@@ -1,12 +1,10 @@
 package ink.whi.service.comment.service.Impl;
 
 import ink.whi.api.model.enums.PushStatusEnum;
-import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.comment.CommentSaveReq;
-import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.core.rabbitmq.BlogMqConstants;
-import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
@@ -14,7 +12,6 @@ import ink.whi.service.comment.converter.CommentConverter;
 import ink.whi.service.comment.repo.dao.CommentDao;
 import ink.whi.service.comment.repo.entity.CommentDO;
 import ink.whi.service.comment.service.CommentWriteService;
-import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.service.UserFootService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,15 +2,11 @@ package ink.whi.service.user.service.relation;
 
 import ink.whi.api.model.enums.FollowStateEnum;
 import ink.whi.api.model.vo.article.req.UserRelationReq;
-import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
 import ink.whi.api.model.vo.page.PageListVo;
 import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.FollowUserInfoDTO;
-import ink.whi.core.rabbitmq.BlogMqConstants;
 import ink.whi.core.rabbitmq.UserMqConstants;
-import ink.whi.core.utils.JsonUtil;
 import ink.whi.core.utils.MapUtils;
-import ink.whi.service.notify.service.RabbitmqService;
 import ink.whi.service.user.repo.dao.UserRelationDao;
 import ink.whi.service.user.repo.entity.UserRelationDO;
 import ink.whi.service.user.service.UserRelationService;

@@ -67,7 +67,7 @@ public class IndexRecommendHelper {
      */
     private CategoryDTO categories(String active, IndexVo vo) {
         List<CategoryDTO> allList = categoryService.loadAllCategories();
-        allList.add(0, new CategoryDTO(0L, CategoryDTO.DEFAULT_TOTAL_CATEGORY));
+        allList.add(0, CategoryDTO.DEFAULT_CATEGORY);
         if (StringUtils.isBlank(active)) {
             // 添加默认的全部分类
             vo.setCategories(allList);

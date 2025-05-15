@@ -1,26 +1,13 @@
 package ink.whi;
 
-import com.rabbitmq.client.BuiltinExchangeType;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
-import ink.whi.api.model.enums.OperateTypeEnum;
-import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
-import ink.whi.core.cache.RedisClient;
 import ink.whi.core.rabbitmq.BlogMqConstants;
-import ink.whi.core.utils.JsonUtil;
-import ink.whi.service.notify.service.RabbitmqService;
-import ink.whi.service.user.repo.dao.UserFootDao;
 import ink.whi.service.user.repo.entity.UserFootDO;
-import ink.whi.service.user.service.UserFootService;
 import org.junit.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * @author: qing
@@ -30,6 +17,9 @@ public class RabbitmqTest extends BasicTest {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private RedisTemplate stringRedisTemplate;
 
     @Test
     public void testProductRabbitmq() {
@@ -49,8 +39,11 @@ public class RabbitmqTest extends BasicTest {
     @Test
     public void testRedis() {
         try {
-            RedisClient.setStr("test", "aaa");
-            System.out.println(RedisClient.getStr("test"));
+            stringRedisTemplate.execute((RedisCallback<Void>) con -> {
+                con.set("test".getBytes(), "123".getBytes());
+                return null;
+            });
+            System.out.println(stringRedisTemplate.opsForValue().get("test"));
         } catch (Exception e) {
             e.printStackTrace();
         }

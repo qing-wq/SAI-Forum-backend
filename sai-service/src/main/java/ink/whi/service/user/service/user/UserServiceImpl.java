@@ -181,4 +181,9 @@ public class UserServiceImpl implements UserService {
     public UserInfoDO queryUserInfoByEmail(String email) {
         return userDao.getByEmail(email);
     }
+
+    @Override
+    public UserInfoDO queryUserInfoByUserName(String author) {
+        return userDao.getByUserName(author);
+    }
 }

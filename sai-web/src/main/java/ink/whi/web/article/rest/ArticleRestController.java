@@ -3,24 +3,27 @@ package ink.whi.web.article.rest;
 import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.output.Response;
-import ink.whi.ai.agent.AISummaryHelper;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
 import ink.whi.api.model.exception.StatusEnum;
-import ink.whi.api.model.vo.article.req.ContentPostReq;
-import ink.whi.api.model.vo.page.PageListVo;
-import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.ResVo;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
+import ink.whi.api.model.vo.article.dto.SimpleArticleDTO;
 import ink.whi.api.model.vo.article.dto.TagDTO;
+import ink.whi.api.model.vo.article.req.ContentPostReq;
+import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 import ink.whi.api.model.vo.notify.enums.NotifyTypeEnum;
+import ink.whi.api.model.vo.page.PageListVo;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.core.permission.Permission;
 import ink.whi.core.permission.UserRole;
 import ink.whi.core.rabbitmq.BlogMqConstants;
 import ink.whi.core.utils.NumUtil;
+import ink.whi.service.ai.agent.AISearchHelper;
+import ink.whi.service.ai.agent.AISummaryHelper;
 import ink.whi.service.article.repo.entity.ArticleDO;
 import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
@@ -34,10 +37,10 @@ import ink.whi.web.base.BaseRestController;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ink.whi.api.model.vo.comment.dto.TopCommentDTO;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -73,6 +76,9 @@ public class ArticleRestController extends BaseRestController {
 
     @Autowired
     private AISummaryHelper summaryHelper;
+
+    @Autowired
+    private AISearchHelper searchHelper;
 
     @Autowired
     private ImageModel imageModel;
@@ -194,5 +200,17 @@ public class ArticleRestController extends BaseRestController {
         Response<Image> image = imageModel.generate("Donald Duck in New York, cartoon style");
         URI url = image.content().url();
         return ResVo.ok(url.toString());
+    }
+
+    /**
+     * AI搜索
+     * @param
+     * @return
+     */
+    @PostMapping(path = "ai/search")
+    public ResVo<List<SimpleArticleDTO>> aiSearch(@RequestBody String userMessage) {
+        Map<String, String> params = searchHelper.chat(userMessage);
+        List<SimpleArticleDTO> articles = articleReadService.queryArticleCluster(params);
+        return ResVo.ok(articles);
     }
 }

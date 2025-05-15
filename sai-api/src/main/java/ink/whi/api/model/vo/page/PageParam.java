@@ -2,7 +2,6 @@ package ink.whi.api.model.vo.page;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -55,6 +54,9 @@ public class PageParam {
     }
 
     public static String getLimitSql(PageParam pageParam) {
+        if (pageParam == null) {
+            return "";
+        }
         return String.format("limit %s,%s", pageParam.offset, pageParam.limit);
     }
 }

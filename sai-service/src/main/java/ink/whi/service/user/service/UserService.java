@@ -24,4 +24,6 @@ public interface UserService {
     void updateUserPwd(Long userId, String olderPassword, String newPassword);
 
     UserInfoDO queryUserInfoByEmail(String email);
+
+    UserInfoDO queryUserInfoByUserName(String author);
 }

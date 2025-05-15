@@ -40,4 +40,6 @@ pid.log
 *.jar.tmp
 .DS_Store
 
+## private
 .env
+sai-forum/images/*

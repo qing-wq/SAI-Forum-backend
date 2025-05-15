@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -24,6 +25,7 @@ import java.net.URLDecoder;
  * @Date: 2023/4/27
  */
 @Slf4j
+@Component
 @WebFilter(urlPatterns = "/*", filterName = "authFilter", asyncSupported = true)
 public class AuthFilter implements Filter {
     private static final Logger REQ_LOG = LoggerFactory.getLogger("req");

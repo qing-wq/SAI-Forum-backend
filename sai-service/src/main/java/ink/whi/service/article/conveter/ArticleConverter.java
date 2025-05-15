@@ -152,4 +152,12 @@ public class ArticleConverter {
         draft.setUserId(authorId);
         return draft;
     }
+
+    public static SimpleArticleDTO toSimpleDto(ArticleDO s) {
+        SimpleArticleDTO dto = new SimpleArticleDTO();
+        dto.setId(s.getId());
+        dto.setTitle(s.getTitle());
+        dto.setCreateTime(s.getCreateTime());
+        return dto;
+    }
 }
