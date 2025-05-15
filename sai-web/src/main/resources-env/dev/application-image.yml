@@ -1,7 +1,6 @@
 image:
-  abs-tmp-path: /tmp/sai-forum/
+  abs-tmp-path: ./sai-forum/
   web-img-path: /images/
-  tmp-upload-path: /tmp/sai-forum/
   cdn-host:
   oss:
     type: local
