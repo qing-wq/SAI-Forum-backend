@@ -1,11 +1,13 @@
 package ink.whi;
 
 import ink.whi.api.model.enums.PhotoUtil;
+import ink.whi.core.utils.DateUtil;
 import org.junit.Test;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,4 +77,14 @@ public class MyTest {
         item.a = 3;
         System.out.println(list);
     }
+
+    @Test
+    public void test4() {
+        Date timer = DateUtil.format("2025-05-10");
+        Date timer2 = DateUtil.format("2025-05-30");
+        System.out.println(timer);
+        System.out.println(timer2);
+        System.out.println(timer.before(timer2));
+    }
+
 }

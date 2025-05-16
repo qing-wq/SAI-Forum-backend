@@ -68,7 +68,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
      * @return
      */
     @Override
-    @CacheEvict(cacheManager = "redisCacheManager", cacheNames = "article", allEntries = true)
+//    @CacheEvict(cacheManager = "redisCacheManager", cacheNames = "article", allEntries = true)
     public Long saveArticle(ArticlePostReq articlePostReq) {
         ArticleDO article = ArticleConverter.toArticleDo(articlePostReq, ReqInfoContext.getReqInfo().getUserId());
         // 图片转链

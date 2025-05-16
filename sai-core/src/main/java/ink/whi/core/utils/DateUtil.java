@@ -11,11 +11,10 @@ import java.util.Date;
 public class DateUtil {
 
     public static Date format(String format) {
-        String dateStr = "2023-10-15";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
-            date = sdf.parse(dateStr);
+            date = sdf.parse(format);
         } catch (ParseException e) {
             e.printStackTrace();
         }
