@@ -24,7 +24,6 @@ public class TagDao extends ServiceImpl<TagMapper, TagDO> {
     public List<TagDTO> listTags(PageParam pageParam) {
         List<TagDO> list = lambdaQuery()
                 .eq(TagDO::getStatus, PushStatusEnum.ONLINE.getCode())
-                .eq(TagDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .last(PageParam.getLimitSql(pageParam))
                 .orderByDesc(BaseDO::getCreateTime)
                 .list();

@@ -36,7 +36,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -77,7 +76,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     private DraftsDao draftsDao;
 
     @Override
-    @CachePut(key = "'articleList_' + #categoryId", cacheManager = "redisCacheManager", cacheNames = "article")
+//    @CachePut(key = "'articleList_' + #categoryId", cacheManager = "redisCacheManager", cacheNames = "article")
     public PageListVo<ArticleDTO> queryArticlesByCategory(Long categoryId, PageParam pageParam) {
         List<ArticleDO> list = articleDao.listArticleByCategoryId(categoryId, pageParam);
         return buildArticleListVo(list, pageParam.getPageSize());
@@ -189,10 +188,9 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             if (article == null) {
                 throw BusinessException.newInstance(StatusEnum.ARTICLE_NOT_EXISTS, articleId);
             }
-            // TODO 如果article=null应该缓存空值?
+            // TODO 如果article=null，应该缓存空值?
             RedisClient.setStrWithExpire(redisCacheKey, JSONUtil.toJsonStr(article), 60L);
         }
-//        ArticleDTO article = articleDao.queryArticleDetail(articleId);
 
         // 分类信息
         CategoryDTO category = article.getCategory();
