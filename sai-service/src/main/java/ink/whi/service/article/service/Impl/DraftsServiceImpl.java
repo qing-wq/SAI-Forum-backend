@@ -52,8 +52,10 @@ public class DraftsServiceImpl implements DraftsService {
         if (dto == null || Objects.equals(dto.getDeleted(), YesOrNoEnum.YES.getCode())) {
             return;
         }
-        dto.setDeleted(YesOrNoEnum.YES.getCode());
-        draftsDao.updateById(dto);
+        // 草稿不能伪删除
+//        dto.setDeleted(YesOrNoEnum.YES.getCode());
+//        draftsDao.updateById(dto);
+        draftsDao.getBaseMapper().deleteById(draftId);
     }
 
     @Override
