@@ -154,6 +154,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setUserId(user.getId());
         userInfo.setUserName("SAI_" +  UUID.randomUUID().toString().replace("-", "").substring(0, 8));
         userInfo.setPhoto(PhotoUtil.genPhoto());    // 随机头像
+        userInfo.setIp(ReqInfoContext.getReqInfo().getClientIp());
         userDao.save(userInfo);
         return user.getId();
     }
