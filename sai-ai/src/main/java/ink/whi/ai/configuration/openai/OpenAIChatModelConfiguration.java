@@ -40,7 +40,7 @@ public class OpenAIChatModelConfiguration {
                 .baseUrl(properties.getBaseUrl())
                 .supportedCapabilities(RESPONSE_FORMAT_JSON_SCHEMA)
                 .strictJsonSchema(true)
-                .modelName("gpt-4o-2024-08-06")
+                .modelName(properties.getModelName())
                 .logRequests(true)
                 .logResponses(true)
                 .build();
