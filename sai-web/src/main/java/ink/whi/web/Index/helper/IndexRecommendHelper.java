@@ -1,10 +1,10 @@
 package ink.whi.web.Index.helper;
 
 import ink.whi.api.model.context.ReqInfoContext;
-import ink.whi.api.model.vo.page.PageListVo;
-import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.article.dto.ArticleDTO;
 import ink.whi.api.model.vo.article.dto.CategoryDTO;
+import ink.whi.api.model.vo.page.PageListVo;
+import ink.whi.api.model.vo.page.PageParam;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
 import ink.whi.core.async.AsyncUtil;
 import ink.whi.service.article.service.ArticleReadService;
@@ -40,13 +40,12 @@ public class IndexRecommendHelper {
         CategoryDTO category = categories(activeTab, vo);
         vo.setCurrentCategory(category.getCategory());
         vo.setCategoryId(category.getCategoryId());
-        System.out.println("categoryId: " +category.getCategoryId());
         AsyncUtil.concurrentExecutor("首页加载")
                 .runAsyncWithTimeRecord(() -> vo.setArticles(articleList(category.getCategoryId())), "文章列表")
                 // fixme: 子线程通过InheritableThreadLocal读取父线程信息
                 .runAsyncWithTimeRecord(() -> vo.setUser(userInfo()), "用户信息")
-                .allExecuted()
-                .prettyPrint();
+                .allExecuted();
+//                .prettyPrint();
         return vo;
     }
 

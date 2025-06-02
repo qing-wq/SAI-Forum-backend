@@ -9,6 +9,7 @@ import ink.whi.api.model.exception.BusinessException;
 import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.req.ArticlePostReq;
 import ink.whi.core.image.service.ImageService;
+import ink.whi.core.rabbitmq.BlogMqConstants;
 import ink.whi.core.utils.NumUtil;
 import ink.whi.service.article.conveter.ArticleConverter;
 import ink.whi.service.article.repo.dao.ArticleDao;
@@ -19,8 +20,8 @@ import ink.whi.service.article.service.ArticleWriteService;
 import ink.whi.service.article.service.DraftsService;
 import ink.whi.service.statistics.repo.dao.DictCommonDao;
 import ink.whi.service.user.service.UserFootService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -61,6 +62,9 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     @Autowired
     private DictCommonDao dictCommonDao;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     /**
      * 文章发布
      *
@@ -74,7 +78,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         // 图片转链
         // todo: 耗时测试
         String content = imageService.mdImgReplace(articlePostReq.getContent());
-        return transactionTemplate.execute(new TransactionCallback<Long>() {
+        Long articleId = transactionTemplate.execute(new TransactionCallback<Long>() {
             //  article + article_detail + tag 三张表
             @Override
             public Long doInTransaction(TransactionStatus status) {
@@ -91,10 +95,16 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
                         throw BusinessException.newInstance(StatusEnum.FORBID_ERROR);
                     }
                     updateArticle(article, content, articlePostReq.getTagIds());
+                    // 更新文章详情缓存
+//                    articleReadService.delArticleDetailCache(record.getId());
                     return article.getId();
                 }
             }
         });
+
+        // 更新首页缓存
+//        articleReadService.delArticleListCache(article.getCategoryId());
+        return articleId;
     }
 
     private Long insertArticle(ArticleDO article, String content, Set<Long> tagIds) {
@@ -113,7 +123,8 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
         articleDao.incrReadCount(articleId);
         userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, articleId, article.getUserId(), ReqInfoContext.getReqInfo().getUserId(), OperateTypeEnum.READ);
 
-        // todo: 发布事件
+        // 发布事件，用户活跃度+10
+        rabbitTemplate.convertAndSend(BlogMqConstants.BLOG_TOPIC_EXCHANGE, BlogMqConstants.BLOG_PUBLISH_KEY, ReqInfoContext.getReqInfo().getUserId());
         return articleId;
     }
 
@@ -132,7 +143,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
     }
 
     @Override
-    @CacheEvict(cacheManager = "redisCacheManager", cacheNames = "article", allEntries = true)
+//    @CacheEvict(cacheManager = "redisCacheManager", cacheNames = "article", allEntries = true)
     public void deleteArticle(Long articleId) {
         ArticleDO article = articleReadService.queryBasicArticle(articleId);
 
@@ -145,5 +156,9 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
                 articleDao.deleteArticle(article);
             }
         });
+
+        // 更新缓存
+//        articleReadService.delArticleListCache(article.getCategoryId());
+//        articleReadService.delArticleDetailCache(articleId);
     }
 }

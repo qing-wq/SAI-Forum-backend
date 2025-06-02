@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 定义日志文件路径 -->
+    <property name="LOG_HOME" value="logs"/>
+
+    <!-- 控制台输出（应用正常日志） -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- MyBatis SQL日志专用文件（仅写入文件） -->
+    <appender name="MYBATIS_SQL_ONLY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/mybatis-sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天滚动 -->
+            <fileNamePattern>${LOG_HOME}/mybatis-sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 保留15天 -->
+            <maxHistory>15</maxHistory>
+            <!-- 单个文件最大50MB -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 应用主日志文件 -->
+    <appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--  请求日志 -->
+    <appender name="reqLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/req.log</File>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${LOG_HOME}/req.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!-- 单个日志文件最多 50MB -->
+            <maxFileSize>50MB</maxFileSize>
+            <!--只保留最近10天的日志-->
+            <maxHistory>10</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- =============== MyBatis相关日志配置 =============== -->
+    <!-- Mapper接口日志 - 仅输出到文件 -->
+    <logger name="ink.whi.service.article.repo.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="MYBATIS_SQL_ONLY"/>
+    </logger>
+    <logger name="ink.whi.service.user.repo.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="MYBATIS_SQL_ONLY"/>
+    </logger>
+    <logger name="ink.whi.service.comment.repo.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="MYBATIS_SQL_ONLY"/>
+    </logger>
+    <logger name="ink.whi.service.statistics.repo.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="MYBATIS_SQL_ONLY"/>
+    </logger>
+    <logger name="ink.whi.service.notify.repo.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="MYBATIS_SQL_ONLY"/>
+    </logger>
+    <logger name="ink.whi.service.config.repo.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="MYBATIS_SQL_ONLY"/>
+    </logger>
+
+    <!-- =============== 应用日志配置 =============== -->
+    <logger name="req" level="info" additivity="false">
+        <appender-ref ref="reqLog"/>
+    </logger>
+
+    <!-- additivity=false 表示匹配之后，不再继续传递给其他的logger-->
+    <logger name="springfox.documentation.spring" level="warn" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APPLICATION"/>
+    </logger>
+
+    <!-- 应用包日志 - 正常输出到控制台 -->
+    <logger name="ink.whi" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APPLICATION"/>
+    </logger>
+
+    <!-- 根日志配置 - 正常输出到控制台和应用日志文件 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APPLICATION"/>
+    </root>
+
+</configuration>

@@ -24,7 +24,7 @@ public class IndexHomeController {
     private IndexRecommendHelper indexRecommendHelper;
 
     /**
-     * 首页接口
+     * 首页接口(目前暂时没被使用)
      *
      * @param request category-当前分类
      * @return

@@ -3,6 +3,7 @@ package ink.whi;
 import ink.whi.api.model.enums.PhotoUtil;
 import ink.whi.core.utils.DateUtil;
 import org.junit.Test;
+import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -85,6 +86,13 @@ public class MyTest {
         System.out.println(timer);
         System.out.println(timer2);
         System.out.println(timer.before(timer2));
+    }
+
+    @Test
+    public void test5() {
+        DefaultTypedTuple<Integer> a = new DefaultTypedTuple<>(101, 1.0);
+        DefaultTypedTuple<Integer> b = new DefaultTypedTuple<>(102, 1.0);
+        System.out.println(a.equals(b));
     }
 
 }

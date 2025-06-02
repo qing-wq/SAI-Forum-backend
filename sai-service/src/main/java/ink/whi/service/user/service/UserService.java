@@ -2,6 +2,7 @@ package ink.whi.service.user.service;
 
 import ink.whi.api.model.vo.article.req.UserInfoSaveReq;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
 import ink.whi.service.user.repo.entity.UserInfoDO;
@@ -12,6 +13,8 @@ import ink.whi.service.user.repo.entity.UserInfoDO;
  */
 public interface UserService {
     BaseUserInfoDTO queryBasicUserInfo(Long userId);
+
+    SimpleUserInfoDTO querySimpleUserInfo(Long userId);
 
     UserStatisticInfoDTO queryUserInfoWithStatistic(Long userId);
 

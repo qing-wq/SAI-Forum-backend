@@ -1,6 +1,7 @@
 package ink.whi.core.cache;
 
 import com.google.common.collect.Maps;
+import ink.whi.core.utils.JsonUtil;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import ink.whi.core.utils.JsonUtil;
 
 /**
  * @author qing
@@ -251,6 +251,13 @@ public class RedisClient {
                 connection.sRem(keyBytes(key), valBytes(val));
                 return null;
             }
+        });
+    }
+
+    public static void zIncr(String key, double score, String member) {
+        template.execute((RedisCallback<Void>) connection -> {
+            connection.zIncrBy(keyBytes(key), score, valBytes(member));
+            return null;
         });
     }
 

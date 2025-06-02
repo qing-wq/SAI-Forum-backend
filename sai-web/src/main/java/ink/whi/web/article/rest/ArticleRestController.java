@@ -3,6 +3,7 @@ package ink.whi.web.article.rest;
 import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.output.Response;
+import ink.whi.api.model.constants.RankConstants;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.DocumentTypeEnum;
 import ink.whi.api.model.enums.OperateTypeEnum;
@@ -29,11 +30,14 @@ import ink.whi.service.article.service.ArticleReadService;
 import ink.whi.service.article.service.CategoryService;
 import ink.whi.service.article.service.TagService;
 import ink.whi.service.comment.service.CommentReadService;
+import ink.whi.service.rank.impl.RankServiceImpl;
 import ink.whi.service.user.repo.entity.UserFootDO;
+import ink.whi.service.user.service.CountService;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
 import ink.whi.web.article.vo.ArticleDetailVo;
 import ink.whi.web.base.BaseRestController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +53,7 @@ import java.util.Optional;
  * @author: qing
  * @Date: 2023/4/28
  */
+@Slf4j
 @RestController
 @RequestMapping(path = "article")
 public class ArticleRestController extends BaseRestController {
@@ -72,6 +77,9 @@ public class ArticleRestController extends BaseRestController {
     private CategoryService categoryService;
 
     @Autowired
+    private CountService countService;
+
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
@@ -82,6 +90,9 @@ public class ArticleRestController extends BaseRestController {
 
     @Autowired
     private ImageModel imageModel;
+    
+    @Autowired
+    private RankServiceImpl rankService;
 
     /**
      * 文章详情接口
@@ -94,6 +105,14 @@ public class ArticleRestController extends BaseRestController {
         if (!NumUtil.upZero(articleId)) {
             return ResVo.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, "文章ID不合法: " + articleId);
         }
+
+        // 如果是登录用户，更新用户活跃度分数
+        Long userId = ReqInfoContext.getReqInfo().getUserId();
+        if (userId != null) {
+            // 浏览文章加分
+            rankService.incrementUserScore(userId, RankConstants.READ_SCORE);
+        }
+
         ArticleDetailVo vo = new ArticleDetailVo();
 
         // 文章详情
@@ -110,7 +129,6 @@ public class ArticleRestController extends BaseRestController {
         article.setAuthorName(user.getUserName());
         article.setAuthorAvatar(user.getPhoto());
         vo.setAuthor(user);
-
         return ResVo.ok(vo);
     }
 
@@ -132,6 +150,7 @@ public class ArticleRestController extends BaseRestController {
 
         ArticleDO article = articleReadService.queryBasicArticle(articleId);
 
+        // 1.更新数据库
         UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, articleId, article.getUserId(),
                 ReqInfoContext.getReqInfo().getUserId(), type);
 

@@ -49,7 +49,7 @@ public class CommonRestController {
     }
 
     /**
-     * 自动保存
+     * 自动保存草稿
      *
      * @param draftsSaveReq
      * @return

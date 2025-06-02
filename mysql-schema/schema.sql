@@ -247,7 +247,7 @@ CREATE TABLE `drafts`
     `category_id` int unsigned                            NOT NULL DEFAULT '0' COMMENT '分类ID',
     `source`      tinyint                                 NOT NULL DEFAULT '1' COMMENT '来源：1-转载，2-原创，3-翻译',
     `source_url`  varchar(128) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1' COMMENT '原文链接',
-    `article_id`  int unsigned                                NULL             COMMENT '关联的文章，0-没有',
+    `article_id`  int unsigned                            NULL COMMENT '关联的文章，0-没有',
     `content`     longtext COLLATE utf8mb4_general_ci COMMENT '内容',
     `deleted`     tinyint                                 NOT NULL DEFAULT '0' COMMENT '是否删除',
     `create_time` timestamp                               NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -390,7 +390,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
     `id`               int unsigned                            NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `third_account_id` varchar(128) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '第三方用户ID',
+    `third_account_id` varchar(128) COLLATE utf8mb4_general_ci NULL     DEFAULT '' COMMENT '第三方用户ID',
     `user_name`        varchar(64) COLLATE utf8mb4_general_ci  NOT NULL DEFAULT '' COMMENT '用户名',
     `password`         varchar(128) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '密码',
     `login_type`       tinyint                                 NOT NULL DEFAULT '0' COMMENT '登录方式: 0-微信登录，1-账号密码登录',
@@ -453,7 +453,7 @@ CREATE TABLE `user_info`
     `profile`     varchar(225) COLLATE utf8mb4_general_ci  NOT NULL DEFAULT '' COMMENT '个人简介',
     `user_role`   int                                      NOT NULL DEFAULT '0' COMMENT '0 普通用户 1 超管',
     `extend`      varchar(1024) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '扩展字段',
-    `ip`          longtext COLLATE utf8mb4_bin             NOT NULL COMMENT '用户的ip信息',
+    `ip`          longtext COLLATE utf8mb4_bin             NOT NULL DEFAULT '' COMMENT '用户的ip信息',
     `deleted`     tinyint                                  NOT NULL DEFAULT '0' COMMENT '是否删除',
     `create_time` timestamp                                NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp                                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',

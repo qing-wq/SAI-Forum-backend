@@ -13,6 +13,7 @@ public class BlogMqConstants {
 
     public static final String BLOG_COMMENT_KEY = "blog.comment";
     public static final String BLOG_REPLY_KEY = "blog.reply";
+    public static final String BLOG_PUBLISH_KEY = "blog.publish";
     public static final String BLOG_PRAISE_KEY = "blog.praise";
     public static final String BLOG_COLLECT_KEY = "blog.collect";
     public static final String BLOG_DELETE_COMMENT_KEY = "blog.comment.delete";

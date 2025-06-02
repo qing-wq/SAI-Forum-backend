@@ -3,16 +3,18 @@ package ink.whi.service.user.service.user;
 import ink.whi.api.model.context.ReqInfoContext;
 import ink.whi.api.model.enums.FollowStateEnum;
 import ink.whi.api.model.enums.PhotoUtil;
-import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.exception.BusinessException;
-import ink.whi.api.model.vo.article.dto.YearArticleDTO;
+import ink.whi.api.model.exception.StatusEnum;
 import ink.whi.api.model.vo.article.dto.ArticleFootCountDTO;
+import ink.whi.api.model.vo.article.dto.YearArticleDTO;
 import ink.whi.api.model.vo.article.req.UserInfoSaveReq;
 import ink.whi.api.model.vo.user.dto.BaseUserInfoDTO;
+import ink.whi.api.model.vo.user.dto.SimpleUserInfoDTO;
 import ink.whi.api.model.vo.user.dto.UserStatisticInfoDTO;
 import ink.whi.api.model.vo.user.req.UserSaveReq;
 import ink.whi.service.article.repo.dao.ArticleDao;
 import ink.whi.service.article.service.ArticleReadService;
+import ink.whi.service.user.converter.UserConverter;
 import ink.whi.service.user.repo.dao.UserDao;
 import ink.whi.service.user.repo.dao.UserRelationDao;
 import ink.whi.service.user.repo.entity.UserDO;
@@ -24,7 +26,6 @@ import ink.whi.service.user.service.help.UserPwdEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ink.whi.service.user.converter.UserConverter;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -62,6 +63,15 @@ public class UserServiceImpl implements UserService {
             throw BusinessException.newInstance(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
         }
         return UserConverter.toDTO(user);
+    }
+
+    @Override
+    public SimpleUserInfoDTO querySimpleUserInfo(Long userId) {
+        UserInfoDO user = userDao.getByUserId(userId);
+        if (user == null) {
+            throw BusinessException.newInstance(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
+        }
+        return UserConverter.toSimpleUserDTO(user);
     }
 
     @Override

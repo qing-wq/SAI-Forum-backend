@@ -122,6 +122,29 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     }
 
     /**
+     * 查询前10位用户及对应文章数
+     * key-userId, value-count
+     *
+     * @return
+     */
+    public Map<Long, Long> countArticleByUserId() {
+        QueryWrapper<ArticleDO> wrapper = Wrappers.query();
+        wrapper.select("user_id, count(*) as cnt")
+                .eq("status", PushStatusEnum.ONLINE.getCode())
+                .eq("deleted", YesOrNoEnum.NO.getCode())
+                .groupBy("user_id");
+        List<Map<String, Object>> mapList = baseMapper.selectMaps(wrapper);
+        Map<Long, Long> map = Maps.newHashMapWithExpectedSize(mapList.size());
+        mapList.forEach(s -> {
+            Long cnt = (Long) s.get("cnt");
+            if (cnt != null && cnt > 0) {
+                map.put((Long) s.get("user_id"), cnt);
+            }
+        });
+        return map;
+    }
+
+    /**
      * 阅读计数+1
      *
      * @param articleId
@@ -144,6 +167,12 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
         readCountMapper.updateById(cnt);
     }
 
+    /**
+     * 查询作者文章数量
+     *
+     * @param userId
+     * @return
+     */
     public Integer countArticleByUserId(Long userId) {
         return lambdaQuery().eq(ArticleDO::getUserId, userId)
                 .eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())

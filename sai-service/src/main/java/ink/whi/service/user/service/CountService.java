@@ -21,10 +21,14 @@ public interface CountService {
      */
     ArticleFootCountDTO queryArticleCountInfoByArticleId(Long articleId);
 
+    void delArticleCountInfoCache(Long articleId);
+
     /**
      * 查询点赞数
      * @param commentId
      * @return
      */
     Integer queryCommentPraiseCount(Long commentId);
+
+    void delCommentPraiseCount(Long commentId);
 }

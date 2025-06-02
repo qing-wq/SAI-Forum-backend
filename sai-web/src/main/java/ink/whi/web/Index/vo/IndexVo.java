@@ -36,4 +36,6 @@ public class IndexVo {
     private PageListVo<ArticleDTO> articles;
 
     private BaseUserInfoDTO user;
+
+    private ActiveDTO active;
 }

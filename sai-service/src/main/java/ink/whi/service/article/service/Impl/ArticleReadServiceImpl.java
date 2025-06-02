@@ -31,6 +31,7 @@ import ink.whi.service.user.repo.entity.UserInfoDO;
 import ink.whi.service.user.service.CountService;
 import ink.whi.service.user.service.UserFootService;
 import ink.whi.service.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
@@ -48,6 +49,7 @@ import java.util.stream.Collectors;
  * @author: qing
  * @Date: 2023/4/27
  */
+@Slf4j
 @Service
 public class ArticleReadServiceImpl implements ArticleReadService {
 
@@ -173,7 +175,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Override
     public ArticleDTO queryDetailArticleInfo(Long articleId) {
         // 引入分布式锁
-        String redisCacheKey = RedisConstants.REDIS_PRE_ARTICLE + RedisConstants.REDIS_CACHE + articleId;
+        String redisCacheKey = RedisConstants.REDIS_PRE_ARTICLE + articleId;
         String cache = RedisClient.getStr(redisCacheKey);
         ArticleDTO article = null;
         if (!ObjectUtils.isEmpty(cache)) {
@@ -373,7 +375,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
     @Override
     public List<SimpleArticleDTO> queryArticleCluster(Map<String, String> params) {
-        System.out.println("result from LLM: " + params);
+        log.info("result from LLM: {}", params);
         List<ArticleDO> result = new ArrayList<>();
         if (!StringUtils.isBlank(params.get("keyword"))) {
             String keyword = params.get("keyword");
