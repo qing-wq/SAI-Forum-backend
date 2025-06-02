@@ -17,7 +17,8 @@ services:
       - GIT_CLIENT_ID=${GIT_CLIENT_ID}
       - GIT_CLIENT_SECRET=${GIT_CLIENT_SECRET}
     volumes:
-      - image_data:/tmp/sai-forum/images   # 图床
+      - ./sai-forum/images:/tmp/sai-forum/images   # 图床
+      - ./logs:/app/logs   # 图床
     depends_on:
       - mysql
       - redis
@@ -89,12 +90,6 @@ volumes:
       type: none
       o: bind
       device: ./mysql-data
-  image_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./sai-forum/images
   redis-data:
     driver: local
   rabbitmq-data:
