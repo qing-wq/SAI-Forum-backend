@@ -274,7 +274,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             return Collections.emptyList();
         }
         key = key.trim();
-        List<ArticleDO> records = articleDao.listSimpleArticlesByBySearchKey(key);
+        List<ArticleDO> records = articleDao.listArticlesBySearchKey(key);
         return records.stream().map(ArticleConverter::toSimpleDto)
                 .collect(Collectors.toList());
     }
@@ -376,35 +376,55 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Override
     public List<SimpleArticleDTO> queryArticleCluster(Map<String, String> params) {
         log.info("result from LLM: {}", params);
-        List<ArticleDO> result = new ArrayList<>();
-        if (!StringUtils.isBlank(params.get("keyword"))) {
-            String keyword = params.get("keyword");
-            List<ArticleDO> searchByTitle = articleDao.listSimpleArticlesByBySearchKey(keyword);
-            result.addAll(searchByTitle);
-
-            List<Long> searchByTags = articleTagDao.searchArticleByTags(keyword);
-            List<ArticleDO> searchByTagsDto = searchByTags.stream().map(articleDao::getArticleById).toList();
-            result.addAll(searchByTagsDto);
-        }
+        String keyword = params.get("keyword");
+        String author = params.get("author");
+        UserInfoDO user;
 
         if (!StringUtils.isBlank(params.get("author"))) {
-            String author = params.get("author");
-            UserInfoDO user = userService.queryUserInfoByUserName(author);
-            if (user != null) {
-                result = result.stream().filter(s -> s.getUserId().equals(user.getId())).toList();
+            user = userService.queryUserInfoByUserName(author);
+            if (user == null) {
+                log.error("查询的用户不存在， userName: {}", author);
             }
+        } else {
+            user = null;
+        }
+
+        //1. keyword == null && author == null
+        if (StringUtils.isBlank(params.get("keyword")) && user == null) {
+            return Collections.emptyList();
+        }
+
+        // 2 3. keyword != null && author ? null
+        Set<ArticleDO> result = new HashSet<>();
+        if (!StringUtils.isBlank(params.get("keyword"))) {
+            List<ArticleDO> searchByTitle = articleDao.listArticlesBySearchKey(keyword);
+            result.addAll(searchByTitle);
+
+            List<Long> searchByTagIds = articleTagDao.searchArticleByTags(keyword);
+            if (!searchByTagIds.isEmpty()) {
+                List<ArticleDO> searchByTags = articleDao.getBaseMapper().selectBatchIds(searchByTagIds);
+
+                if (user != null) {
+                    result.addAll(searchByTags.stream().filter(s -> s.getUserId().equals(user.getId())).toList());
+                }
+            }
+        }
+        // 4. keyword == null && author != null
+        else {
+            List<ArticleDO> articles = articleDao.listArticlesByUserId(user.getId());
+            result.addAll(articles);
         }
 
         if (!StringUtils.isBlank(params.get("startTime"))) {
             String startTimeStr = params.get("startTime");
             Date startTime = DateUtil.format(startTimeStr);
-            result = result.stream().filter(s -> s.getCreateTime().after(startTime)).toList();
+            result = result.stream().filter(s -> s.getCreateTime().after(startTime)).collect(Collectors.toSet());
         }
 
         if (!StringUtils.isBlank(params.get("endTime"))) {
             String endTimeStr = params.get("endTime");
             Date endTime = DateUtil.format(endTimeStr);
-            result = result.stream().filter(s -> s.getCreateTime().before(endTime)).toList();
+            result = result.stream().filter(s -> s.getCreateTime().before(endTime)).collect(Collectors.toSet());
         }
 
         return result.stream().map(ArticleConverter::toSimpleDto).toList();

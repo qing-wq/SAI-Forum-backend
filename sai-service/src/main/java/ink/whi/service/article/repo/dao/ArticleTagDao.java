@@ -10,6 +10,7 @@ import ink.whi.api.model.enums.YesOrNoEnum;
 import ink.whi.api.model.vo.article.dto.TagDTO;
 import ink.whi.service.article.repo.entity.ArticleTagDO;
 import ink.whi.service.article.repo.mapper.ArticleTagMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -68,11 +69,15 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
      * @return
      */
     public List<Long> searchArticleByTags(String keyword) {
-        // 查询相关tag
-        List<Long> tagIds = tagDao.listTagsByKey(keyword);
-        if (CollectionUtils.isEmpty(tagIds)) {
+        if (StringUtils.isBlank(keyword)) {
             return Collections.emptyList();
         }
+
+        List<Long> tagIds = tagDao.listTagsByKey(keyword);
+        if (tagIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         LambdaQueryChainWrapper<ArticleTagDO> chainWrapper = ChainWrappers.lambdaQueryChain(baseMapper);
         List<ArticleTagDO> articleTags = chainWrapper.in(ArticleTagDO::getTagId, tagIds).list();
         if (CollectionUtils.isEmpty(articleTags)) {

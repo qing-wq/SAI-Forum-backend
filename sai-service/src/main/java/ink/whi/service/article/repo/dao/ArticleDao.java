@@ -237,6 +237,15 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
         }
     }
 
+    public List<ArticleDO> listArticlesByUserId(Long userId) {
+        LambdaQueryWrapper<ArticleDO> query = Wrappers.lambdaQuery();
+        query.eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .eq(ArticleDO::getUserId, userId)
+                .eq(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode())
+                .orderByDesc(ArticleDO::getId);
+        return baseMapper.selectList(query);
+    }
+
     public List<ArticleDO> listArticlesByUserId(Long userId, PageParam pageParam) {
         LambdaQueryWrapper<ArticleDO> query = Wrappers.lambdaQuery();
         query.eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
@@ -262,7 +271,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
                 .last(PageParam.getLimitSql(pageParam)).list();
     }
 
-    public List<ArticleDO> listSimpleArticlesByBySearchKey(String key) {
+    public List<ArticleDO> listArticlesBySearchKey(String key) {
         LambdaQueryWrapper<ArticleDO> query = Wrappers.lambdaQuery();
         query.eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .eq(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode())
